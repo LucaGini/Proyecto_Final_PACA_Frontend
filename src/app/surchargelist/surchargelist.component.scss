@@ -1,0 +1,140 @@
+.mb-3 {
+  max-width: 800px;
+  width: 90%;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  box-shadow:
+    0 10px 30px rgba(231, 198, 51, 0.1),
+    inset 0 0 20px rgba(231, 198, 51, 0.05);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(231, 198, 51, 0.1), rgba(255, 255, 255, 0.1));
+    z-index: -1;
+    transition: transform 0.6s ease;
+    transform: translateX(-100%);
+  }
+
+  &:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow:
+      0 20px 40px rgba(231, 198, 51, 0.15),
+      inset 0 0 30px rgba(231, 198, 51, 0.1);
+
+    &::before {
+      transform: translateX(0);
+    }
+  }
+}
+
+h2 {
+  font-family: 'Quicksand', sans-serif;
+  color: #444;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  transform: translateZ(0);
+  transition: all 0.3s ease;
+
+  &:first-child {
+    color: #e7c633;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(231, 198, 51, 0.2);
+
+    &::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 2px;
+      background: #e7c633;
+      transition: width 0.4s ease;
+    }
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
+}
+
+h3 {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 550;
+  color: #e7c633;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  animation: fadeInScale 0.6s ease-out;
+  text-shadow: 0 2px 4px rgba(231, 198, 51, 0.2);
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid rgba(231, 198, 51, 0.2);
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Quicksand', sans-serif;
+  background: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: #e7c633;
+    box-shadow:
+      0 0 0 4px rgba(231, 198, 51, 0.15),
+      0 0 20px rgba(231, 198, 51, 0.1);
+    transform: scale(1.02);
+  }
+
+  option {
+    padding: 0.75rem;
+    font-family: 'Quicksand', sans-serif;
+    background: white;
+  }
+
+  &:hover {
+    border-color: rgba(231, 198, 51, 0.5);
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes floatingAnimation {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-5px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.selected-city {
+  animation: floatingAnimation 3s ease-in-out infinite;
+}

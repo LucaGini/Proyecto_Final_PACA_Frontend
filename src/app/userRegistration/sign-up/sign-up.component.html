@@ -1,0 +1,106 @@
+<form #signUpForm="ngForm" (ngSubmit)="signUp(signUpForm)" enctype="multipart/form-data">
+      
+  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+    <div class="form-group">
+      <label for="firstName">Nombre</label>
+      <input type="text" class="form-control" id="firstName" ngModel name="firstName" required firstName #firstNameInput="ngModel">
+      <div *ngIf="firstNameInput.invalid && firstNameInput.touched" class="text-danger">
+        <small *ngIf="firstNameInput.errors?.['required']">El nombre es requerido.</small>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+    <div class="form-group">
+      <label for="lastName">Apellido</label>
+      <input type="text" class="form-control" id="lastName" ngModel name="lastName" required lastName #lastNameInput="ngModel">
+      <div *ngIf="lastNameInput.invalid && lastNameInput.touched" class="text-danger">
+        <small *ngIf="lastNameInput.errors?.['required']">El apellido es requerido.</small>
+      </div>
+    </div>
+  </div>
+  
+  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+    <div class="form-group">
+      <label for="phone">Teléfono</label>
+      <input type="number" class="form-control" id="phone" ngModel name="phone" required phone #phoneInput="ngModel">
+      <div *ngIf="phoneInput.invalid && phoneInput.touched" class="text-danger">
+        <small *ngIf="phoneInput.errors?.['required']">El teléfono es requerido.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+    <div class="form-group">
+      <label for="email">Mail</label>
+      <input type="email" class="form-control" id="email" ngModel name="email" required email #emailInput="ngModel">
+      <div *ngIf="emailInput.invalid && emailInput.touched" class="text-danger">
+        <small *ngIf="emailInput.errors?.['required']">El email es obligatorio.</small>
+        <small *ngIf="emailInput.errors?.['email']">El email debe tener un formato válido.</small>
+      </div>
+    </div>
+  </div>
+        
+  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+    <div class="form-group">
+      <label for="password" class="form-label">Contraseña</label>
+      <div class="input-group">
+        <input [type]="showPassword ? 'text' : 'password'" class="form-control" id="password" ngModel name="password" required 
+          pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*._-])[A-Za-z\d!@#$%^&*._-]{8,}$" #passwordInput="ngModel"/>
+        <span class="input-group-text" (click)="togglePasswordVisibility()" style="cursor: pointer;">
+          <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+        </span>
+      </div>
+      <div *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger mt-1">
+        <small *ngIf="passwordInput.errors?.['required']">La contraseña es requerida.</small>
+        <small *ngIf="passwordInput.errors?.['pattern']">
+          La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, un número y un carácter especial.
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+    <div class="form-group">
+      <label for="street">Calle</label>
+      <input type="text" class="form-control" id="street" ngModel name="street" required street #streetInput="ngModel">
+      <div *ngIf="streetInput.invalid && streetInput.touched" class="text-danger">
+        <small *ngIf="streetInput.errors?.['required']">La calle es requerido.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+    <div class="form-group">
+      <label for="streetNumber">Número</label>
+      <input type="number" class="form-control" id="streetNumber" ngModel name="streetNumber" required streetNumber #streetNumberInput="ngModel">
+      <div *ngIf="streetNumberInput.invalid && streetNumberInput.touched" class="text-danger">
+        <small *ngIf="streetNumberInput.errors?.['required']">El número de calle es requerido.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+    <div class="form-group">
+      <label for="province">Provincia</label>
+      <select class="form-control" id="province" name="province" [(ngModel)]="selectedProvince" (change)="getCities()" required>
+        <option disabled selected value="">Seleccione una provincia</option>
+        <option *ngFor="let province of provinces" [value]="province.id">{{province.name}}</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+    <div class="form-group">
+      <label for="city">Ciudad</label>
+      <select class="form-control" id="city" name="city" ngModel name="city" required>
+        <option disabled selected value="">Seleccione una ciudad de la provincia</option>
+        <option *ngFor="let city of cities" [value]="city.id">{{city.name}}</option>
+      </select> 
+    </div>          
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <button type="submit" class="btn btn-warning " id="Accept">Aceptar</button>
+  </div>
+</form>

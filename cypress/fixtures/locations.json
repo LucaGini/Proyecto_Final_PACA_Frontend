@@ -1,0 +1,11 @@
+{
+    "provinces": [
+      { "id": 1, "name": "Buenos Aires" },
+      { "id": 2, "name": "Córdoba" }
+    ],
+    "cities": {
+      "1": [{ "id": 10, "name": "Mar del Plata" }],
+      "2": [{ "id": 20, "name": "Villa Carlos Paz" }]
+    }
+  }
+  

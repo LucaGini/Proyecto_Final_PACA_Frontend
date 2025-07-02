@@ -1,0 +1,128 @@
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow:
+    0 10px 30px rgba(231, 198, 51, 0.1),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(231, 198, 51, 0.15);
+  }
+}
+
+.card-img-top {
+  height: 260px;
+  width: 260px;
+  margin: 1rem auto;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: all 0.5s ease;
+  filter: brightness(0.95);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+
+  &:hover {
+    transform: scale(1.05);
+    filter: brightness(1.05);
+    box-shadow: 0 12px 30px rgba(231, 198, 51, 0.2);
+  }
+}
+
+#Añadir {
+  background: linear-gradient(45deg, #e7c633, #ffd700);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 550;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(231, 198, 51, 0.2);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
+    background: linear-gradient(45deg, #ffd700, #e7c633);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Quicksand', sans-serif;
+  color: #333;
+  margin-bottom: 1rem;
+  position: relative;
+  padding-left: 20px;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 2px;
+    background: linear-gradient(45deg, #e7c633, #ffd700);
+    margin: 0.5rem 0;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 100px;
+  }
+}
+
+.product-description {
+  color: #666;
+  line-height: 1.6;
+  margin: 1.5rem 0;
+  font-size: 1.1rem;
+}
+
+.price {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #e7c633;
+  margin: 1rem 0;
+  text-shadow: 0 2px 4px rgba(231, 198, 51, 0.2);
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 1.5rem 0;
+
+  input {
+    width: 60px;
+    padding: 0.5rem;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #e7c633;
+      box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .card-img-top {
+    height: 220px;
+    width: 220px;
+  }
+
+  #Añadir {
+    width: 100%;
+    margin-top: 1rem;
+  }
+}

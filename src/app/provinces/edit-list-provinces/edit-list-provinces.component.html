@@ -1,0 +1,24 @@
+ <div class="provinces-container" style="display: flex; flex-wrap: wrap; gap: 15px;">
+  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex" style="flex: 0 0 calc(50% - 15px); margin-bottom: 15px;" *ngFor="let province of provinces">
+    <div class="card-body">
+      <div *ngIf="province.editing">
+        <div class="form-group">
+          <label for="name">Nombre: </label>
+          <input type="text" class="form-control" id="name" [(ngModel)]="province.editName" name="name" required>
+        </div>
+        
+      </div>
+
+      <div *ngIf="!province.editing">
+        <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Nombre: {{ province.name }}</h2>
+      </div>
+    </div>
+  
+    <div class="example-button-container">
+      <button mat-icon-button class="btn" *ngIf="!province.editing" (click)="edit(province)" style="color: #e7c633;"><mat-icon>create</mat-icon></button>
+      <button mat-icon-button class="btn" *ngIf="province.editing" (click)="save(province)" style="color: #e7c633;"><mat-icon>save_alt</mat-icon></button>
+      <button mat-icon-button class="btn" (click)="delete(province.id)" style="color: #f76666;"><mat-icon>delete</mat-icon></button>
+    </div>
+  </div>
+</div> 
+

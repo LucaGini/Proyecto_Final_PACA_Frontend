@@ -1,0 +1,77 @@
+.suppliers-container {
+    padding: 2rem;
+    background: linear-gradient(45deg, rgba(231, 198, 51, 0.05), rgba(255, 255, 255, 0.1));
+}
+
+.card-body {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 2.5rem;
+    margin-top: 10px;
+    margin-left: 15px;
+    position: relative;
+    padding-top: 40px;
+    box-shadow: 0 10px 30px rgba(231, 198, 51, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.button-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+    z-index: 10;
+    background: transparent;
+
+    button {
+        transition: all 0.3s ease;
+
+        &:hover {
+            transform: translateY(-2px);
+        }
+    }
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #e7c633;
+        box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
+    }
+}
+
+.card-text {
+    margin: 0.5rem 0;
+    color: #444;
+    font-size: 1.1rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.suppliers-container>div {
+    animation: fadeIn 0.6s ease-out;
+    animation-fill-mode: both;
+
+    @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+            animation-delay: #{$i * 0.1}s;
+        }
+    }
+}

@@ -1,0 +1,17 @@
+<div class="container text-center">
+  <div class="container text-center">
+    <div class="cart-item" *ngFor="let item of items">
+      <span><img class="card-img-top" [src]="apiUrl + item.image"  alt="{{ item.name }}"></span>
+      <h1 class="card-title truncate" style="font-family: 'Quicksand', sans-serif;">{{ item.name }}</h1>
+      <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Precio unitario: {{ item.price | currency }}</h2>
+      <button type="button" class="btn btn-warning" id="Cantidad" (click)="verifyStock(item,'devolucion')">-</button>
+      <span>{{ item.quantity }}</span>
+      <button type="button" class="btn btn-warning" id="Cantidad" (click)="verifyStock(item,'compra')">+</button> 
+      <button mat-icon-button class="btn" style="color: #f76666;" id="delete" (click)="removeItem(item)"><mat-icon>delete</mat-icon></button>
+    </div> 
+    <div style="font-family: 'Quicksand', sans-serif;" *ngIf="cityCharge > 0" class="city-charge">
+      <h2>Recargo por domicilio seleccionado: {{ cityCharge }}%</h2>
+    </div>
+  <h2 style="font-family: 'Quicksand', sans-serif;">Total: <span>{{ totalAmount | currency }}</span></h2>
+  <button type="button" class="btn btn-warning" *ngIf="showConfirmButton" id="ConfirmarCompra" (click)="confirmPurchase()">Confirmar compra</button> 
+</div>

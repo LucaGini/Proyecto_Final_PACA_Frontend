@@ -1,0 +1,55 @@
+<div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+  <div class="card-body">
+    <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data" ngNativeValidate>
+        
+      <div class="form-group">
+        <label for="name">Nombre</label>
+        <input type="text" class="form-control" id="name" ngModel name="name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Descripción</label>
+        <textarea class="form-control" id="description" ngModel name="description" required></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="stock">Stock</label>
+        <input type="number" class="form-control" id="stock"  ngModel name="stock" required>
+      </div>
+
+      <div class="form-group">
+        <label for="precio">Precio</label>
+        <input type="text" class="form-control" id="price"  ngModel name="price" required>
+      </div>
+
+        <div class="form-group">
+          <label for="image">Imagen:</label>
+          <input type="file" class="form-control-file" id="image" name="image" (change)="onImageSelected($event)"
+            accept="image/*" required>
+          <img *ngIf="imagePreviewUrl" [src]="imagePreviewUrl" alt="Imagen seleccionada"
+            style="max-width: 200px; margin-top: 10px;" />
+        </div>
+        
+
+      <div class="form-group">
+        <label for="category">Categoria</label>
+        <select class = "form-control" id = "category" ngModel name = "category" required>
+          <option disabled selected value ="">Seleccione una categoria</option>
+          <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+        </select> 
+      </div>
+
+      <div class="form-group">
+        <label for="supplier">Proveedor</label>
+        <select class="form-control" id="supplier" ngModel name="supplier" required>
+          <option disabled selected value="">Seleccione un proveedor</option>
+          <option *ngFor="let supplier of suppliers" [value]="supplier.id">{{supplier.cuit + " " + supplier.businessName}}</option>
+        </select>
+      </div>
+    </form>
+  </div> 
+</div>
+  
+<div class="d-flex justify-content-center">
+  <button type="submit" class="btn btn-warning mx-2" form="addForm" id="Accept">Guardar</button>
+</div>

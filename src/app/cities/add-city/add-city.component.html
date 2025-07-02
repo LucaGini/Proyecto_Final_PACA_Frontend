@@ -1,0 +1,33 @@
+<div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
+  <div class="card-body">
+    <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data" ngNativeValidate>
+          
+      <div class="form-group">
+        <label for="name">Nombre</label>
+        <input type="text" class="form-control" id="name" ngModel name="name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="postCode">Código postal</label>
+        <input type="text" class="form-control" id="postCode" ngModel name="postCode" required>
+      </div>
+
+      <div class="form-group">
+        <label for="postCode">Recargo</label>
+        <input type="number" class="form-control" id="surcharge" ngModel name="surcharge" required>
+      </div>
+
+      <div class="form-group">
+        <label for="province">Provincia</label>
+        <select class = "form-control" id = "province" ngModel name = "province" required>
+          <option disabled selected value ="">Seleccione una provincia</option>
+          <option *ngFor="let province of provinces" [value]="province.id">{{province.name}}</option>
+        </select> 
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="d-flex justify-content-center">
+  <button type="submit" class="btn btn-warning mx-2" form="addForm" id="Accept">Guardar</button>
+</div>

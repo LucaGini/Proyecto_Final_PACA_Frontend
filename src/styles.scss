@@ -1,0 +1,28 @@
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* Importing Bootstrap SCSS file. */
+@import "./node_modules/bootstrap/scss/bootstrap";
+
+/* Importing Datepicker SCSS file. */
+@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
+
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&family=Raleway&display=swap');
+
+.card-text{
+    font-family: 'Quicksand', sans-serif;
+}
+
+.card{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+  app-root { // para que el contenedor de la aplicación, es decir lo que sea q esté en el body crezca dinamincamente 
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; //
+  }
+  
+
+  

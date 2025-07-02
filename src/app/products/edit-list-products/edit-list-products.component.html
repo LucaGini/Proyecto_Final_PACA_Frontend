@@ -1,0 +1,94 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <div class="form-group">
+            <h2 style="font-family: 'Quicksand', sans-serif; ">Filtros</h2>
+            <label for="supplier">Proveedores:</label>
+            <select class="form-control" id="supplier" (change)="onSupplierChange($event)" name="supplier" required>
+              <option disabled selected value="">Seleccione un proveedor</option>
+              <option value="">Todos</option>
+              <option *ngFor="let supplier of suppliers" [value]="supplier.cuit" >{{supplier.cuit + " " + supplier.businessName}}
+              </option>
+            </select>
+          </div>  
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>  
+
+
+
+<!-- Delete y update -->
+<!-- Contenedor principal con display: flex para organizar las columnas -->
+<div class="products-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
+  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 py-5 mb-3"  style="flex: 0 0 calc(33.33% - 15px);" *ngFor="let product of products">
+    <div class="card">
+      <div class="example-button-container">
+        <button mat-icon-button class="btn" *ngIf="!product.editing" (click)="edit(product)"
+          style="color: #e7c633;"><mat-icon>create</mat-icon></button>
+        <button mat-icon-button class="btn" (click)="delete(product.id)"
+          style="color: #f76666;"><mat-icon>delete</mat-icon></button>
+      </div>
+
+      <div class="card-body">
+        <img class="card-img-top" [src]="apiUrl + product.image" alt="{{ product.name }}">
+
+        <div *ngIf="product.editing">
+          <div class="form-group mb-2">
+            <label for="name">Nombre:</label>
+            <input type="text" class="form-control" id="name" [(ngModel)]="product.editName" name="name" required>
+          </div>
+        </div>
+        
+        <div *ngIf="!product.editing">
+          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif;"> Nombre: {{ product.name }} </h3>
+        </div>
+
+        <div *ngIf="product.editing">
+          <div class="form-group">
+            <label for="description">Descripción:</label>
+            <textarea class="form-control" id="description" [(ngModel)]="product.editDescription" name="description" required></textarea>
+          </div>
+        </div>
+
+        <div *ngIf="!product.editing">
+          <h3 class="card-text truncate" style="font-family: 'Quicksand', sans-serif;">Descripcion: {{ product.description }}</h3>
+        </div>
+
+        <div *ngIf="product.editing">
+          <div class="form-group mb-2">
+            <label for="precio">Precio:</label>
+            <input type="text" class="form-control" id="price" [(ngModel)]="product.editPrice" name="price" required>
+          </div>
+        </div>
+        
+        <div *ngIf="!product.editing">
+          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif;"> Precio: {{ product.price }} </h3>
+        </div>
+
+        <div *ngIf="product.editing">
+          <div class="form-group">
+            <label for="stock">Stock:</label>
+            <input type="number" class="form-control" id="stock" [(ngModel)]="product.editStock" name="stock" required>
+          </div>
+        </div>
+
+        <div *ngIf="!product.editing">
+          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif;">Stock: {{ product.stock }}</h3>
+        </div>
+
+        <div class="example-button-container" style="display: flex; justify-content: flex-end;">
+          <button mat-icon-button class="btn" *ngIf="product.editing" (click)="save(product)"
+            style="color: #e7c633;"><mat-icon>save_alt</mat-icon>
+          </button>       
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,138 @@
+.bd-footer {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 2rem 1rem;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    box-shadow:
+        0 -10px 30px rgba(231, 198, 51, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+h1 {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.8rem;
+    color: #333;
+    margin: 1.5rem 0;
+    text-align: center;
+    position: relative;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(45deg, #e7c633, #ffd700);
+        margin: 0.5rem auto;
+        border-radius: 2px;
+        transition: width 0.3s ease;
+    }
+
+    &:hover::after {
+        width: 100px;
+    }
+}
+
+.socialNetwork {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+
+    a {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        img {
+            width: 34px;
+            height: 34px;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            transition: filter 0.3s ease;
+
+            &:hover {
+                filter: drop-shadow(0 6px 8px rgba(231, 198, 51, 0.3));
+            }
+        }
+    }
+}
+
+.logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    cursor: pointer;
+
+    img {
+        width: 150px;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        filter: brightness(1);
+
+        &:hover {
+            transform: scale(1.05);
+            filter: brightness(1.1);
+            box-shadow: 0 8px 20px rgba(231, 198, 51, 0.2);
+        }
+    }
+}
+
+.MapaGoogle {
+    position: relative;
+    overflow: hidden;
+
+    iframe {
+        width: 250px;
+        height: 200px;
+    }
+}
+
+.col-lg-4 {
+    opacity: 0;
+    animation: simpleAppear 0.6s ease-out forwards;
+    will-change: opacity;
+
+    &:nth-child(1) {
+        animation-delay: 0.2s;
+    }
+
+    &:nth-child(2) {
+        animation-delay: 0.4s;
+    }
+
+    &:nth-child(3) {
+        animation-delay: 0.6s;
+    }
+}
+
+@keyframes simpleAppear {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .bd-footer {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .MapaGoogle iframe {
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .socialNetwork {
+        gap: 1rem;
+    }
+}

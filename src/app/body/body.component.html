@@ -1,0 +1,20 @@
+<app-carousel *ngIf="!isSearching"></app-carousel>
+<div class="products-container"style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
+  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3 py-5 mb-3"  style="flex: 0 0 calc(33.33% - 15px);"*ngFor="let product of products" id="product">
+      <a [routerLink]="['/product', product.id]" class="no-underline">
+        <div class="card">
+          <img class="card-img-top" [src]="apiUrl + product.image"  alt="{{ product.name }}">
+            <div class="card-body">
+              <h1 class="card-title truncate">{{ product.name }}</h1>
+              <h3 class="card-text truncate">{{ product.description }}</h3>
+              <h2 class="card-text">Precio: ${{ product.price }}</h2>
+                <div class="button-container right-align">
+                  <a [routerLink]="['/product', product.id]" class="btn btn-warning" id="Product">
+                    Ver producto
+                  </a>
+                </div>
+            </div>
+          </div>
+        </a>
+  </div>
+</div>

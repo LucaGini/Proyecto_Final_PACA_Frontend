@@ -1,0 +1,70 @@
+<div class="suppliers-container" style="display: flex; flex-wrap: wrap; gap: 15px;">
+  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex" style="flex: 0 0 calc(50% - 15px); margin-bottom: 15px;"
+    *ngFor="let supplier of suppliers">
+    <div class="card-body">
+      <div class="button-container">
+        <button mat-icon-button class="btn" *ngIf="!supplier.editing" (click)="edit(supplier)" style="color: #e7c633;">
+          <mat-icon>create</mat-icon>
+        </button>
+        <button mat-icon-button class="btn" *ngIf="supplier.editing" (click)="save(supplier)" style="color: #e7c633;">
+          <mat-icon>save_alt</mat-icon>
+        </button>
+        <button mat-icon-button class="btn" *ngIf="!supplier.editing" (click)="delete(supplier)"
+          style="color: #f76666;">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div *ngIf="supplier.editing">
+        <div class="form-group">
+          <label for="cuit">Cuit: </label>
+          <input type="number" class="form-control" id="cuit" [(ngModel)]="supplier.editCuit"
+            [formControl]="cuitControl"
+            [ngClass]="{ 'is-invalid': cuitControl.invalid && (cuitControl.dirty || cuitControl.touched) }" required>
+          <div *ngIf="cuitControl.invalid && (cuitControl.dirty || cuitControl.touched)" class="text-danger">
+            <small *ngIf="cuitControl.errors?.['required']">CUIT es requerido.</small>
+            <small *ngIf="cuitControl.errors?.['pattern']">CUIT debe tener exactamente 11 caracteres numéricos.</small>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!supplier.editing">
+        <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">CUIT: {{ supplier.cuit }}</h2>
+      </div>
+
+      <div *ngIf="supplier.editing">
+        <div class="form-group">
+          <label for="businessName">Nombre: </label>
+          <input type="text" class="form-control" id="businessName" [(ngModel)]="supplier.editBusinessName"
+            businessName="businessName" required>
+        </div>
+      </div>
+
+      <div *ngIf="!supplier.editing">
+        <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Nombre: {{ supplier.businessName }}</h2>
+      </div>
+
+      <div *ngIf="supplier.editing">
+        <div class="form-group">
+          <label for="email">Email: </label>
+          <input type="email" class="form-control" id="email" [(ngModel)]="supplier.editEmail" email="email" required>
+        </div>
+      </div>
+
+      <div *ngIf="!supplier.editing">
+        <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Email: {{ supplier.email }}</h2>
+      </div>
+
+      <div *ngIf="supplier.editing">
+        <div class="form-group">
+          <label for="phone">Teléfono: </label>
+          <input type="string" class="form-control" id="phone" [(ngModel)]="supplier.editPhone" phone="phone" required>
+        </div>
+      </div>
+
+      <div *ngIf="!supplier.editing">
+        <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Teléfono: {{ supplier.phone }}</h2>
+      </div>
+    </div>
+  </div>
+</div>

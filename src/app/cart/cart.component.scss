@@ -1,0 +1,41 @@
+h2, h3{
+  font-family: 'Dancing Script', cursive;
+  font-family: 'Quicksand', sans-serif;
+}
+    
+.card-img-top {
+  height: 260px;
+  width: 260px; 
+}
+
+#Cantidad{
+  background: linear-gradient(45deg, #e7c633, #ffd700);
+  font-weight: 550;
+  color: white;
+  border-color: white;
+  margin-left: 10px;
+  margin-right: 10px;
+}  
+
+#ConfirmarCompra {
+  background: linear-gradient(45deg, #e7c633, #ffd700);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 18;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(231, 198, 51, 0.2);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
+    background: linear-gradient(45deg, #ffd700, #e7c633);
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+}

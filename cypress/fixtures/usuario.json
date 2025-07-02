@@ -1,0 +1,11 @@
+{
+  "firstName": "Juan",
+  "lastName": "Pérez",
+  "phone": "123456789",
+  "email": "juan.perez@example.com",
+  "password": "Password123!",
+  "street": "Calle Falsa",
+  "streetNumber": "123",
+  "province": "1",
+  "city": "1"
+}

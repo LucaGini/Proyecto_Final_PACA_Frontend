@@ -1,0 +1,18 @@
+<div class="d-flex flex-wrap">
+  <div class="col-12 col-md-6 py-5 mb-3">
+    <div class="card">
+      <img class="card-img-top" [src]="apiUrl + product.image"  alt="{{ product.name }}">
+    </div>
+  </div>
+
+  <div class="col-12 col-md-6 py-5 mb-3 d-flex align-items-center">
+    <div class="card-body">
+      <h1 class="card-title truncate">{{ product.name }}</h1>
+      <h3 class="card-text truncate">{{ product.description }}</h3>
+      <h2 class="card-text">Precio: ${{ product.price }}</h2>
+      <div class="btn">
+        <button type="submit" class="btn btn-warning"  *ngIf="showDeleteButton()" (click)="addToCart(product)" id="Añadir">Añadir al carrito</button>
+      </div>
+    </div>
+  </div>
+</div>

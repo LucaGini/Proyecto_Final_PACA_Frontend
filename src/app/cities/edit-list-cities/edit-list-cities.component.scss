@@ -1,0 +1,96 @@
+.cities-container {
+    padding: 2rem;
+    background: linear-gradient(45deg, rgba(231, 198, 51, 0.05), rgba(255, 255, 255, 0.1));
+}
+
+.card-body {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 2rem;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(231, 198, 51, 0.1);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    margin-top: 10px;
+    margin-left: 15px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #eee;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        &:focus {
+            outline: none;
+            border-color: #e7c633;
+            box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
+        }
+    }
+}
+
+.example-button-container {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    z-index: 10;
+    background: transparent;
+}
+
+.btn {
+    background: transparent;
+    color: white;
+    border: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+}
+
+.card-text {
+    margin: 0.5rem 0;
+    color: #444;
+    font-size: 1.1rem;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cities-container>div {
+    animation: fadeIn 0.6s ease-out;
+    animation-fill-mode: both;
+
+    @for $i from 1 through 20 {
+        &:nth-child(#{$i}) {
+            animation-delay: #{$i * 0.1}s;
+        }
+    }
+}
