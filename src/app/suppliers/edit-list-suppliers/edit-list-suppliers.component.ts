@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SupplierService } from 'src/app/services/supplier.service';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-edit-list-suppliers',
@@ -11,10 +11,9 @@ import { FormControl, Validators } from '@angular/forms';
   styleUrls: ['./edit-list-suppliers.component.scss']
 })
 export class EditListSuppliersComponent {
-
   suppliers: any[] = [];
 
-    cuitControl = new FormControl('', [
+  cuitControl = new FormControl('', [
     Validators.required,
     Validators.pattern(/^[0-9]{11}$/)
   ]);
@@ -22,7 +21,8 @@ export class EditListSuppliersComponent {
   constructor(
     private supplierService: SupplierService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private utils: UtilsService
   ) {}
 
   ngOnInit() {
@@ -35,43 +35,29 @@ export class EditListSuppliersComponent {
     this.supplierService.findProductsBySupplier(supplier.cuit)
       .subscribe(
         (foundProducts: any) => {
-          if (foundProducts.data && foundProducts.data.length === 0) { 
-            Swal.fire({
-              title: 'Desea eliminar el proveedor',
-              text: 'Esta acción no se puede deshacer',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#e7c633',
-              cancelButtonColor: '#f76666',
-              confirmButtonText: 'Aceptar',
-              cancelButtonText: 'Cancelar'
-            }).then((result) => {
-              if (result.isConfirmed) {
-                this.supplierService.delete(supplier.id).subscribe({
-                  next: res => {
-                    Swal.fire(
-                      'Confirmado',
-                      'La acción ha sido confirmada',
-                      'success'
-                    );
-                    this.suppliers = this.suppliers.filter(s => s.id !== supplier.id);  
-                  },
-                  error: err => {
-                    console.log(err);
-                  }
-                });
-              }
-            });
+          if (foundProducts.data && foundProducts.data.length === 0) {
+            this.utils.showConfirm('Desea eliminar el proveedor', 'Esta acción no se puede deshacer')
+              .then((result) => {
+                if (result.isConfirmed) {
+                  this.supplierService.delete(supplier.id).subscribe({
+                    next: res => {
+                      this.utils.showAlert('success', 'Confirmado', 'La acción ha sido confirmada');
+                      this.suppliers = this.suppliers.filter(s => s.id !== supplier.id);
+                    },
+                    error: err => {
+                      console.log(err);
+                      this.utils.showAlert('error', 'Error', 'No se pudo eliminar el proveedor.');
+                    }
+                  });
+                }
+              });
           } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'No se puede eliminar el proveedor, ya que tiene productos asociados ',
-            });
+            this.utils.showAlert('error', 'Error', 'No se puede eliminar el proveedor, ya que tiene productos asociados.');
           }
         },
         error => {
           console.log(error);
+          this.utils.showAlert('error', 'Error', 'Error al verificar productos asociados.');
         }
       );
   }
@@ -89,83 +75,66 @@ export class EditListSuppliersComponent {
     return /^[0-9]{11}$/.test(cuit);
   }
 
-  save(supplier: any): void {
-    if (!supplier.editBusinessName || !supplier.editEmail || !supplier.editPhone || !supplier.editCuit) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error en el registro',
-        text: 'Debe completar todos los campos.',
-      });
-      return;
-    }
+save(supplier: any): void {
+  const original = {
+    businessName: supplier.businessName,
+    email: supplier.email,
+    phone: supplier.phone,
+    cuit: supplier.cuit
+  };
 
-    if (!this.validateCuit(supplier.editCuit)) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error en el registro',
-        text: 'El CUIT debe tener exactamente 11 caracteres numéricos.',
-      });
-      return;
-    }
+  const updated = {
+    businessName: supplier.editBusinessName,
+    email: supplier.editEmail,
+    phone: supplier.editPhone,
+    cuit: supplier.editCuit
+  };
 
-    if (supplier.businessName !== supplier.editBusinessName || 
-        supplier.email !== supplier.editEmail || 
-        supplier.phone !== supplier.editPhone || 
-        supplier.cuit !== supplier.editCuit) {
-      
-      this.supplierService.findSupplierByCuit(supplier.editCuit)
-        .subscribe({
-          next: (existingsupplier: any) => {
-            if (existingsupplier === null || supplier.cuit === supplier.editCuit) {
-              supplier.cuit = supplier.editCuit;
-              supplier.businessName = supplier.editBusinessName.charAt(0).toUpperCase() + 
-                                    supplier.editBusinessName.slice(1).toLowerCase();
-              supplier.email = supplier.editEmail;
-              supplier.phone = supplier.editPhone;
-              
-              this.supplierService.update(supplier).subscribe({
-                next: (response: any) => {
-                  Swal.fire(
-                    'Proveedor actualizado con éxito!!',
-                    '',
-                    'success'
-                  );
-                  supplier.editing = false;
-                },
-                error: (err: any) => {
-                  console.log(err);
-                  Swal.fire({
-                    icon: 'error',
-                    title: 'Actualización fallida',
-                    text: err.message,
-                  });
-                }
-              });
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'El CUIT ya está registrado',
-              });
-            }
-          },
-          error: (err: any) => {
-            console.log(err);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Error en la verificación del CUIT.',
+  if (!updated.businessName || !updated.email || !updated.phone || !updated.cuit) {
+    this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
+    return;
+  }
+
+  if (!this.utils.validateEmail(updated.email)) {
+    this.utils.showAlert('error', 'Email inválido', 'Ingrese un email válido.');
+    return;
+  }
+
+  if (!this.utils.validateCuit(updated.cuit)) {
+    this.utils.showAlert('error', 'Error en el registro', 'El CUIT debe tener exactamente 11 caracteres numéricos.');
+    return;
+  }
+
+  if (this.utils.hasObjectChanged(original, updated)) {
+    updated.businessName = this.utils.capitalize(updated.businessName ?? '');
+
+    this.supplierService.findSupplierByCuit(updated.cuit)
+      .subscribe({
+        next: (existingSupplier: any) => {
+          if (existingSupplier === null || supplier.cuit === updated.cuit) {
+            this.utils.copyProperties(supplier, updated);
+            this.supplierService.update(supplier).subscribe({
+              next: () => {
+                this.utils.showAlert('success', 'Proveedor actualizado con éxito!!');
+                supplier.editing = false;
+              },
+              error: (err: any) => {
+                console.log(err);
+                this.utils.showAlert('error', 'Actualización fallida', err.message);
+              }
             });
+          } else {
+            this.utils.showAlert('error', 'Error', 'El CUIT ya está registrado');
           }
-        });
-    } else {
-      Swal.fire({
-        icon: 'info',
-        title: 'Sin cambios',
-        text: 'No se realizaron cambios en el proveedor.',
+        },
+        error: (err: any) => {
+          console.log(err);
+          this.utils.showAlert('error', 'Error', 'Error en la verificación del CUIT.');
+        }
       });
-      supplier.editing = false;
-    }
+  } else {
+    this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en el proveedor.');
+    supplier.editing = false;
   }
 }
-
+}
