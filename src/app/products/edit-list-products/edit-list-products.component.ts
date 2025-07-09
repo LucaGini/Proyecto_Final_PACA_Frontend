@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { SupplierService } from 'src/app/services/supplier.service';
 import { FilterProductsSupplierService } from 'src/app/services/filter-products-supplier.service';
 import { environment } from '../../../environments/environment';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-edit-list-products',
@@ -16,58 +16,47 @@ export class EditListProductsComponent {
   products: any[] = [];
   suppliers: any[] = [];
   apiUrl = environment.apiUrl;
-  
-    constructor(
-      private productService: ProductService,
-      private route: ActivatedRoute,
-      private router: Router,
-      private supplierService: SupplierService,
-      private filterProductsSupplierService: FilterProductsSupplierService,
-    ) {}
-  
+
+  constructor(
+    private productService: ProductService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private supplierService: SupplierService,
+    private filterProductsSupplierService: FilterProductsSupplierService,
+    private utils: UtilsService
+  ) {}
+
   ngOnInit() {
     this.getSuppliers();
     this.productService.products$.subscribe((data: any) => {
       this.products = data;
     });
 
-    this.filterProductsSupplierService.supplierSelected$.subscribe(async (cuit: number) => { 
-    await this.supplierService.findProductsBySupplier(cuit).subscribe((data:any) => {
-      this.products = data.data;
-    });
-    });
-    }
-  
-  delete(id: string) {
-    Swal.fire({
-      title: 'Desea eliminar el producto',
-      text: 'Esta acción no se puede deshacer',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#e7c633',
-      cancelButtonColor: '#f76666',
-      confirmButtonText: 'Aceptar',
-      cancelButtonText: 'Cancelar'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.productService.delete(id)
-        .subscribe({
-          next: res => {
-          Swal.fire(
-            'Confirmado',
-            'La acción ha sido confirmada',
-            'success'
-            );
-            this.products = this.products.filter(product => product.id !== id); // lo tuve que agregar para que se actualice la página y no quede el prodcuto que ya había eliminado hasta que se recargue 
-          },
-          error: err => {
-            console.log(err);
-          }
-        });
-      }
+    this.filterProductsSupplierService.supplierSelected$.subscribe(async (cuit: number) => {
+      await this.supplierService.findProductsBySupplier(cuit).subscribe((data: any) => {
+        this.products = data.data;
+      });
     });
   }
-  
+
+  delete(id: string) {
+    this.utils.showConfirm('Desea eliminar el producto', 'Esta acción no se puede deshacer')
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.productService.delete(id).subscribe({
+            next: () => {
+              this.utils.showAlert('success', 'La acción ha sido confirmada');
+              this.products = this.products.filter(product => product.id !== id);
+            },
+            error: err => {
+              console.error(err);
+              this.utils.showAlert('error', 'Error al eliminar el producto', err.message);
+            }
+          });
+        }
+      });
+  }
+
   edit(product: any): void {
     product.editName = product.name;
     product.editPrice = product.price;
@@ -77,91 +66,82 @@ export class EditListProductsComponent {
   }
 
   save(product: any): void {
-    if (!product.editName || !product.editPrice || !product.editStock || !product.editDescription ) { 
-      Swal.fire({
-        icon: 'error',
-        title: 'Error en el registro',
-        text: 'Debe completar todos los campos.',
-      });
-    } else {   
-      if (product.editName !== product.name || product.price !== product.editPrice || product.stock !== product.editStock || product.description !== product.editDescription) {
-        product.editName = product.editName.charAt(0).toUpperCase() + product.editName.slice(1).toLowerCase();
-        this.productService.findProductByName(product.editName)
-        .subscribe(
-          (existingproduct: any) => {
-            if (existingproduct === null || product.name === product.editName ) {
-            product.name = product.editName;
-            product.price = product.editPrice;
-            product.stock = product.editStock;
-            product.description = product.editDescription;
-    
-            this.productService.update(product).subscribe(
-            (response: any) => {
-              Swal.fire(
-              'Producto registrado con éxito!!',
-              '',
-              'success'
-              );
+    const { editName, editPrice, editStock, editDescription } = product;
+
+    if (!this.utils.areValidFields([editName, editPrice, editStock, editDescription])) {
+      this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
+      return;
+    }
+
+    const hasChanged = this.utils.hasObjectChanged(
+      { name: product.name, price: product.price, stock: product.stock, description: product.description },
+      { name: editName, price: editPrice, stock: editStock, description: editDescription }
+    );
+
+    if (!hasChanged) {
+      this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en el producto.');
+      product.editing = false;
+      return;
+    }
+
+    product.editName = this.utils.capitalize(editName);
+
+    this.productService.findProductByName(product.editName).subscribe({
+      next: (existingProduct: any) => {
+        const nameChanged = product.name !== product.editName;
+        if (existingProduct === null || !nameChanged) {
+          // Aplicar cambios al objeto original
+          product.name = product.editName;
+          product.price = editPrice;
+          product.stock = editStock;
+          product.description = editDescription;
+
+          this.productService.update(product).subscribe({
+            next: () => {
+              this.utils.showAlert('success', 'Producto actualizado con éxito');
               product.editing = false;
             },
-            (err: any) => {
-              console.log(err);
-              Swal.fire({
-                icon: 'error',
-                title: 'Registro fallido',
-                text: err.message,
-                });
-              }
-            );
-       
-              } else {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: 'El nombre ya está registrado',
-                });
-              }      
-            },
-            (err: any) => {
-              console.log(err);
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error en la verificación del nombre.',
-              });
+            error: (err: any) => {
+              console.error(err);
+              this.utils.showAlert('error', 'Registro fallido', err.message);
             }
-          );
-      } else {
-        Swal.fire({
-          icon: 'info',
-          title: 'Sin cambios',
-          text: 'No se realizaron cambios en el producto.',
-        });
-        product.editing = false;
+          });
+        } else {
+          this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
+        }
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.utils.showAlert('error', 'Error', 'Error en la verificación del nombre.');
       }
-    }
+    });
   }
 
-  getSuppliers(){
-    this.supplierService.findAll().subscribe((data:any)=>{
-      this.suppliers = data.data;
-    }, (error)=>{
-      console.error('Error fetching suppliers', error);
+  getSuppliers() {
+    this.supplierService.findAll().subscribe({
+      next: (data: any) => {
+        this.suppliers = data.data;
+      },
+      error: (error) => {
+        console.error('Error al obtener proveedores', error);
+        this.utils.showAlert('error', 'Error', 'No se pudieron cargar los proveedores.');
+      }
     });
   }
 
   onSupplierButtonClick(cuit: number) {
-    this.filterProductsSupplierService.emitSupplierSelected(cuit);  // Emite el evento
+    this.filterProductsSupplierService.emitSupplierSelected(cuit);
   }
 
-  onSupplierChange(event: any){
+  onSupplierChange(event: any) {
     const selectedCuit = event.target.value;
-    if (selectedCuit === ""){
-      this.productService.findAll().subscribe((data:any) => {this.products = data.data;});
-    } else{
+    if (selectedCuit === "") {
+      this.productService.findAll().subscribe((data: any) => {
+        this.products = data.data;
+      });
+    } else {
       const cuitNumber = parseInt(selectedCuit);
       this.onSupplierButtonClick(cuitNumber);
     }
   }
 }
-  
