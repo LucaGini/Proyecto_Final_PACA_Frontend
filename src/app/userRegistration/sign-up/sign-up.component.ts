@@ -1,126 +1,122 @@
 import { Component } from '@angular/core';
-import Swal from 'sweetalert2';
 import { Router } from "@angular/router";
 import { NgForm } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { CityService } from '../../services/city.service';
 import { ProvinceService } from '../../services/province.service';
+import { UtilsService } from '../../services/utils.service';
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss']
 })
-
 export class SignUpComponent {
   cities: any[] = [];
   provinces: any[] = [];
   selectedProvince: string = '';	
   password: string = '';
   showPassword: boolean = false;
-  
+
   constructor(
-  private router: Router,
-  private userService: UserService,
-  private cityService: CityService,
-  private provinceService :ProvinceService,
+    private router: Router,
+    private userService: UserService,
+    private cityService: CityService,
+    private provinceService: ProvinceService,
+    private utils: UtilsService
   ) {}
-  
-ngOnInit(): void {
-  this.getCities();
-  this.getProvinces();
-}
 
-getProvinces() {
-  this.provinceService.findAll().subscribe({
-    next: (data: any[]) => {
-      this.provinces = Array.isArray(data) ? data : [];
-    },
-    error: (error) => {
-      console.error('Error fetching provinces', error);
-      this.provinces = [];
-    }
-  });
-}
+  ngOnInit(): void {
+    this.getProvinces();
+  }
 
-getCities() {
-  if (this.selectedProvince) {
-    this.provinceService.findCitiesByProvince(this.selectedProvince).subscribe({
+  getProvinces() {
+    this.provinceService.findAll().subscribe({
       next: (data: any[]) => {
-        this.cities = Array.isArray(data) ? data : [];
+        this.provinces = Array.isArray(data) ? data : [];
       },
-      error: (err) => {
-        console.error('Error fetching cities', err);
-        this.cities = [];
+      error: (error) => {
+        console.error('Error fetching provinces', error);
+        this.provinces = [];
       }
     });
-  } else {
-    this.cities = [];
   }
-}
 
-signUp(signUpForm: NgForm) {  
-  const newUser = signUpForm.value;
-if ( !newUser.email || !newUser.password || !newUser.firstName || !newUser.lastName || !newUser.phone || !newUser.city ){
-  Swal.fire({
-    icon: 'error',
-    title: 'Error al registrarse',
-    text: 'Debe completar todos los campos obligatorios (*).',});}
-else if (!this.validatePassword(newUser.password)) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Contraseña inválida',
-      text: 'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, un número y un carácter especial.',
-    });
-  } else {
-    newUser.email = newUser.email.toLowerCase();
-    this.userService.findUserByEmail(newUser.email)
-    .subscribe(
-      (existingUser: any) => {
-      if (existingUser === null) {
-        newUser.privilege = "cliente";
-        this.userService.signUp(newUser).subscribe(
-        (response: any) => {
-        console.log(response);
-        Swal.fire(
-          'Usuario registrado con éxito!!',
-          '',
-          'success'
-        );
-        this.router.navigate(['/UserRegistration/login']);
+  getCities() {
+    if (this.selectedProvince) {
+      this.provinceService.findCitiesByProvince(this.selectedProvince).subscribe({
+        next: (data: any[]) => {
+          this.cities = Array.isArray(data) ? data : [];
         },
-        (err: any) => {
-        console.log(err);
-        Swal.fire({
-          icon: 'error',
-          title: 'Registro fallido',
-          text: err.message,
-          });
+        error: (err) => {
+          console.error('Error fetching cities', err);
+          this.cities = [];
         }
-        );
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'El email ya está registrado',
-          });
-        }
-      },
-      (err: any) => {
-      console.log(err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Error en la verificación del mail.',
       });
+    } else {
+      this.cities = [];
     }
-    );
-  }
   }
 
-  validatePassword(password: string): boolean {
-    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*._-])[A-Za-z\d!@#$%^&*._-]{8,}$/;
-    return regex.test(password);
+  signUp(signUpForm: NgForm) {
+    const newUser = signUpForm.value;
+
+    const camposRequeridos = [
+      newUser.email,
+      newUser.password,
+      newUser.firstName,
+      newUser.lastName,
+      newUser.phone,
+      newUser.city
+    ];
+
+    if (!this.utils.areValidFields(camposRequeridos)) {
+      this.utils.showAlert('error', 'Error al registrarse', 'Debe completar todos los campos obligatorios (*).');
+      return;
+    }
+
+    if (!this.utils.validateEmail(newUser.email)) {
+      this.utils.showAlert('error', 'Email inválido', 'Ingrese un email válido.');
+      return;
+    }
+
+    if (!this.utils.validatePassword(newUser.password)) {
+      this.utils.showAlert(
+        'error',
+        'Contraseña inválida',
+        'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, un número y un carácter especial.'
+      );
+      return;
+    }
+
+    newUser.email = newUser.email.toLowerCase();
+    newUser.firstName = this.utils.capitalize(newUser.firstName ?? '');
+    newUser.lastName = this.utils.capitalize(newUser.lastName ?? '');
+
+    this.userService.findUserByEmail(newUser.email)
+      .subscribe({
+        next: (existingUser: any) => {
+          if (existingUser === null) {
+            newUser.privilege = "cliente";
+            this.userService.signUp(newUser).subscribe({
+              next: () => {
+                this.utils.showAlert('success', 'Usuario registrado con éxito!!', '');
+                this.router.navigate(['/UserRegistration/login']);
+              },
+              error: (err: any) => {
+                console.log(err);
+                this.utils.showAlert('error', 'Registro fallido', err.message);
+              }
+            });
+          } else {
+            this.utils.showAlert('error', 'Error', 'El email ya está registrado');
+          }
+        },
+        error: (err: any) => {
+          console.log(err);
+          this.utils.showAlert('error', 'Error', 'Error en la verificación del mail.');
+        }
+      });
   }
 
   togglePasswordVisibility(): void {
