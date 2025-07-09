@@ -4,12 +4,13 @@ import { CartService } from '../services/cart.service';
 import { ProductService } from '../services/product.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
 import { CityService } from '../services/city.service';
 import { OrderService } from '../services/order.service';
+import { UtilsService } from '../services/utils.service';
+
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -20,9 +21,9 @@ export class CartComponent implements OnInit {
   items: any[] = [];
   totalAmount: number = 0; 
   private destroy$ = new Subject<void>();
-  showConfirmButton: boolean = false
+  showConfirmButton: boolean = false;
   apiUrl = environment.apiUrl;
-  userData: any = null; // Datos del usuario logueado
+  userData: any = null;
   cityCharge: number = 0;
 
   constructor(
@@ -32,21 +33,21 @@ export class CartComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private cityService: CityService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private utils: UtilsService
   ) {}
+
   ngOnInit() {
     this.items = this.cartService.getItems();
     this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
-  
-    // Cambios en el carrito
-    this.cartService.itemsChanged$
-  .pipe(takeUntil(this.destroy$))
-  .subscribe((updatedItems: any[]) => {
-    this.items = updatedItems;
-    this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
-  });
 
-  
+    this.cartService.itemsChanged$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((updatedItems: any[]) => {
+        this.items = updatedItems;
+        this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+      });
+
     this.showConfirmButton = this.cartService.isOrderFinished();
     this.loadUserData();
   }
@@ -56,12 +57,6 @@ export class CartComponent implements OnInit {
     this.destroy$.complete();
   }
 
-  initializeCart() {
-    this.items.forEach(item => {
-      item.quantity = item.quantity || 1;
-      item.totalAmount = 0; 
-    });
-  }
   verifyStock(item: any, operation: string) {
     const newQuantity = operation === 'compra' ? item.quantity + 1 : item.quantity - 1; 
     if (newQuantity < 1) {
@@ -70,91 +65,62 @@ export class CartComponent implements OnInit {
     this.productService.verifyStock(item.id, newQuantity).subscribe({
       next: () => {
         item.quantity = newQuantity;
-        this.totalAmount =  this.cartService.calculateTotal(this.cityCharge)
+        this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
       },
-      error: (err) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Lo sentimos',
-          text: `No hay stock suficiente para el producto ${item.name}`,
-        });
+      error: () => {
+        this.utils.showAlert('error', 'Lo sentimos', `No hay stock suficiente para el producto ${item.name}`);
       }
     });
   }
   
   removeItem(item: any) {  
     this.cartService.removeFromCart(item);
-    this.totalAmount =  this.cartService.calculateTotal(this.cityCharge)
-    
+    this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
   }
+
   confirmPurchase() {
-    if (!this.userData) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Acción no permitida',
-        text: 'Debes iniciar sesión para confirmar tu compra.',
-      });
+    if (!this.userData) { this.utils.showAlert('error', 'Acción no permitida', 'Debes iniciar sesión para confirmar tu compra.'); 
       this.router.navigate(['UserRegistration/login']);
       return;
     }
-  
-    Swal.fire({
-      title: '¿Desea enviar la compra a su dirección registrada?',
-      text: `Dirección registrada: ${this.userData.street} ${this.userData.streetNumber}`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, usar esta dirección',
-      cancelButtonText: 'No, quiero cambiarla',
-      confirmButtonColor: '#e7c633',
-      cancelButtonColor: '#f76666',
-    }).then((result) => {
+
+    this.utils.showConfirm( '¿Desea enviar la compra a su dirección registrada?', `Dirección registrada: ${this.userData.street} ${this.userData.streetNumber}`
+    ).then((result) => {
       if (result.isConfirmed) {
         this.createOrder(this.items);
       } else {
-        // Si elige cambiar la dirección, redirige al componente de edición de datos
-        Swal.fire({
-          icon: 'info',
-          title: 'Redirigiendo',
-          text: 'Por favor, actualice su dirección.',
-          timer: 2000,
-          showConfirmButton: false
-        }).then(() => {
+        this.utils.showAlert('info', 'Redirigiendo', 'Por favor, actualice su dirección.');
+        setTimeout(() => {
           this.router.navigate(['UserInformation']);
-        });
+        }, 2000);
       }
     });
   }
+
   createOrder(items: any[]) {
-    // ACA SE VALIDA QUE HAYA STOCK SUFICIENTE
     let stockErrorProducts: string[] = [];
     const verifyStockPromises = items.map((item) =>
       this.productService.verifyStock(item.id, item.quantity).toPromise().catch(() => {
         stockErrorProducts.push(item.name);
       })
     );
-  
+
     Promise.all(verifyStockPromises)
       .then(() => {
         if (stockErrorProducts.length > 0) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Stock insuficiente',
-            text: `No hay suficiente stock para los siguientes productos: ${stockErrorProducts.join(', ')}`,
-          });
+          this.utils.showAlert('error', 'Stock insuficiente', `No hay suficiente stock para: ${stockErrorProducts.join(', ')}`);
           return;
         }
+
         const orderData = {
           userId: this.userData.id, 
           orderItems: this.cartService.getItemsOrder(), 
           total: this.cartService.calculateTotal(this.cityCharge)
         };
+
         this.orderService.create(orderData).subscribe({
           next: () => {
-            Swal.fire({
-              icon: 'success',
-              title: 'Muchas gracias por su compra',
-              text: `La compra se ha concretado con éxito.`,
-            });
+            this.utils.showAlert('success', 'Muchas gracias por su compra', 'La compra se ha concretado con éxito.');
             this.cartService.clearCart();
             this.items = [];
             this.totalAmount = 0;
@@ -163,53 +129,44 @@ export class CartComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error creando la orden:', err);
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Ocurrió un error al procesar la orden.',
-            });
+            this.utils.showAlert('error', 'Error', 'Ocurrió un error al procesar la orden.');
           },
         });
       })
       .catch((error) => {
         console.error('Error verificando stock:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Ocurrió un error al verificar el stock.',
-        });
+        this.utils.showAlert('error', 'Error', 'Ocurrió un error al verificar el stock.');
       });
   }
-  
-loadUserData(): void {
-  const user = this.authService.getLoggedUser();
 
-  if (user) {
-    this.userService.findUserByEmail(user.email).subscribe({
-      next: (data) => {
-        this.userData = data.data;
+  loadUserData(): void {
+    const user = this.authService.getLoggedUser();
 
-        this.cityService.findOne(this.userData.city).subscribe({
-          next: (city) => {
-            if (city && city.data.surcharge !== undefined) {
-              this.cityCharge = city.data.surcharge;
-              this.totalAmount =  this.cartService.calculateTotal(this.cityCharge)
-              
-            } else {
-              console.error("City no contiene un surcharge válido:", city);
-            }
-          },
-          error: (err) => {
-            console.error("Error cargando datos de la ciudad:", err);
-          },
-        });
-      },
-      error: (err) => {
-        console.error("Error al buscar usuario por email:", err);
-      },
-    });
-  } else {
-    console.error("No se encontró un usuario logueado.");
+    if (user) {
+      this.userService.findUserByEmail(user.email).subscribe({
+        next: (data) => {
+          this.userData = data.data;
+
+          this.cityService.findOne(this.userData.city).subscribe({
+            next: (city) => {
+              if (city && city.data.surcharge !== undefined) {
+                this.cityCharge = city.data.surcharge;
+                this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+              } else {
+                console.error("City no contiene un surcharge válido:", city);
+              }
+            },
+            error: (err) => {
+              console.error("Error cargando datos de la ciudad:", err);
+            },
+          });
+        },
+        error: (err) => {
+          console.error("Error al buscar usuario por email:", err);
+        },
+      });
+    } else {
+      console.error("No se encontró un usuario logueado.");
+    }
   }
-}
 }
