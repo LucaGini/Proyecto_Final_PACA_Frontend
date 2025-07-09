@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { UtilsService } from '../services/utils.service';
 
 interface OrderItem {
   product: {
@@ -48,6 +49,7 @@ export class OrdersHistoryComponent implements OnInit {
     private orderService: OrderService,
     private productService: ProductService,
     private authService: AuthService,
+    private utils: UtilsService
   ) {}
 
   ngOnInit() {
@@ -57,11 +59,7 @@ export class OrdersHistoryComponent implements OnInit {
 loadOrders() {
   const user = this.authService.getLoggedUser();
   if (!user?.email) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Sesión no iniciada'
-    });
+    this.utils.showAlert('error', 'Error', 'Sesión no iniciada');
     return;
   }
 
@@ -97,11 +95,7 @@ loadOrders() {
     },
     error: (error) => {
       console.error('Error loading orders:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No se pudieron cargar las órdenes'
-      });
+      this.utils.showAlert('error', 'Error', 'No se pudieron cargar las órdenes');
     }
   });
 }
@@ -138,16 +132,8 @@ loadOrders() {
     this.filteredOrders = filtered;
   }
   cancelOrder(order: Order) {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'Esta acción cancelará la orden y no se podrá revertir.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Sí, cancelar orden',
-      cancelButtonText: 'Cancelar',
-      confirmButtonColor: '#e7c633',
-      cancelButtonColor: '#f76666',
-    }).then((result) => {
+    this.utils.showConfirm('¿Estás seguro?', 'Esta acción cancelará la orden y no se podrá revertir.')
+    .then((result) => {
       if (result.isConfirmed) {
         const updatedOrder = {
           ...order,
@@ -158,7 +144,7 @@ loadOrders() {
   
         this.orderService.update(updatedOrder).subscribe({
           next: () => {
-            Swal.fire('Cancelado', 'La orden ha sido cancelada con éxito', 'success');
+            this.utils.showAlert('success', 'Cancelado', 'La orden ha sido cancelada con éxito');
             order.status = 'cancelled';
             order.updatedDate = new Date();
             this.productService.loadProducts();  
@@ -169,11 +155,10 @@ loadOrders() {
             if (error.status === 400 && error.error?.message) {
               errorMessage = error.error.message; // esto es lo que dice el back
          }
-         Swal.fire('Error', errorMessage, 'error');
+         this.utils.showAlert('error', 'Error', errorMessage);
           }
         });
       }
     });
   }
-  
-}  
+}
