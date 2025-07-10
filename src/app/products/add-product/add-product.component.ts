@@ -4,7 +4,7 @@ import { ProductService } from 'src/app/services/product.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { SupplierService } from 'src/app/services/supplier.service';
 import { Router } from "@angular/router";
-import { UtilsService } from 'src/app/services/utils.service';
+import { UtilsService } from 'src/app/services/utils.service'; 
 
 @Component({
   selector: 'app-add-product',
@@ -23,7 +23,7 @@ export class AddProductComponent implements OnInit {
     private router: Router,
     private categoryService: CategoryService,
     private supplierService: SupplierService,
-    private utils: UtilsService
+    private utils: UtilsService 
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +35,6 @@ export class AddProductComponent implements OnInit {
     const inputElement = event.target as HTMLInputElement;
     if (inputElement.files && inputElement.files[0]) {
       this.selectedImage = inputElement.files[0];
-
       const reader = new FileReader();
       reader.onload = () => {
         this.imagePreviewUrl = reader.result;
@@ -43,7 +42,7 @@ export class AddProductComponent implements OnInit {
       reader.readAsDataURL(this.selectedImage);
     } else {
       console.log('No se seleccionó ninguna imagen');
-    }
+    }////
   }
 
   getCategories() {
@@ -52,8 +51,7 @@ export class AddProductComponent implements OnInit {
         this.categories = data.data;
       },
       error: (error) => {
-        console.error('Error al obtener categorías', error);
-        this.utils.showAlert('error', 'Error', 'No se pudieron cargar las categorías.');
+        console.error('Error fetching categories', error);
       }
     });
   }
@@ -64,8 +62,7 @@ export class AddProductComponent implements OnInit {
         this.suppliers = data.data;
       },
       error: (error) => {
-        console.error('Error al obtener proveedores', error);
-        this.utils.showAlert('error', 'Error', 'No se pudieron cargar los proveedores.');
+        console.error('Error fetching suppliers', error);
       }
     });
   }
@@ -73,13 +70,21 @@ export class AddProductComponent implements OnInit {
   add(addForm: NgForm) {
     const newProduct = addForm.value;
 
-    if (!this.utils.areValidFields([
-      newProduct.name, newProduct.price, newProduct.stock,
-      newProduct.supplierId, newProduct.categoryId
-    ])) {
-      this.utils.showAlert('error', 'Error', 'Por favor, complete todos los campos requeridos.');
+    const camposObligatorios = [
+      newProduct.name,
+      newProduct.description,
+      newProduct.price,
+      newProduct.stock,
+      newProduct.category,
+      newProduct.supplier
+    ];
+
+    if (!this.utils.areValidFields(camposObligatorios)) {
+      this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
       return;
     }
+
+    newProduct.name = this.utils.capitalize(newProduct.name ?? '');
 
     const formData = new FormData();
 
@@ -93,14 +98,15 @@ export class AddProductComponent implements OnInit {
 
     this.productService.add(formData).subscribe({
       next: () => {
-        this.utils.showAlert('success', 'Producto registrado con éxito');
+        this.utils.showAlert('success', 'Éxito', 'Producto registrado con éxito');
         addForm.resetForm();
         this.router.navigate(['AdminProducts']);
       },
       error: (error: any) => {
         console.error('Error al agregar el producto:', error);
-        this.utils.showAlert('error', 'Error', 'No se pudo registrar el producto porque ya existe o faltan campos.');
+        this.utils.showAlert('error', 'Error', 'No se pudo registrar el producto porque ya existe o faltan rellenar campos');
       }
     });
   }
+
 }

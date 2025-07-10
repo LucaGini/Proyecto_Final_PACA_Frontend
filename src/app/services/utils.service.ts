@@ -54,8 +54,9 @@ export class UtilsService {
     return emailRegex.test(email);
   }
 
-  isValidStock(total: number, minimum: number): boolean {
-    return minimum <= total;
+  validatePhone(phone: string): boolean {
+    const phoneRegex = /^\d{10,15}$/; // Ajusta el rango según tus necesidades
+    return phoneRegex.test(phone);
   }
 
   markAllControlsAsTouched(formGroup: { [key: string]: AbstractControl }) {
@@ -63,10 +64,9 @@ export class UtilsService {
   }
 
   // ALERTAS//
-  showAlert(icon: 'success' | 'error' | 'info' | 'warning', title: string, text = ''): void {
-    Swal.fire({ icon, title, text });
+  showAlert(icon: 'success' | 'error' | 'info' | 'warning', title: string, text = ''): Promise<any> {
+    return  Swal.fire({ icon, title, text });
   }
-
   showConfirm(title: string, text: string): Promise<any> {
     return Swal.fire({
       title,

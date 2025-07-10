@@ -67,6 +67,7 @@ export class SignUpComponent {
       newUser.firstName,
       newUser.lastName,
       newUser.phone,
+      newUser.streetNumber,
       newUser.city
     ];
 
@@ -81,11 +82,14 @@ export class SignUpComponent {
     }
 
     if (!this.utils.validatePassword(newUser.password)) {
-      this.utils.showAlert(
-        'error',
-        'Contraseña inválida',
+      this.utils.showAlert( 'error', 'Contraseña inválida', 
         'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, un número y un carácter especial.'
       );
+      return;
+    }
+
+    if (!this.utils.validatePhone(newUser.phone)) {
+      this.utils.showAlert('error', 'Telefono inválido', 'Por favor ingrese un telefono válido');
       return;
     }
 

@@ -44,13 +44,19 @@ export class AddCityComponent {
   add(addForm: NgForm) {
     const newCity = addForm.value;
 
-    // Validaciones básicas
-    if (!this.utils.areValidFields([newCity.name, newCity.postCode, newCity.provinceId])) {
-      this.utils.showAlert('error', 'Error', 'Debe completar todos los campos obligatorios.');
+    const camposObligatorios = [
+      newCity.name,
+      newCity.postCode,
+      newCity.surcharge,
+      newCity.province
+    ];
+
+    if (!this.utils.areValidFields(camposObligatorios)) {
+      this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
       return;
     }
 
-    newCity.name = this.utils.capitalize(newCity.name);
+    newCity.name = this.utils.capitalize(newCity.name ?? '');
 
     this.cityService.findCityByPostCode(newCity.postCode).subscribe({
       next: (existingCity: any) => {
