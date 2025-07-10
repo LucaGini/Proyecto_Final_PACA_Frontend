@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CategoryService } from 'src/app/services/category.service';
 import { Router } from "@angular/router";
 import { NgForm } from '@angular/forms';
-import { UtilsService } from 'src/app/services/utils.service'; 
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-add-category',
@@ -14,7 +14,7 @@ export class AddCategoryComponent {
   constructor(
     private categoryService: CategoryService,
     private router: Router,
-    private utils: UtilsService 
+    private utils: UtilsService
   ) {}
 
   add(addForm: NgForm) {
@@ -30,7 +30,7 @@ export class AddCategoryComponent {
       return;
     }
 
-    this.utils.capitalize(newCategory.name); 
+    newCategory.name = this.utils.capitalize(newCategory.name);
     this.categoryService.findCategoryByName(newCategory.name)
       .subscribe({
         next: (existingCategory: any) => {

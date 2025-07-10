@@ -11,6 +11,6 @@ describe('UtilsService', () => {
   });
 
   it('should be created', () => {
-    expect(service).toBeTruthy();
+    (window as any).expect(!!service).toBe(true);
   });
 });
