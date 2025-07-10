@@ -4,7 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
-import { UtilsService } from 'src/app/services/utils.service'; // ✅ agregado
+import { UtilsService } from 'src/app/services/utils.service'; 
 
 @Component({
   selector: 'app-reset-password',
@@ -22,7 +22,7 @@ export class ResetPasswordComponent {
     private formbuilder: FormBuilder,
     private loginService: LoginService,
     private userService: UserService,
-    private utils: UtilsService // ✅ inyectado
+    private utils: UtilsService 
   ) {}
 
   get email() {
@@ -61,7 +61,7 @@ export class ResetPasswordComponent {
         }
       });
     } else {
-      this.utils.markAllControlsAsTouched(this.resetForm.controls); // ✅ usando utils
+      this.utils.markAllControlsAsTouched(this.resetForm.controls); 
       this.utils.showAlert('error', 'Campo incompleto', 'Por favor ingrese un email válido.');
     }
   }

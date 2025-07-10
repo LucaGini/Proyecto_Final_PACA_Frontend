@@ -147,8 +147,8 @@ export class UserInformationComponent implements OnInit {
       const updatedUser = {
         id: this.userData.id || this.userData._id,
         email: this.userForm.value.email.toLowerCase(),
-        firstName: this.userForm.value.firstName,
-        lastName: this.userForm.value.lastName,
+        firstName: this.utils.capitalize(this.userForm.value.firstName),
+        lastName: this.utils.capitalize(this.userForm.value.lastName),
         phone: this.userForm.value.phone,
         street: this.userForm.value.street,
         streetNumber: String(this.userForm.value.streetNumber),

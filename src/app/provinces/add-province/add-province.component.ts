@@ -25,6 +25,11 @@ export class AddProvinceComponent {
       return;
     }
 
+    if (!this.utils.areValidFields(newProvince.name)) {
+      this.utils.showAlert('error', 'Error', 'Debe completar todos los campos.');
+      return;
+    }
+
     newProvince.name = this.utils.capitalize(newProvince.name);
 
     this.provinceService.findProvinceByName(newProvince.name)

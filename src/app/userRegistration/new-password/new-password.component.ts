@@ -23,7 +23,7 @@ export class NewPasswordComponent implements OnInit {
     private userService: UserService,
     private router: Router,
     private formbuilder: FormBuilder,
-    private utils: UtilsService // ✅ inyectado
+    private utils: UtilsService 
   ) {}
 
   get password() { return this.resetPasswordForm.controls.password; }

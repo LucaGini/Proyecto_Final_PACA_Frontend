@@ -76,37 +76,42 @@ export class EditListProvincesComponent implements OnInit {
   }
 
   save(province: Province): void {
+    const original = { name: province.name };
+    const updated = { name: province.editName };
+
     if (!this.utils.isValid(province.editName ?? '')) {
       this.utils.showAlert('error', 'Error en el registro', 'Debe completar el campo.');
-    } else {
-      if (province.editName !== province.name) {
-        province.name = this.utils.capitalize(province.editName ?? '');
-        this.provinceService.findProvinceByName(province.name).subscribe(
-          (existingProvince: any) => {
-            if (existingProvince === null) {
-              this.provinceService.update(province).subscribe(
-                (response: any) => {
-                  console.log(response);
-                  this.utils.showAlert('success', 'Provincia registrada con éxito!!');
-                  province.editing = false;
-                },
-                (err: any) => {
-                  console.log(err);
-                  this.utils.showAlert('error', 'Registro fallido', err.message);
-                }
-              );
-            } else {
-              this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
-            }
-          },
-          (err: any) => {
-            this.utils.showAlert('error', 'Error', 'Error en la verificación del nombre.');
+      return;
+    }
+
+    updated.name = this.utils.capitalize(updated.name ?? '');
+
+    if (this.utils.hasObjectChanged(original, updated)) {
+      this.provinceService.findProvinceByName(updated.name).subscribe(
+        (existingProvince: any) => {
+          if (existingProvince === null || province.name === updated.name) {
+            this.utils.copyProperties(province, updated);
+            this.provinceService.update(province).subscribe(
+              (response: any) => {
+                this.utils.showAlert('success', 'Provincia registrada con éxito!!');
+                province.editing = false;
+              },
+              (err: any) => {
+                console.log(err);
+                this.utils.showAlert('error', 'Registro fallido', err.message);
+              }
+            );
+          } else {
+            this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
           }
-        );
-      } else {
-        this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en la provincia.');
-        province.editing = false;
-      }
+        },
+        (err: any) => {
+          this.utils.showAlert('error', 'Error', 'Error en la verificación del nombre.');
+        }
+      );
+    } else {
+      this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en la provincia.');
+      province.editing = false;
     }
   }
 }

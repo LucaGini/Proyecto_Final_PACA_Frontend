@@ -71,6 +71,10 @@ export class EditListCategoriesComponent {
     description: category.editDescription
   };
   
+  if (!this.utils.areValidFields([category.editName, category.editDescription])) {
+  this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
+  return;
+}
   if (this.utils.hasObjectChanged(original, updated)) {
     category.editName = this.utils.capitalize(category.editName ?? '');
 

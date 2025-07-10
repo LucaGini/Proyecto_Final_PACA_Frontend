@@ -80,7 +80,7 @@ export class EditListCitiesComponent {
     if (!updated.name || !updated.postCode || updated.surcharge == null) {
       this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
       return;
-    } /// se elimina si se implementa lo de categorías en el html
+    } 
 
     if (this.utils.hasObjectChanged(original, updated)) {
       updated.name = this.utils.capitalize(updated.name ?? '');

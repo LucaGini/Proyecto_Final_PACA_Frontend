@@ -20,6 +20,11 @@ export class AddCategoryComponent {
   add(addForm: NgForm) {
     const newCategory = addForm.value;
 
+    if (!this.utils.areValidFields([newCategory.name, newCategory.description])) {
+      this.utils.showAlert('error', 'Error', 'Debe completar todos los campos.');
+    return;
+  }
+
     if (!this.utils.isValid(newCategory.name)) {
       this.utils.showAlert('error', 'Error', 'Debe ingresar un nombre válido.');
       return;

@@ -90,7 +90,7 @@ save(supplier: any): void {
     cuit: supplier.editCuit
   };
 
-  if (!updated.businessName || !updated.email || !updated.phone || !updated.cuit) {
+  if (!this.utils.areValidFields([supplier.editBusinessName, supplier.editEmail, supplier.editPhone, supplier.editCuit])) {
     this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
     return;
   }
