@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ProvinceService } from 'src/app/services/province.service';
-import Swal from 'sweetalert2';
 import { Router } from "@angular/router";
 import { NgForm } from '@angular/forms';
+import { UtilsService } from 'src/app/services/utils.service'; 
 
 @Component({
   selector: 'app-add-province',
@@ -10,59 +10,51 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./add-province.component.scss']
 })
 export class AddProvinceComponent {
+
   constructor(
     private provinceService: ProvinceService,
     private router: Router,
+    private utils: UtilsService 
   ) {}
 
-  add(addForm: NgForm) {  
+  add(addForm: NgForm) {
     const newProvince = addForm.value;
-    newProvince.name = newProvince.name.charAt(0).toUpperCase() + newProvince.name.slice(1).toLowerCase();
-      this.provinceService.findProvinceByName(newProvince.name)
-      .subscribe(
-        (existingProvince: any) => {
-          if (existingProvince === null) {
-          this.provinceService.add(newProvince).subscribe(
-          (response: any) => {
-            console.log(response);
-            Swal.fire(
-            'Provincia registrada con éxito!!',
-            '',
-            'success'
-            );
-            addForm.resetForm(); 
-            this.router.navigate(['AdminProvinces']);
-          },
-          (err: any) => {
-            console.log(err);
-            Swal.fire({
-              icon: 'error',
-              title: 'Registro fallido',
-              text: err.message,
-              });
-            }
-          );
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'El nombre ya está registrado',
-          });
-        }      
-      },
-      (err: any) => {
-        console.log(err);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'Error en la verificación del nombre.',
-          });
-        }
-      );
-      }
+
+    if (!this.utils.isValid(newProvince.name)) {
+      this.utils.showAlert('error', 'Error', 'Debe ingresar un nombre válido.');
+      return;
     }
 
-  
-  
-  
-   
+    if (!this.utils.areValidFields(newProvince.name)) {
+      this.utils.showAlert('error', 'Error', 'Debe completar todos los campos.');
+      return;
+    }
+
+    newProvince.name = this.utils.capitalize(newProvince.name);
+
+    this.provinceService.findProvinceByName(newProvince.name)
+      .subscribe({
+        next: (existingProvince: any) => {
+          if (existingProvince === null) {
+            this.provinceService.add(newProvince).subscribe({
+              next: () => {
+                this.utils.showAlert('success', 'Provincia registrada con éxito!!');
+                addForm.resetForm();
+                this.router.navigate(['AdminProvinces']);
+              },
+              error: (err: any) => {
+                console.error(err);
+                this.utils.showAlert('error', 'Registro fallido', err.message);
+              }
+            });
+          } else {
+            this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
+          }
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.utils.showAlert('error', 'Error', 'Error en la verificación del nombre.');
+        }
+      });
+  }
+}

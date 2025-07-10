@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CategoryService } from 'src/app/services/category.service';
-import Swal from 'sweetalert2';
 import { Router } from "@angular/router";
 import { NgForm } from '@angular/forms';
-  
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-add-category',
@@ -11,51 +10,49 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./add-category.component.scss']
 })
 export class AddCategoryComponent {
+
   constructor(
     private categoryService: CategoryService,
     private router: Router,
+    private utils: UtilsService
   ) {}
-    
-add(addForm: NgForm) {  
-  const newCategory = addForm.value;
-  newCategory.name = newCategory.name.toLowerCase();
-  this.categoryService.findCategoryByName(newCategory.name)
-  .subscribe(
-    (existingCategory: any) => {
-      if (existingCategory === null) {
-        this.categoryService.add(newCategory).subscribe(
-        (response: any) => {
-          Swal.fire(
-          'Categoría registrada con éxito!!',
-          '',
-          'success'
-          )
-          addForm.resetForm();
-          this.router.navigate(['AdminCategories']);
-        },
-        (err: any) => {
-          Swal.fire({
-            icon: 'error',
-            title: 'Registro fallido',
-            text: err.message,
-            });
-          }
-        );
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'El nombre ya está registrado',
-        });
-      }      
-    },
-    (err: any) => {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Error en la verificación del nombre.',
-        });
-      }
-    );
-    }
+
+  add(addForm: NgForm) {
+    const newCategory = addForm.value;
+
+    if (!this.utils.areValidFields([newCategory.name, newCategory.description])) {
+      this.utils.showAlert('error', 'Error', 'Debe completar todos los campos.');
+    return;
   }
+
+    if (!this.utils.isValid(newCategory.name)) {
+      this.utils.showAlert('error', 'Error', 'Debe ingresar un nombre válido.');
+      return;
+    }
+
+    newCategory.name = this.utils.capitalize(newCategory.name);
+    this.categoryService.findCategoryByName(newCategory.name)
+      .subscribe({
+        next: (existingCategory: any) => {
+          if (existingCategory === null) {
+            this.categoryService.add(newCategory).subscribe({
+              next: () => {
+                this.utils.showAlert('success', 'Categoría registrada con éxito!!');
+                addForm.resetForm();
+                this.router.navigate(['AdminCategories']);
+              },
+              error: (err: any) => {
+                this.utils.showAlert('error', 'Registro fallido', err.message);
+              }
+            });
+          } else {
+            this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
+          }
+        },
+        error: (err: any) => {
+          console.error('Error al verificar nombre:', err);
+          this.utils.showAlert('error', 'Error', 'Error en la verificación del nombre.');
+        }
+      });
+  }
+}

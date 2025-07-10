@@ -1,23 +1,23 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CityService } from 'src/app/services/city.service';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
-
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-edit-list-cities',
   templateUrl: './edit-list-cities.component.html',
   styleUrls: ['./edit-list-cities.component.scss']
 })
-export class EditListCitiesComponent {  
-  
+export class EditListCitiesComponent {
+
   cities: any[] = [];
 
   constructor(
     private cityService: CityService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private utils: UtilsService
   ) {}
 
   ngOnInit() {
@@ -26,54 +26,36 @@ export class EditListCitiesComponent {
     });
   }
 
-  delete(city: any): void { 
-      this.cityService.findUsersByCity(city.postCode)
-        .subscribe(
-          (foundusers: any) => {
-            if (foundusers.data && foundusers.data.length === 0) { 
-              Swal.fire({
-                title: 'Desea eliminar la ciudad',
-                text: 'Esta acción no se puede deshacer',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#e7c633',
-                cancelButtonColor: '#f76666',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar'
-              }).then((result) => {
+  delete(city: any): void {
+    this.cityService.findUsersByCity(city.postCode)
+      .subscribe(
+        (foundUsers: any) => {
+          if (foundUsers.data && foundUsers.data.length === 0) {
+            this.utils.showConfirm('Desea eliminar la ciudad', 'Esta acción no se puede deshacer')
+              .then((result) => {
                 if (result.isConfirmed) {
                   this.cityService.delete(city.id).subscribe({
                     next: res => {
-                      Swal.fire(
-                        'Confirmado',
-                        'La acción ha sido confirmada',
-                        'success'
-                      );
-                      this.cities = this.cities.filter(c => c.id !== city.id);  
-                      // tuve que cambiarlo, ya que no le pasamos solamente el id como parámetro como estaba antes por el método
-                      // No se si conviene cambiarlo y hacer métodos separados o usar el mismo 
-                      // en este caso estamos usando el mismo.
-                      // mismo caso en proveedores
+                      this.utils.showAlert('success', 'Confirmado', 'La acción ha sido confirmada');
+                      this.cities = this.cities.filter(c => c.id !== city.id);
                     },
                     error: err => {
                       console.log(err);
+                      this.utils.showAlert('error', 'Error', 'No se pudo eliminar la ciudad.');
                     }
                   });
                 }
               });
-            } else {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se puede eliminar la ciudad, ya que tiene usuarios asociados ',
-              });
-            }
-          },
-          error => {
-            console.log(error);
+          } else {
+            this.utils.showAlert('error', 'Error', 'No se puede eliminar la ciudad, ya que tiene usuarios asociados.');
           }
-        );
-    }
+        },
+        error => {
+          console.log(error);
+          this.utils.showAlert('error', 'Error', 'Error al verificar usuarios asociados.');
+        }
+      );
+  }
 
   edit(city: any): void {
     city.editName = city.name;
@@ -83,73 +65,54 @@ export class EditListCitiesComponent {
   }
 
   save(city: any): void {
-    if (!city.editName || !city.editPostCode || !city.editSurcharge ) { 
-      Swal.fire({
-        icon: 'error',
-        title: 'Error en el registro',
-        text: 'Debe completar todos los campos.',
-      });
-    } else {   
-      if (city.editName !== city.name || city.editPostCode !== city.postCode || city.editSurcharge !== city.surcharge) {
-        this.cityService.findCityByPostCode(city.editPostCode)
-        .subscribe(
-          (existingCity: any) => {
-            if (existingCity === null || city.postCode === city.editPostCode ) {
-            city.name = city.editName.charAt(0).toUpperCase() + city.editName.slice(1).toLowerCase();
-            city.postCode = city.editPostCode;
-            city.surcharge = city.editSurcharge;
-            this.cityService.update(city).subscribe(
-            (response: any) => {
-              Swal.fire(
-              'Ciudad registrada con éxito!!',
-              '',
-              'success'
-              );
-              city.editing = false;
-            },
-            (err: any) => {
-              console.log(err);
-              Swal.fire({
-                icon: 'error',
-                title: 'Registro fallido',
-                text: 'El código postal ya está registrado',
-                });
-              }
-            );
-       
-              } else {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error',
-                  text: 'El código postal ya está registrado',
-                });
-              }      
-            },
-            (err: any) => {
-              console.log(err);
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Error en la verificación del código postal.',
+    const original = {
+      name: city.name,
+      postCode: city.postCode,
+      surcharge: city.surcharge
+    };
+
+    const updated = {
+      name: city.editName,
+      postCode: city.editPostCode,
+      surcharge: city.editSurcharge
+    };
+
+    if (!updated.name || !updated.postCode || updated.surcharge == null) {
+      this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
+      return;
+    } 
+
+    if (this.utils.hasObjectChanged(original, updated)) {
+      updated.name = this.utils.capitalize(updated.name ?? '');
+
+      this.cityService.findCityByPostCode(updated.postCode)
+        .subscribe({
+          next: (existingCity: any) => {
+            if (existingCity === null || city.postCode === updated.postCode) {
+              this.utils.copyProperties(city, updated);
+
+              this.cityService.update(city).subscribe({
+                next: (response: any) => {
+                  this.utils.showAlert('success', 'Ciudad registrada con éxito!!');
+                  city.editing = false;
+                },
+                error: (err: any) => {
+                  console.log(err);
+                  this.utils.showAlert('error', 'Registro fallido', err.message);
+                }
               });
+            } else {
+              this.utils.showAlert('error', 'Error', 'El código postal ya está registrado');
             }
-          );
-      } else {
-        Swal.fire({
-          icon: 'info',
-          title: 'Sin cambios',
-          text: 'No se realizaron cambios en la ciudad.',
+          },
+          error: (err: any) => {
+            console.log(err);
+            this.utils.showAlert('error', 'Error', 'Error en la verificación del código postal.');
+          }
         });
-        city.editing = false;
-      }
+    } else {
+      this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en la ciudad.');
+      city.editing = false;
     }
   }
 }
-
-  
-  
-   
-  
-  
-  
-   
