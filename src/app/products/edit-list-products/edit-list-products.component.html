@@ -10,8 +10,7 @@
           <div class="form-group">
             <h2 style="font-family: 'Quicksand', sans-serif; ">Filtros</h2>
             <label for="supplier">Proveedores:</label>
-            <select class="form-control" id="supplier" (change)="onSupplierChange($event)" name="supplier" required>
-              <option disabled selected value="">Seleccione un proveedor</option>
+            <select class="form-control" id="supplier" (change)="onSupplierChange($event)" name="supplier" [value]="selectedSupplierCuit || ''" required>
               <option value="">Todos</option>
               <option *ngFor="let supplier of suppliers" [value]="supplier.cuit" >{{supplier.cuit + " " + supplier.businessName}}
               </option>
@@ -21,8 +20,7 @@
         <li class="nav-item">
           <div class="form-group">
             <label for="category">Categorías:</label>
-            <select class="form-control" id="category" (change)="onCategoryChange($event)" name="category" required>
-              <option disabled selected value="">Seleccione una categoría</option>
+            <select class="form-control" id="category" (change)="onCategoryChange($event)" name="category" [value]="selectedCategoryName || ''" required>
               <option value="">Todas</option>
               <option *ngFor="let category of categories" [value]="category.name" >{{category.name}}
               </option>

@@ -16,9 +16,14 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class EditListProductsComponent {
   products: any[] = [];
+  allProducts: any[] = []; // Nueva propiedad para mantener todos los productos
   suppliers: any[] = [];
   categories: any[] = [];
   apiUrl = environment.apiUrl;
+  
+  // Variables para mantener el estado de los filtros
+  selectedSupplierCuit: number | null = null;
+  selectedCategoryName: string | null = null;
 
   constructor(
     private productService: ProductService,
@@ -34,20 +39,23 @@ export class EditListProductsComponent {
   ngOnInit() {
     this.getSuppliers();
     this.getCategories();
+    
+    // Cargar todos los productos inicialmente
     this.productService.products$.subscribe((data: any) => {
-      this.products = data;
+      this.allProducts = data;
+      this.applyFilters(); // Aplicar filtros cada vez que se actualicen los productos
     });
 
-    this.filterProductsSupplierService.supplierSelected$.subscribe(async (cuit: number) => {
-      await this.supplierService.findProductsBySupplier(cuit).subscribe((data: any) => {
-        this.products = data.data;
-      });
+    // Escuchar cambios en el filtro de proveedor
+    this.filterProductsSupplierService.supplierSelected$.subscribe((cuit: number) => {
+      this.selectedSupplierCuit = cuit;
+      this.applyFilters();
     });
 
-    this.filterProductsCategoryService.categorySelected$.subscribe(async (categoryName: string) => {
-      await this.categoryService.findProductsByCategory(categoryName).subscribe((data: any) => {
-        this.products = data.data;
-      });
+    // Escuchar cambios en el filtro de categoría
+    this.filterProductsCategoryService.categorySelected$.subscribe((categoryName: string) => {
+      this.selectedCategoryName = categoryName;
+      this.applyFilters();
     });
   }
 
@@ -153,6 +161,35 @@ export class EditListProductsComponent {
     });
   }
 
+  // Método para aplicar filtros combinados
+  applyFilters() {
+    let filteredProducts = [...this.allProducts];
+
+    // Aplicar filtro de proveedor si está seleccionado
+    if (this.selectedSupplierCuit !== null) {
+      // Encontrar el ID del proveedor basado en el CUIT seleccionado
+      const selectedSupplier = this.suppliers.find(supplier => supplier.cuit === this.selectedSupplierCuit);
+      if (selectedSupplier) {
+        filteredProducts = filteredProducts.filter(product => 
+          product.supplier === selectedSupplier.id
+        );
+      }
+    }
+
+    // Aplicar filtro de categoría si está seleccionado
+    if (this.selectedCategoryName !== null && this.selectedCategoryName !== '') {
+      // Encontrar el ID de la categoría basado en el nombre seleccionado
+      const selectedCategory = this.categories.find(category => category.name === this.selectedCategoryName);
+      if (selectedCategory) {
+        filteredProducts = filteredProducts.filter(product => 
+          product.category === selectedCategory.id
+        );
+      }
+    }
+
+    this.products = filteredProducts;
+  }
+
   onSupplierButtonClick(cuit: number) {
     this.filterProductsSupplierService.emitSupplierSelected(cuit);
   }
@@ -164,23 +201,20 @@ export class EditListProductsComponent {
   onSupplierChange(event: any) {
     const selectedCuit = event.target.value;
     if (selectedCuit === "") {
-      this.productService.findAll().subscribe((data: any) => {
-        this.products = data.data;
-      });
+      this.selectedSupplierCuit = null;
     } else {
-      const cuitNumber = parseInt(selectedCuit);
-      this.onSupplierButtonClick(cuitNumber);
+      this.selectedSupplierCuit = parseInt(selectedCuit);
     }
+    this.applyFilters();
   }
 
   onCategoryChange(event: any) {
     const selectedCategory = event.target.value;
     if (selectedCategory === "") {
-      this.productService.findAll().subscribe((data: any) => {
-        this.products = data.data;
-      });
+      this.selectedCategoryName = null;
     } else {
-      this.onCategoryButtonClick(selectedCategory);
+      this.selectedCategoryName = selectedCategory;
     }
+    this.applyFilters();
   }
 }
