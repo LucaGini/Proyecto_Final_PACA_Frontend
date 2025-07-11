@@ -5,7 +5,7 @@
         <li class="nav-item me-4">
           <div class="form-group">
             <h2 style="font-family: 'Quicksand', sans-serif;">Filtros</h2>
-            <label for="status">Estado:</label>
+            <label for="status">Estado de la orden:</label>
             <select class="form-control" id="status" (change)="onStatusChange($event)" name="status">
               <option value="">Todos</option>
               <option value="pending">Pendiente</option>
@@ -14,9 +14,18 @@
             </select>
           </div>
         </li>
+        <li class="nav-item me-4">
+          <div class="form-group">
+            <label for="city">Ciudad:</label>
+            <select class="form-control" id="city" (change)="onCityChange($event)" name="city">
+              <option value="">Todas</option>
+              <option *ngFor="let city of cities" [value]="city.name">{{city.name}}</option>
+            </select>
+          </div>
+        </li>
         <li class="nav-item">
           <div class="form-group">
-            <label for="dateRange">Rango de Fechas:</label>
+            <label for="dateRange">Rango de fechas:</label>
             <div class="input-group">
               <input type="date" class="form-control" id="startDate" (change)="onDateChange()" [(ngModel)]="startDate">
               <span class="input-group-text">hasta</span>

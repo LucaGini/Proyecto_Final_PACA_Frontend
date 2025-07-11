@@ -4,6 +4,8 @@ import { ProductService } from 'src/app/services/product.service';
 import { Router } from '@angular/router';
 import { SupplierService } from 'src/app/services/supplier.service';
 import { FilterProductsSupplierService } from 'src/app/services/filter-products-supplier.service';
+import { CategoryService } from 'src/app/services/category.service';
+import { FilterProductsCategoryService } from 'src/app/services/filter-products-category.service';
 import { environment } from '../../../environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -14,8 +16,14 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class EditListProductsComponent {
   products: any[] = [];
+  allProducts: any[] = []; // Nueva propiedad para mantener todos los productos
   suppliers: any[] = [];
+  categories: any[] = [];
   apiUrl = environment.apiUrl;
+  
+  // Variables para mantener el estado de los filtros
+  selectedSupplierCuit: number | null = null;
+  selectedCategoryName: string | null = null;
 
   constructor(
     private productService: ProductService,
@@ -23,19 +31,31 @@ export class EditListProductsComponent {
     private router: Router,
     private supplierService: SupplierService,
     private filterProductsSupplierService: FilterProductsSupplierService,
+    private categoryService: CategoryService,
+    private filterProductsCategoryService: FilterProductsCategoryService,
     private utils: UtilsService
   ) {}
 
   ngOnInit() {
     this.getSuppliers();
+    this.getCategories();
+    
+    // Cargar todos los productos inicialmente
     this.productService.products$.subscribe((data: any) => {
-      this.products = data;
+      this.allProducts = data;
+      this.applyFilters(); // Aplicar filtros cada vez que se actualicen los productos
     });
 
-    this.filterProductsSupplierService.supplierSelected$.subscribe(async (cuit: number) => {
-      await this.supplierService.findProductsBySupplier(cuit).subscribe((data: any) => {
-        this.products = data.data;
-      });
+    // Escuchar cambios en el filtro de proveedor
+    this.filterProductsSupplierService.supplierSelected$.subscribe((cuit: number) => {
+      this.selectedSupplierCuit = cuit;
+      this.applyFilters();
+    });
+
+    // Escuchar cambios en el filtro de categoría
+    this.filterProductsCategoryService.categorySelected$.subscribe((categoryName: string) => {
+      this.selectedCategoryName = categoryName;
+      this.applyFilters();
     });
   }
 
@@ -129,19 +149,72 @@ export class EditListProductsComponent {
     });
   }
 
+  getCategories() {
+    this.categoryService.findAll().subscribe({
+      next: (data: any) => {
+        this.categories = data.data;
+      },
+      error: (error) => {
+        console.error('Error al obtener categorías', error);
+        this.utils.showAlert('error', 'Error', 'No se pudieron cargar las categorías.');
+      }
+    });
+  }
+
+  // Método para aplicar filtros combinados
+  applyFilters() {
+    let filteredProducts = [...this.allProducts];
+
+    // Aplicar filtro de proveedor si está seleccionado
+    if (this.selectedSupplierCuit !== null) {
+      // Encontrar el ID del proveedor basado en el CUIT seleccionado
+      const selectedSupplier = this.suppliers.find(supplier => supplier.cuit === this.selectedSupplierCuit);
+      if (selectedSupplier) {
+        filteredProducts = filteredProducts.filter(product => 
+          product.supplier === selectedSupplier.id
+        );
+      }
+    }
+
+    // Aplicar filtro de categoría si está seleccionado
+    if (this.selectedCategoryName !== null && this.selectedCategoryName !== '') {
+      // Encontrar el ID de la categoría basado en el nombre seleccionado
+      const selectedCategory = this.categories.find(category => category.name === this.selectedCategoryName);
+      if (selectedCategory) {
+        filteredProducts = filteredProducts.filter(product => 
+          product.category === selectedCategory.id
+        );
+      }
+    }
+
+    this.products = filteredProducts;
+  }
+
   onSupplierButtonClick(cuit: number) {
     this.filterProductsSupplierService.emitSupplierSelected(cuit);
+  }
+
+  onCategoryButtonClick(categoryName: string) {
+    this.filterProductsCategoryService.emitCategorySelected(categoryName);
   }
 
   onSupplierChange(event: any) {
     const selectedCuit = event.target.value;
     if (selectedCuit === "") {
-      this.productService.findAll().subscribe((data: any) => {
-        this.products = data.data;
-      });
+      this.selectedSupplierCuit = null;
     } else {
-      const cuitNumber = parseInt(selectedCuit);
-      this.onSupplierButtonClick(cuitNumber);
+      this.selectedSupplierCuit = parseInt(selectedCuit);
     }
+    this.applyFilters();
+  }
+
+  onCategoryChange(event: any) {
+    const selectedCategory = event.target.value;
+    if (selectedCategory === "") {
+      this.selectedCategoryName = null;
+    } else {
+      this.selectedCategoryName = selectedCategory;
+    }
+    this.applyFilters();
   }
 }

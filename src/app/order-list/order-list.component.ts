@@ -14,9 +14,11 @@ import { forkJoin } from 'rxjs';
 export class OrderListComponent implements OnInit {
   orders: any[] = [];
   filteredOrders: any[] = [];
+  cities: any[] = [];
   startDate: string = '';
   endDate: string = '';
   selectedStatus: string = '';
+  selectedCity: string = '';
 
   constructor(
     private orderService: OrderService,
@@ -28,6 +30,7 @@ export class OrderListComponent implements OnInit {
 
   ngOnInit() {
     this.loadOrders();
+    this.loadCities();
   }
 
   loadOrders() {
@@ -90,6 +93,10 @@ export class OrderListComponent implements OnInit {
       filtered = filtered.filter(order => order.status === this.selectedStatus);
     }
 
+    if (this.selectedCity) {
+      filtered = filtered.filter(order => order.user?.cityName === this.selectedCity);
+    }
+
     if (this.startDate && this.endDate) {
       const start = new Date(this.startDate + 'T00:00:00');
       const end = new Date(this.endDate + 'T23:59:59.999');
@@ -104,6 +111,22 @@ export class OrderListComponent implements OnInit {
     }
 
     this.filteredOrders = filtered;
+  }
+
+  loadCities() {
+    this.cityService.findAll().subscribe({
+      next: (data: any) => {
+        this.cities = data.data;
+      },
+      error: (error) => {
+        console.error('Error al obtener ciudades', error);
+      }
+    });
+  }
+
+  onCityChange(event: any) {
+    this.selectedCity = event.target.value;
+    this.applyFilters();
   }
 
   edit(order: any) {

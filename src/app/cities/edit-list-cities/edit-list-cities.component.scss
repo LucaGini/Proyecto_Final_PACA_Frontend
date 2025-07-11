@@ -1,3 +1,66 @@
+.navbar {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(231, 198, 51, 0.1);
+
+  .navbar-nav {
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-group {
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      color: #333;
+      margin-bottom: 1rem;
+      position: relative;
+
+      &::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(45deg, #e7c633, #ffd700);
+        margin: 0.5rem 0;
+        transition: width 0.3s ease;
+      }
+
+      &:hover::after {
+        width: 100px;
+      }
+    }
+
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    select.form-control {
+      border: 2px solid #eee;
+      border-radius: 8px;
+      padding: 0.8rem;
+      min-width: 200px;
+
+      &:focus {
+        outline: none;
+        border-color: #e7c633;
+        box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
+      }
+    }
+  }
+}
+
 .cities-container {
     padding: 2rem;
     background: linear-gradient(45deg, rgba(231, 198, 51, 0.05), rgba(255, 255, 255, 0.1));
@@ -15,7 +78,7 @@
     margin-left: 15px;
 }
 
-.form-group {
+.card-body .form-group {
     margin-bottom: 1.5rem;
 
     label {
