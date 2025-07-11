@@ -18,6 +18,17 @@
             </select>
           </div>  
         </li>
+        <li class="nav-item">
+          <div class="form-group">
+            <label for="category">Categorías:</label>
+            <select class="form-control" id="category" (change)="onCategoryChange($event)" name="category" required>
+              <option disabled selected value="">Seleccione una categoría</option>
+              <option value="">Todas</option>
+              <option *ngFor="let category of categories" [value]="category.name" >{{category.name}}
+              </option>
+            </select>
+          </div>  
+        </li>
       </ul>
     </div>
   </div>

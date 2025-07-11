@@ -4,6 +4,8 @@ import { ProductService } from 'src/app/services/product.service';
 import { Router } from '@angular/router';
 import { SupplierService } from 'src/app/services/supplier.service';
 import { FilterProductsSupplierService } from 'src/app/services/filter-products-supplier.service';
+import { CategoryService } from 'src/app/services/category.service';
+import { FilterProductsCategoryService } from 'src/app/services/filter-products-category.service';
 import { environment } from '../../../environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -15,6 +17,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class EditListProductsComponent {
   products: any[] = [];
   suppliers: any[] = [];
+  categories: any[] = [];
   apiUrl = environment.apiUrl;
 
   constructor(
@@ -23,17 +26,26 @@ export class EditListProductsComponent {
     private router: Router,
     private supplierService: SupplierService,
     private filterProductsSupplierService: FilterProductsSupplierService,
+    private categoryService: CategoryService,
+    private filterProductsCategoryService: FilterProductsCategoryService,
     private utils: UtilsService
   ) {}
 
   ngOnInit() {
     this.getSuppliers();
+    this.getCategories();
     this.productService.products$.subscribe((data: any) => {
       this.products = data;
     });
 
     this.filterProductsSupplierService.supplierSelected$.subscribe(async (cuit: number) => {
       await this.supplierService.findProductsBySupplier(cuit).subscribe((data: any) => {
+        this.products = data.data;
+      });
+    });
+
+    this.filterProductsCategoryService.categorySelected$.subscribe(async (categoryName: string) => {
+      await this.categoryService.findProductsByCategory(categoryName).subscribe((data: any) => {
         this.products = data.data;
       });
     });
@@ -129,8 +141,24 @@ export class EditListProductsComponent {
     });
   }
 
+  getCategories() {
+    this.categoryService.findAll().subscribe({
+      next: (data: any) => {
+        this.categories = data.data;
+      },
+      error: (error) => {
+        console.error('Error al obtener categorías', error);
+        this.utils.showAlert('error', 'Error', 'No se pudieron cargar las categorías.');
+      }
+    });
+  }
+
   onSupplierButtonClick(cuit: number) {
     this.filterProductsSupplierService.emitSupplierSelected(cuit);
+  }
+
+  onCategoryButtonClick(categoryName: string) {
+    this.filterProductsCategoryService.emitCategorySelected(categoryName);
   }
 
   onSupplierChange(event: any) {
@@ -142,6 +170,17 @@ export class EditListProductsComponent {
     } else {
       const cuitNumber = parseInt(selectedCuit);
       this.onSupplierButtonClick(cuitNumber);
+    }
+  }
+
+  onCategoryChange(event: any) {
+    const selectedCategory = event.target.value;
+    if (selectedCategory === "") {
+      this.productService.findAll().subscribe((data: any) => {
+        this.products = data.data;
+      });
+    } else {
+      this.onCategoryButtonClick(selectedCategory);
     }
   }
 }

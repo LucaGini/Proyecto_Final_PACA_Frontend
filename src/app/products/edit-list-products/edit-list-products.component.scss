@@ -8,8 +8,26 @@
   margin-bottom: 2rem;
   box-shadow: 0 4px 15px rgba(231, 198, 51, 0.1);
 
+  .navbar-nav {
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    
+    // El segundo filtro (categorías) necesita alinearse con el primero
+    &:nth-child(2) .form-group {
+      margin-top: calc(1rem + 60px); // Compensar la altura del h2
+    }
+  }
+
   .form-group {
     margin: 1rem;
+    display: flex;
+    flex-direction: column;
 
     h2 {
       color: #333;
@@ -31,10 +49,17 @@
       }
     }
 
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+
     select.form-control {
       border: 2px solid #eee;
       border-radius: 8px;
       padding: 0.8rem;
+      min-width: 200px;
 
       &:focus {
         outline: none;

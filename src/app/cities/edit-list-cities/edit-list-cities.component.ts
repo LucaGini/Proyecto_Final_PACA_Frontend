@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CityService } from 'src/app/services/city.service';
+import { ProvinceService } from 'src/app/services/province.service';
+import { FilterCitiesProvinceService } from 'src/app/services/filter-cities-province.service';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -12,17 +14,27 @@ import { UtilsService } from 'src/app/services/utils.service';
 export class EditListCitiesComponent {
 
   cities: any[] = [];
+  provinces: any[] = [];
 
   constructor(
     private cityService: CityService,
+    private provinceService: ProvinceService,
+    private filterCitiesProvinceService: FilterCitiesProvinceService,
     private route: ActivatedRoute,
     private router: Router,
     private utils: UtilsService
   ) {}
 
   ngOnInit() {
+    this.getProvinces();
     this.cityService.cities$.subscribe((data: any) => {
       this.cities = data;
+    });
+
+    this.filterCitiesProvinceService.provinceSelected$.subscribe(async (provinceId: string) => {
+      await this.provinceService.findCitiesByProvince(provinceId).subscribe((data: any) => {
+        this.cities = data;
+      });
     });
   }
 
@@ -113,6 +125,33 @@ export class EditListCitiesComponent {
     } else {
       this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en la ciudad.');
       city.editing = false;
+    }
+  }
+
+  getProvinces() {
+    this.provinceService.findAll().subscribe({
+      next: (data: any) => {
+        this.provinces = data;
+      },
+      error: (error) => {
+        console.error('Error al obtener provincias', error);
+        this.utils.showAlert('error', 'Error', 'No se pudieron cargar las provincias.');
+      }
+    });
+  }
+
+  onProvinceButtonClick(provinceId: string) {
+    this.filterCitiesProvinceService.emitProvinceSelected(provinceId);
+  }
+
+  onProvinceChange(event: any) {
+    const selectedProvince = event.target.value;
+    if (selectedProvince === "") {
+      this.cityService.findAll().subscribe((data: any) => {
+        this.cities = data.data;
+      });
+    } else {
+      this.onProvinceButtonClick(selectedProvince);
     }
   }
 }

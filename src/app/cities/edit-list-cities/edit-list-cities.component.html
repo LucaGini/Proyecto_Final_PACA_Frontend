@@ -1,3 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <div class="form-group">
+            <h2 style="font-family: 'Quicksand', sans-serif; ">Filtros</h2>
+            <label for="province">Provincias:</label>
+            <select class="form-control" id="province" (change)="onProvinceChange($event)" name="province" required>
+              <option disabled selected value="">Seleccione una provincia</option>
+              <option value="">Todas</option>
+              <option *ngFor="let province of provinces" [value]="province.id" >{{province.name}}
+              </option>
+            </select>
+          </div>  
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>  
+
 <div class="cities-container" style="display: flex; flex-wrap: wrap; gap: 15px;">
   <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex" style="flex: 0 0 calc(50% - 15px); margin-bottom: 15px;" *ngFor="let city of cities">
     <div class="card-body">
