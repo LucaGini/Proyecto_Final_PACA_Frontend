@@ -24,13 +24,13 @@ interface OrderItem {
 
 interface Order {
   id: number;
+  orderNumber: string;
   status: string;
   orderDate: Date;
   updatedDate: Date;
   total: number;
   orderItems: OrderItem[];
   user?: any;
-  displayNumber?: number;
 }
 
 @Component({
@@ -65,7 +65,7 @@ loadOrders() {
 
   this.orderService.getOrdersByEmail(user.email).subscribe({
     next: (response: any) => {
-      const orderPromises = response.data.map((order: any, index: number) => {
+      const orderPromises = response.data.map((order: any) => {
         const productPromises = order.orderItems.map((item: any) => {
           return this.productService.findOne(item.productId).toPromise()
             .then(product => {
@@ -76,7 +76,6 @@ loadOrders() {
         return Promise.all(productPromises).then(products => {
           return {
             ...order,
-            displayNumber: index + 1,
             orderItems: order.orderItems.map((item: any, idx: number) => ({
               ...item,
               product: products[idx]?.data || products[idx], // Handle both data wrapper and direct product

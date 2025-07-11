@@ -39,7 +39,7 @@
   <div class="card mb-3" *ngFor="let order of filteredOrders; let i = index">
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center">
-        <h3>Orden #{{i + 1}}</h3>
+        <h3>Orden #{{order.orderNumber}}</h3>
         <div class="d-flex align-items-center">
           <span class="badge" [ngClass]="{
             'bg-warning': order.status === 'pending',

@@ -36,7 +36,7 @@ export class OrderListComponent implements OnInit {
   loadOrders() {
     this.orderService.findAll().subscribe({
       next: (response: any) => {
-        const orderPromises = response.data.map((order: any, index: number) => {
+        const orderPromises = response.data.map((order: any) => {
           const productPromises = order.orderItems.map((item: any) => {
             return this.productService.findOne(item.productId).toPromise();
           });
@@ -50,7 +50,6 @@ export class OrderListComponent implements OnInit {
             const city = results[results.length - 1];
             return {
               ...order,
-              displayNumber: index + 1,
               user: {
                 ...order.user,
                 cityName: city?.data?.name || city?.name || 'N/A'
