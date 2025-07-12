@@ -1,10 +1,10 @@
 <mat-toolbar class='title'>
-  <a class="navbar-brand" href="#">Coco Purse</a>
+  <a class="navbar-brand" href="/about-us">Cooperativa P.A.CA.</a>
 </mat-toolbar>
 
 <mat-toolbar class='navBar'>
   <mat-toolbar-row>
-    <span class="example-spacer"></span>
+
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -55,18 +55,18 @@
 
         </div>
       </div>
-    </nav>  
+    </nav>
 <!-- cuando lo validemos o se va a mostrar el ingresar secion o el de cabiar los datos  -->
     <button *ngIf="!isLoggedIn"(click)="UserRegistration()" mat-button  id = "login" >Iniciar Sesion</button>
     <button *ngIf="isLoggedIn"  (click)="logout()" mat-button id = "logout">Cerrar Sesion</button>
 
     <mat-icon *ngIf="isLoggedIn  && !isAdmin" style="color: #e7c633;" id = "UserInformation" (click)="UserInformation()">perm_identity</mat-icon>
     <mat-icon *ngIf="isLoggedIn && !isAdmin" style="color: #e7c633;" (click)="OrdersHistory()" matTooltip="Historial de pedidos">history</mat-icon>
-    
+
       <button mat-icon-button color="accent" aria-label="Carrito" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cartModal" style="background-color: white;" id = "shopping_cart"  *ngIf="!isAdmin">
       <mat-icon style="color: #e7c633;">shopping_cart</mat-icon>
     </button>
-    
+
     <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -83,7 +83,7 @@
       </div>
     </div>
     <div>
-      <button mat-button [matMenuTriggerFor]="menu" *ngIf="isAdmin" id="admin-button">Admin</button> 
+      <button mat-button [matMenuTriggerFor]="menu" *ngIf="isAdmin" id="admin-button">Admin</button>
       <mat-menu #menu="matMenu">
         <button (click)="AdminProducts()" mat-menu-item>Productos</button>
         <button (click)="AdminProvinces()" mat-menu-item>Provincias</button>
