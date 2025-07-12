@@ -71,7 +71,7 @@ describe('NavbarComponent', () => {
   it('should render the navigation bar with the brand', () => {
     const brandElement = debugElement.query(By.css('.navbar-brand'));
     expect(brandElement).toBeTruthy();
-    expect(brandElement.nativeElement.textContent).toContain('Coco Purse');
+    expect(brandElement.nativeElement.textContent).toContain('Cooperativa P.A.CA.');
   });
 
   it('should display the categories button', () => {
@@ -84,13 +84,13 @@ describe('NavbarComponent', () => {
     mockAuthService.isAuthenticated.mockReturnValue(true);
     component.isLoggedIn = true;
     fixture.detectChanges();
-    
+
     const userIcon = debugElement.query(By.css('mat-icon#UserInformation'));
     expect(userIcon).toBeTruthy();
   });
 
   it('should display the shopping cart icon', () => {
-    const cartIcon = debugElement.query(By.css('button#shopping_cart')); 
+    const cartIcon = debugElement.query(By.css('button#shopping_cart'));
     expect(cartIcon).toBeTruthy();
     expect(cartIcon.nativeElement.textContent).toContain('shopping_cart');
   });
@@ -100,7 +100,7 @@ describe('NavbarComponent', () => {
     mockAuthService.isAdmin.mockReturnValue(true);
     component.isAdmin = true;
     fixture.detectChanges();
-    
+
     const adminButton = debugElement.query(By.css('button#admin-button'));
     expect(adminButton).toBeTruthy();
     expect(adminButton.nativeElement.textContent).toContain('Admin');
@@ -126,7 +126,7 @@ describe('NavbarComponent', () => {
     mockAuthService.isAuthenticated.mockReturnValue(true);
     component.isLoggedIn = true;
     fixture.detectChanges();
-    
+
     const logoutButton = debugElement.query(By.css('button#logout'));
     expect(logoutButton.nativeElement.textContent).toContain('Cerrar Sesion');
   });
@@ -136,7 +136,7 @@ describe('NavbarComponent', () => {
     mockAuthService.isAuthenticated.mockReturnValue(false);
     component.isLoggedIn = false;
     fixture.detectChanges();
-    
+
     const loginButton = debugElement.query(By.css('button#login'));
     expect(loginButton.nativeElement.textContent).toContain('Iniciar Sesion');
   });

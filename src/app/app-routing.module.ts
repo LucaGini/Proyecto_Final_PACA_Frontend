@@ -23,9 +23,11 @@ import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cit
 import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
 import { OrdersHistoryComponent } from './orders-history/orders-history.component';
 import { AuthGuard } from './guards/auth.guard';
+import { AboutUsComponent } from './about-us/about-us.component';
 
 const routes: Routes = [
-  { path: '', component: BodyComponent },
+{ path: '', component: AboutUsComponent },
+  { path: 'about-us', component: AboutUsComponent },
   { path: 'UserRegistration', component: UserRegistrationComponent },
   { path: 'AdminProducts', component: AdminProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'AdminProvinces', component: AdminProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},

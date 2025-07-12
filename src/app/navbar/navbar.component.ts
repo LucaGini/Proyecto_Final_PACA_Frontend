@@ -5,7 +5,7 @@ import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { CartService } from '../services/cart.service';
 import { LoginService } from '../services/login.service';
 import { AuthService } from '../services/auth.service';
-import { ProductService } from '../services/product.service';	
+import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.service';
 import Swal from 'sweetalert2';
 
@@ -17,7 +17,7 @@ import Swal from 'sweetalert2';
 
 export class NavbarComponent implements OnInit {
   categories: any[] = [];
-  
+
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
 
@@ -28,7 +28,7 @@ export class NavbarComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService,
     private authService: AuthService,
-    private loginService: LoginService  
+    private loginService: LoginService
   ) {}
 
   ngOnInit() {
@@ -60,7 +60,11 @@ export class NavbarComponent implements OnInit {
     console.error('Error fetching categories:', error);
   });
   }
-  
+
+  Home() {
+    this.router.navigate(['about-us']);
+  }
+
   UserRegistration (){
     this.router.navigate(['UserRegistration']);
   }
@@ -106,7 +110,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate([`collection/${name}`]);
   }
   finishOrder() {
-    this.cartService.setOrderFinished(true); 
+    this.cartService.setOrderFinished(true);
   }
 
 onSearch(event: Event) {
