@@ -20,12 +20,10 @@ export class OrderService {
         return new HttpHeaders({
           'Authorization': token ? `Bearer ${token}` : ''
         });
-      }
-  
-
+      }  
   create(orderData: any): Observable<any> {
     const url = `${this.URL}/orders`; // URL para el endpoint de creación
-    return this.http.post(url, orderData).pipe(
+    return this.http.post(url, orderData,  { headers: this.getAuthHeaders() }).pipe(
       catchError((error: any) => {
         console.error('Error creating order:', error);
         return throwError(error);

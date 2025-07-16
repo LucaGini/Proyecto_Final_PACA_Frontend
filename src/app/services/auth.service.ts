@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -27,6 +27,12 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {}
+    private getAuthHeaders(): HttpHeaders {
+    const token = localStorage.getItem('access_token');
+    return new HttpHeaders({
+      'Authorization': token ? `Bearer ${token}` : ''
+    });
+  }
 
   isLoggedIn$(): Observable<boolean> {
     return this.isLoggedInSubject.asObservable();
@@ -40,7 +46,6 @@ export class AuthService {
     const token = localStorage.getItem(this.tokenKey);
     return !!token;
   }
-
   private checkAdmin(): boolean {
     const token = localStorage.getItem(this.tokenKey);
     if (!!!token) return false
@@ -97,24 +102,24 @@ export class AuthService {
   }
   
   sendResetPasswordEmail(email: string): Observable<any> {
-    const url = `${this.URL}/auth/password/recovery`;
-    return this.http.post<any>(url, { email }).pipe(
-      catchError((error: any) => {
-        console.error('Error en la solicitud:', error);
-        return of(null); 
-      })
-    );
-  }
+  const url = `${this.URL}/auth/password/recovery`;
+  return this.http.post<any>(url, { email }, { headers: this.getAuthHeaders() }).pipe(
+    catchError((error: any) => {
+      console.error('Error en la solicitud:', error);
+      return of(null); // Devuelve null en caso de error
+    })
+  );
+}
 
-  sendRequestToLogin(email: string, password: any) {
-    const url = `${this.URL}/auth/login`;
-    return this.http.post<any>(url, { email, password }).pipe(
-      catchError((err) => {
-        console.error('Error en el servicio:', err);
-        return throwError(() => err); // Reemite el error
-      })
-    );
-  }
+sendRequestToLogin(email: string, password: any): Observable<any> {
+  const url = `${this.URL}/auth/login`;
+  return this.http.post<any>(url, { email, password }, { headers: this.getAuthHeaders() }).pipe(
+    catchError((err) => {
+      console.error('Error en el servicio:', err);
+      return throwError(() => err); // Reemite el error
+    })
+  );
+}
 
 updateUserEmail(newEmail: string): void {
     const token = localStorage.getItem(this.tokenKey);

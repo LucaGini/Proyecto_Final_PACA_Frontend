@@ -45,7 +45,7 @@ const routes: Routes = [
   { path: 'OrderList', component: OrderListComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
 
   //TODOS MENOS ADMINISTRADOR
-  { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador'] }},// si no estoy registrada no me deja entrar a este
+  { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador'] }},
 
   // SOLO CLIENTES
   { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['cliente'] }},
