@@ -1,11 +1,9 @@
 html, body { height: 100%; }
 
 
-/* Importing Bootstrap SCSS file. */
-@import "./node_modules/bootstrap/scss/bootstrap";
-
 /* Importing Datepicker SCSS file. */
-@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
+@import "bootstrap/scss/bootstrap";
+
 
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&family=Raleway&display=swap');

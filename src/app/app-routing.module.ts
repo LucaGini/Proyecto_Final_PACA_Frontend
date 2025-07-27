@@ -26,8 +26,9 @@ import { AuthGuard } from './guards/auth.guard';
 import { AboutUsComponent } from './about-us/about-us.component';
 
 const routes: Routes = [
-{ path: '', component: AboutUsComponent },
+  { path: '', redirectTo: 'about-us', pathMatch: 'full' },
   { path: 'about-us', component: AboutUsComponent },
+  { path: 'products', component: BodyComponent },
   { path: 'UserRegistration', component: UserRegistrationComponent },
   { path: 'AdminProducts', component: AdminProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'AdminProvinces', component: AdminProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},

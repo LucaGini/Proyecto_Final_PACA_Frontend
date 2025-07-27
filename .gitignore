@@ -40,3 +40,10 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# npm
+package-lock.json
+
+# pnpm
+.pnpm-debug.log
+shrinkwrap.yaml
