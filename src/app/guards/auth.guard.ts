@@ -26,19 +26,19 @@ export class AuthGuard implements CanActivate {
     const allowedRoles = route.data['roles'] as string[] | undefined;
     const excludeRoles = route.data['excludeRoles'] as string[] | undefined;
 
-    // solo los que no están logueados pueden acceder a las rutas con onlyGuest
+    // No logueados
     if (route.data['onlyGuest']) {
       if (isLoggedIn) {
-        this.denyAccess('Esta página solo está disponible para usuarios no registrados.');
+        this.denyAccess('Solo usuarios no logueados pueden acceder a esta sección.');
         return this.router.parseUrl('/');
       }
       return true;
     }
 
-    // Caso modificado para permitir invitados si solo hay excludeRoles
+    // Logueados
     if (!isLoggedIn) {
       if (allowedRoles) {
-        this.denyAccess('Debés iniciar sesión para acceder a esta página.');
+        this.denyAccess('Debés iniciar sesión para acceder a esta sección.');
         return this.router.parseUrl('/');
       }
       if (excludeRoles) {
@@ -46,15 +46,15 @@ export class AuthGuard implements CanActivate {
       }
     }
 
-    // Si el usuario no está logueado y no hay roles permitidos o excluidos, se permite el acceso
+    // No está logueado pero no hay restriccion 
     if (allowedRoles && !allowedRoles.includes(userRole)) {
-      this.denyAccess('Tu rol no tiene permiso para acceder a esta sección.');
+      this.denyAccess('No tiene permiso para acceder a esta sección.');
       return this.router.parseUrl('/');
     }
 
-    // Si el usuario tiene un rol excluido, se le quita el acceso
+    // El rol tiene acceso
     if (excludeRoles && excludeRoles.includes(userRole)) {
-      this.denyAccess('Esta página no está disponible para tu tipo de usuario.');
+      this.denyAccess('No tiene permiso para acceder a esta sección.');
       return this.router.parseUrl('/');
     }
 

@@ -23,13 +23,9 @@ import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cit
 import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
 import { OrdersHistoryComponent } from './orders-history/orders-history.component';
 import { AuthGuard } from './guards/auth.guard';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
-  // TODOS
-  { path: '', component: BodyComponent },
-  { path: 'product/:productId', component: ProductDetailsComponent },
-  { path: 'collection/:collection', component: CollectionComponent },
-
   // SOLO ADMINISTRADOR
   { path: 'AdminProducts', component: AdminProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'AdminProvinces', component: AdminProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
@@ -56,6 +52,12 @@ const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent, canActivate: [AuthGuard], data: { onlyGuest: true } },
   { path: 'UserRegistration/login', component: LoginComponent , canActivate: [AuthGuard], data: { onlyGuest: true } },
   { path: 'UserRegistration', component: UserRegistrationComponent , canActivate: [AuthGuard], data: { onlyGuest: true } },
+
+  // TODOS
+  { path: '', component: BodyComponent },
+  { path: 'product/:productId', component: ProductDetailsComponent },
+  { path: 'collection/:collection', component: CollectionComponent },
+  { path: '**', component: NotFoundComponent, data: { hideHeaderFooter: true } },
 ];
 
 @NgModule({

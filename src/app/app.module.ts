@@ -43,6 +43,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 
 
 import { TokenInterceptorService } from './services/token-interceptor.service';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,8 @@ import { TokenInterceptorService } from './services/token-interceptor.service';
     NewPasswordComponent,
     SurchargelistComponent,
     OrderListComponent,
-    OrdersHistoryComponent
+    OrdersHistoryComponent,
+    NotFoundComponent
 
   ],
   imports: [
