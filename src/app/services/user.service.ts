@@ -27,7 +27,7 @@ export class UserService {
   }
 
   signUp(userData: any): Observable<any> { 
-    return this.http.post<any>(this.URL + '/users', userData);
+    return this.http.post<any>(this.URL + '/users', userData,{ headers: this.getAuthHeaders() });
   }
 
 findUserByEmail(email: string): Observable<any> {
@@ -42,7 +42,7 @@ findUserByEmail(email: string): Observable<any> {
 
   updatePassword(email: string, password: string): Observable<any> {
     const url = `${this.URL}/users/update-password`;
-    return this.http.put<any>(url, { email, password }).pipe(
+    return this.http.put<any>(url, { email, password},{ headers: this.getAuthHeaders() }).pipe(
       catchError((error: any) => {
         console.error('Error al actualizar contraseña:', error);
         return of(null); 

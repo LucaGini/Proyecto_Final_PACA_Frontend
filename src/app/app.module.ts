@@ -46,6 +46,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 
 import { TokenInterceptorService } from './services/token-interceptor.service';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -68,7 +69,9 @@ import { TokenInterceptorService } from './services/token-interceptor.service';
     SurchargelistComponent,
     OrderListComponent,
     OrdersHistoryComponent,
+    NotFoundComponent
   ],
+  
   imports: [
     BrowserModule,
     HttpClientModule,

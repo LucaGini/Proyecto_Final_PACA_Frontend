@@ -16,15 +16,13 @@ export class UtilsService {
     return !!text && text.trim().length > 0;
   }
   areValidFields(fields: any[]): boolean {
-  return fields.every(field => {
-    if (typeof field === 'string') {
-      return field.trim() !== '';
-    }
-    return field !== null && field !== undefined;
-  });
-}
-
-
+    return fields.every(field => {
+      if (typeof field === 'string') {
+        return field.trim() !== '';
+      }
+      return field !== null && field !== undefined;
+    });
+  }
   hasObjectChanged(original: any, updated: any): boolean {  // revisa aver si cambio algo
     for (const key of Object.keys(updated)) {
       if (original[key] !== updated[key]) {
@@ -34,12 +32,12 @@ export class UtilsService {
     return false;
   }
   copyProperties(destination: any, source: any, transforms: { [key: string]: (value: any) => any } = {}): void { // para los updates actualiza los datos para despues mandarlos al back y q se guarde
-  for (const key of Object.keys(source)) {
-    destination[key] = transforms[key] ? transforms[key](source[key]) : source[key];
+    for (const key of Object.keys(source)) {
+      destination[key] = transforms[key] ? transforms[key](source[key]) : source[key];
+    }
   }
-}
+  
   // VALIDACIONES //
-
   validateCuit(cuit: string): boolean {
     return /^[0-9]{11}$/.test(cuit);
   }
@@ -79,4 +77,16 @@ export class UtilsService {
       cancelButtonText: 'Cancelar',
     });
   }
+  showTimedInfo(title: string, text = ''): Promise<any> {
+    return Swal.fire({
+      icon: 'info',
+      title,
+      text,
+      showConfirmButton: false,
+      timer: 2500,
+      timerProgressBar: true
+    });
+  }
 }
+
+
