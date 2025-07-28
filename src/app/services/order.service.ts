@@ -77,9 +77,8 @@ delete(orderId: string): Observable<any> {
     return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
       map((response: any) => {
         return {
-          data: response.data.map((order: any, index: number) => ({
+          data: response.data.map((order: any) => ({
             ...order,
-            displayNumber: index + 1,
             orderItems: order.orderItems.map((item: any) => ({
               ...item,
               subtotal: item.quantity * item.unitPrice
@@ -90,6 +89,16 @@ delete(orderId: string): Observable<any> {
       catchError(error => {
         console.error('Error fetching orders:', error);
         return throwError(() => error);
+      })
+    );
+  }
+
+  findByOrderNumber(orderNumber: string): Observable<any> {
+    const url = `${this.URL}/orders/number/${orderNumber}`;
+    return this.http.get(url).pipe(
+      catchError((error: any) => {
+        console.error('Error finding order by number:', error);
+        return throwError(error);
       })
     );
   }
