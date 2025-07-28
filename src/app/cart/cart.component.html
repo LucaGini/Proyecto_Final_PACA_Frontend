@@ -13,5 +13,6 @@
       <h2>Recargo por domicilio seleccionado: {{ cityCharge }}%</h2>
     </div>
   <h2 style="font-family: 'Quicksand', sans-serif;">Total: <span>{{ totalAmount | currency }}</span></h2>
-  <button type="button" class="btn btn-warning" *ngIf="showConfirmButton" id="ConfirmarCompra" (click)="confirmPurchase()">Confirmar compra</button> 
+  <!-- <button type="button" class="btn btn-warning" *ngIf="showConfirmButton" id="ConfirmarCompra" (click)="confirmPurchase()">Confirmar compra</button>  -->
+  <button type="button" class="btn btn-warning" id="ConfirmarCompra" (click)="confirmPurchase()">Confirmar compra</button> 
 </div>
