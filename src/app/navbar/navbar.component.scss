@@ -1,28 +1,3 @@
-/* Estilo del título */
-.title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: "Poppins", sans-serif;
-  font-size: 30px;
-  font-weight: bold;
-
-  position: fixed;
-  top: 0;
-  width: 100%;
-  padding: 5px;
-
-  background-color: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-  color: #302f2d;
-
-  z-index: 1000;
-}
-
 .mat-toolbar.navBar {
   .mat-toolbar-row {
     display: flex;
@@ -36,21 +11,46 @@
     color: inherit;
     border: none;
   }
-  margin-top: 65px;
+}
+
+.empty-message {
+  padding: 0px 10px;
+  color: #666;           /* tono gris suave */
+  font-style: italic;    /* para que quede más sutil */
+
 }
 
 /* Barra de navegación */
 .navBar {
-  margin-top: 65px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
 
   .mat-toolbar-row {
     display: flex;
-    justify-content: center;
-    gap: 20px;
+    align-items: center;
+    padding: 0 20px;
   }
 
-  .capitalize-text {
-    text-transform: capitalize;
+  .navbar-brand {
+    margin-right: auto;
+    font-weight: bold;
+    font-size: 1.7rem;
+    letter-spacing: 2px;
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button.mat-button {
+    margin-left: 20px;
+    background-color: transparent;
+    color: inherit;
+    border: none;
   }
 }
 
