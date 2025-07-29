@@ -1,44 +1,8 @@
-//EN CASO DE APLICAR SEGUIMIENTO DE URL
-// .active-link {
-//   position: relative;
-//   font-weight: 600;
-//   color: #e7c633;
-//   transition: color 0.3s ease;
-// }
-
-// .active-link::after {
-//   content: "";
-//   position: absolute;
-//   left: 0;
-//   bottom: -4px;
-//   width: 100%;
-//   height: 3px;
-//   background: linear-gradient(90deg, #e7c633, #ffd700);
-//   border-radius: 2px;
-//   transition: width 0.3s ease;
-// }
-
-// a.navbar-brand:hover {
-//   color: #ffd700;
-// }
-
 .mat-toolbar.navBar {
-  display: flex;
-  position: fixed;
-  top: 0;
-  z-index: 1000;
-
   .mat-toolbar-row {
     display: flex;
-    justify-content: space-between; /* o flex-start si no hay otro extremo */
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .navbar-brand {
-    margin-right: auto; /* empuja lo demás hacia la derecha */
-    font-size: 2rem;
-    font-weight: bold;
+    justify-content: center;
+    gap: 30px;
   }
 
   button.mat-button {
@@ -47,9 +11,46 @@
     color: inherit;
     border: none;
   }
+}
 
-  .capitalize-text {
-    text-transform: capitalize;
+.empty-message {
+  padding: 0px 10px;
+  color: #666;           /* tono gris suave */
+  font-style: italic;    /* para que quede más sutil */
+
+}
+
+/* Barra de navegación */
+.navBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+
+  .mat-toolbar-row {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+  }
+
+  .navbar-brand {
+    margin-right: auto;
+    font-weight: bold;
+    font-size: 1.7rem;
+    letter-spacing: 2px;
+    font-weight: bold;
+    text-decoration: none;
+    color: inherit;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button.mat-button {
+    margin-left: 20px;
+    background-color: transparent;
+    color: inherit;
+    border: none;
   }
 }
 
