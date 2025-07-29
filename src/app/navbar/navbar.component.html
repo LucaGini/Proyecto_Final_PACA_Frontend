@@ -1,14 +1,20 @@
-<mat-toolbar class='title'>
-  <a class="navbar-brand" href="/about-us">Cooperativa P.A.CA.</a>
-</mat-toolbar>
-
-<mat-toolbar class='navBar'>
+<mat-toolbar class="navBar">
   <mat-toolbar-row>
+    <!-- En caso de querer aplicar seguimiento de url
+    <a class="navbar-brand" routerLink="/about-us" routerLinkActive="active-link">P.A.CA.</a> -->
+    <a class="navbar-brand" href="/about-us">P.A.CA.</a>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span class="navbar-toggler-icon"></span>
         </button>
 
@@ -17,77 +23,75 @@
             <li class="nav-item">
               <button mat-button [matMenuTriggerFor]="categoriesMenu">Categorías</button>
               <mat-menu #categoriesMenu="matMenu">
-                <button mat-menu-item *ngFor="let category of categories" (click)="onCategoryButtonClick(category.name)"
-                  style="text-transform: capitalize;">
+                <button
+                  mat-menu-item
+                  *ngFor="let category of categories"
+                  (click)="onCategoryButtonClick(category.name)"
+                  style="text-transform: capitalize;"
+                >
                   {{ category.name }}
                 </button>
                 <div *ngIf="categories.length === 0">No categories available</div>
               </mat-menu>
             </li>
             <li class="nav-item">
-              <!-- Button trigger modal -->
               <button mat-button type="button" data-bs-toggle="modal" data-bs-target="#recargosModal">
                 Recargos
               </button>
-              <div class="modal fade" id="recargosModal" tabindex="-1" aria-labelledby="recargosModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h3 class="modal-title" id="recargosModalLabel">Recargos por ciudad</h3>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <app-surchargelist></app-surchargelist>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              </li>
+            </li>
           </ul>
 
           <form id="search-form" class="form-inline ml-auto" (submit)="onSearch($event)">
-            <input class="form-control mr-sm-2" type="search" id="search-input" placeholder="Buqueda de productos..."
-              aria-label="Search">
-              <button mat-icon-button type="submit" class="search-button" aria-label="Search">
-                <span class="material-symbols-outlined search-icon">search</span>
-              </button>
+            <input
+              class="form-control mr-sm-2"
+              type="search"
+              id="search-input"
+              placeholder="Búsqueda de productos..."
+              aria-label="Search"
+            />
+            <button mat-icon-button type="submit" class="search-button" aria-label="Search">
+              <span class="material-symbols-outlined search-icon">search</span>
+            </button>
           </form>
-
         </div>
       </div>
     </nav>
-<!-- cuando lo validemos o se va a mostrar el ingresar secion o el de cabiar los datos  -->
-    <button *ngIf="!isLoggedIn"(click)="UserRegistration()" mat-button  id = "login" >Iniciar Sesion</button>
-    <button *ngIf="isLoggedIn"  (click)="logout()" mat-button id = "logout">Cerrar Sesion</button>
 
-    <mat-icon *ngIf="isLoggedIn  && !isAdmin" style="color: #e7c633;" id = "UserInformation" (click)="UserInformation()">perm_identity</mat-icon>
-    <mat-icon *ngIf="isLoggedIn && !isAdmin" style="color: #e7c633;" (click)="OrdersHistory()" matTooltip="Historial de pedidos">history</mat-icon>
+    <button *ngIf="!isLoggedIn" (click)="UserRegistration()" mat-button id="login">Iniciar Sesión</button>
+    <button *ngIf="isLoggedIn" (click)="logout()" mat-button id="logout">Cerrar Sesión</button>
 
-      <button mat-icon-button color="accent" aria-label="Carrito" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cartModal" style="background-color: white;" id = "shopping_cart"  *ngIf="!isAdmin">
+    <mat-icon *ngIf="isLoggedIn && !isAdmin" style="color: #e7c633;" id="UserInformation" (click)="UserInformation()"
+      >perm_identity</mat-icon
+    >
+    <mat-icon
+      *ngIf="isLoggedIn && !isAdmin"
+      style="color: #e7c633;"
+      (click)="OrdersHistory()"
+      matTooltip="Historial de pedidos"
+      >history</mat-icon
+    >
+
+    <button
+      mat-icon-button
+      color="accent"
+      aria-label="Carrito"
+      type="button"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#cartModal"
+      style="background-color: white;"
+      id="shopping_cart"
+      *ngIf="!isAdmin"
+    >
       <mat-icon style="color: #e7c633;">shopping_cart</mat-icon>
     </button>
 
-    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5" id="cartModalLabel">Carrito de compra</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <app-cart></app-cart>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" id="Close" data-bs-dismiss="modal">Cerrar</button>
-            <a routerLink="/cart" class="button fancy-button" class="btn btn-warning" id="Finish" data-bs-dismiss="modal" (click)="finishOrder()">Terminar pedido</a>
-          </div>
-        </div>
-      </div>
-    </div>
     <div>
       <button mat-button [matMenuTriggerFor]="menu" *ngIf="isAdmin" id="admin-button">Admin</button>
       <mat-menu #menu="matMenu">
         <button (click)="AdminProducts()" mat-menu-item>Productos</button>
         <button (click)="AdminProvinces()" mat-menu-item>Provincias</button>
-        <button (click)="AdminCategories()" mat-menu-item>Categorias</button>
+        <button (click)="AdminCategories()" mat-menu-item>Categorías</button>
         <button (click)="AdminCities()" mat-menu-item>Ciudades</button>
         <button (click)="AdminSuppliers()" mat-menu-item>Proveedores</button>
         <button (click)="UserList()" mat-menu-item>Usuarios</button>
@@ -96,3 +100,56 @@
     </div>
   </mat-toolbar-row>
 </mat-toolbar>
+
+<!-- Modales fuera del toolbar -->
+
+<!-- Modal Recargos -->
+<div
+  class="modal fade"
+  id="recargosModal"
+  tabindex="-1"
+  aria-labelledby="recargosModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="recargosModalLabel">Recargos por ciudad</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <app-surchargelist></app-surchargelist>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Carrito -->
+<div
+  class="modal fade"
+  id="cartModal"
+  tabindex="-1"
+  aria-labelledby="cartModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="cartModalLabel">Carrito de compra</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <app-cart></app-cart>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="Close" data-bs-dismiss="modal">Cerrar</button>
+        <a
+          routerLink="/cart"
+          class="button fancy-button btn btn-warning"
+          id="Finish"
+          data-bs-dismiss="modal"
+          (click)="finishOrder()"
+          >Terminar pedido</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
