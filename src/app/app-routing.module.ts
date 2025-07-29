@@ -24,32 +24,44 @@ import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit
 import { OrdersHistoryComponent } from './orders-history/orders-history.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AboutUsComponent } from './about-us/about-us.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'about-us', pathMatch: 'full' },
-  { path: 'about-us', component: AboutUsComponent },
-  { path: 'products', component: BodyComponent },
-  { path: 'UserRegistration', component: UserRegistrationComponent },
+  
+  // SOLO ADMINISTRADOR
   { path: 'AdminProducts', component: AdminProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'AdminProvinces', component: AdminProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'AdminCategories', component: AdminCategoriesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'AdminCities', component: AdminCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'UserList', component: UserListComponent , canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'AdminSuppliers', component: AdminSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['cliente'] }},
-  { path: 'reset-password', component: ResetPasswordComponent},
-  { path: 'product/:productId', component: ProductDetailsComponent },
-  { path: 'cart', component: CartComponent},
-  { path: 'collection/:collection', component: CollectionComponent },
-  { path: 'UserRegistration/new-password', component: NewPasswordComponent },
-  { path: 'UserRegistration/login', component: LoginComponent },
-  { path: 'OrderList', component: OrderListComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'EditListProducts', component: EditListProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'EditListProvinces', component: EditListProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'EditListCategories', component: EditListCategoriesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'EditListCities', component: EditListCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'EditListSuppliers', component: EditListSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  { path: 'OrderList', component: OrderListComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+
+  //TODOS MENOS ADMINISTRADOR
+  { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador'] }},
+
+  // SOLO CLIENTES
+  { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['cliente'] }},
   { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate: [AuthGuard], data: { roles: ['cliente'] }},
+
+  // SOLO NO LOGUEADOS
+  { path: 'UserRegistration/new-password', component: NewPasswordComponent, canActivate: [AuthGuard], data: { onlyGuest: true } },
+  { path: 'reset-password', component: ResetPasswordComponent, canActivate: [AuthGuard], data: { onlyGuest: true } },
+  { path: 'UserRegistration/login', component: LoginComponent , canActivate: [AuthGuard], data: { onlyGuest: true } },
+  { path: 'UserRegistration', component: UserRegistrationComponent , canActivate: [AuthGuard], data: { onlyGuest: true } },
+
+  // TODOS
+  { path: '', redirectTo: 'about-us', pathMatch: 'full' },
+  { path: 'about-us', component: AboutUsComponent },
+  //{ path: '', component: BodyComponent },
+  { path: 'product/:productId', component: ProductDetailsComponent },
+  { path: 'collection/:collection', component: CollectionComponent },
+  { path: '**', component: NotFoundComponent, data: { hideHeaderFooter: true } },
 ];
 
 @NgModule({

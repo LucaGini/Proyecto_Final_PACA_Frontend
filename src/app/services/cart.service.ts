@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { environment } from 'src/environments/environment';
@@ -17,6 +17,13 @@ export class CartService {
   constructor(private http: HttpClient, private router: Router) {
     this.getItems();
   }
+
+    private getAuthHeaders(): HttpHeaders {
+      const token = localStorage.getItem('access_token');
+      return new HttpHeaders({
+        'Authorization': token ? `Bearer ${token}` : ''
+      });
+    } 
 
   private initializeCart() { // traigo el carrito y si no hay nada lo muestro vacio o si tiene, con las cosas que dejó el cliente comprando 
     const lsCart = localStorage.getItem('CART');
