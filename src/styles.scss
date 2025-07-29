@@ -24,11 +24,6 @@ html, body { height: 100%; }
   }
 
 
-.modal {
-margin-top: 3rem;
-}
-
-
 h1, h2, h3, h4, h5, h6, p, span, a {
   font-family: 'Poppins', sans-serif;
 }
@@ -36,4 +31,26 @@ h1, h2, h3, h4, h5, h6, p, span, a {
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined' !important;
 }
+
+
+.modal-content{
+  margin-top: 4rem;
+}
+
+
+.modal-header{
+  padding: 12px;
+}
+
+.modal-dialog .modal-title {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+
+.modal-body{
+  padding: 0;
+}
+
 
