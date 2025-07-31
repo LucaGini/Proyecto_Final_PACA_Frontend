@@ -17,6 +17,15 @@ export class ProductDetailsComponent implements OnInit {
   products: any | undefined;
   apiUrl = environment.apiUrl;
 
+  getImageUrl(imageUrl: string): string {
+    // Si la imagen ya es una URL completa (Cloudinary), la retornamos tal como está
+    if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      return imageUrl;
+    }
+    // Si no, concatenamos con la apiUrl para imágenes locales
+    return this.apiUrl + imageUrl;
+  }
+
   constructor(
     private route: ActivatedRoute,
     private productService: ProductService,

@@ -47,7 +47,7 @@
       </div>
 
       <div class="card-body">
-        <img class="card-img-top" [src]="apiUrl + product.image" alt="{{ product.name }}">
+        <img class="card-img-top" [src]="getImageUrl(product.image)" alt="{{ product.name }}">
 
         <div *ngIf="product.editing">
           <div class="form-group mb-2">

@@ -1,7 +1,7 @@
 <div class="container text-center">
   <div class="container text-center">
     <div class="cart-item" *ngFor="let item of items">
-      <span><img class="card-img-top" [src]="apiUrl + item.image"  alt="{{ item.name }}"></span>
+      <span><img class="card-img-top" [src]="getImageUrl(item.image)"  alt="{{ item.name }}"></span>
       <h1 class="card-title truncate" style="font-family: 'Quicksand', sans-serif;">{{ item.name }}</h1>
       <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Precio unitario: {{ item.price | currency }}</h2>
       <button type="button" class="btn btn-warning" id="Cantidad" (click)="verifyStock(item,'devolucion')">-</button>

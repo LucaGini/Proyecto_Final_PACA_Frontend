@@ -13,7 +13,16 @@ import { environment } from '../../environments/environment';
 export class BodyComponent implements OnInit {
   products: any[] = [];
   apiUrl = environment.apiUrl;
-  isSearching: boolean = false; 
+  isSearching: boolean = false;
+
+  getImageUrl(imageUrl: string): string {
+    // Si la imagen ya es una URL completa (Cloudinary), la retornamos tal como está
+    if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      return imageUrl;
+    }
+    // Si no, concatenamos con la apiUrl para imágenes locales
+    return this.apiUrl + imageUrl;
+  } 
 
   constructor(
     private route: ActivatedRoute, // Agrega ActivatedRoute al constructor
