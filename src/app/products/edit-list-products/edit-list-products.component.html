@@ -32,17 +32,13 @@
   </div>
 </nav>  
 
-
-
-<!-- Delete y update -->
-<!-- Contenedor principal con display: flex para organizar las columnas -->
 <div class="products-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
   <div class="col-xs-6 col-sm-6 col-md-6 col-lg-4 py-5 mb-3"  style="flex: 0 0 calc(33.33% - 15px);" *ngFor="let product of products">
     <div class="card">
       <div class="example-button-container">
         <button mat-icon-button class="btn" *ngIf="!product.editing" (click)="edit(product)"
           style="color: #e7c633;"><mat-icon>create</mat-icon></button>
-        <button mat-icon-button class="btn" (click)="delete(product.id)"
+        <button mat-icon-button class="btn" *ngIf="!product.editing" (click)="delete(product.id)"
           style="color: #f76666;"><mat-icon>delete</mat-icon></button>
       </div>
 
@@ -52,8 +48,13 @@
         <div *ngIf="product.editing">
           <div class="form-group mb-2">
             <label for="name">Nombre:</label>
-            <input type="text" class="form-control" id="name" [(ngModel)]="product.editName" name="name" required>
+            <textarea type="text" class="form-control" id="name" [(ngModel)]="product.editName" name="name" required #editNameInput="ngModel"
+            [ngClass]="{ 'is-invalid': editNameInput.invalid && editNameInput.touched }">
+          </textarea>
+          <div *ngIf="editNameInput.invalid && editNameInput.touched" class="text-danger">
+            <small>El nombre es obligatorio.</small>
           </div>
+        </div>
         </div>
         
         <div *ngIf="!product.editing">
@@ -63,7 +64,12 @@
         <div *ngIf="product.editing">
           <div class="form-group">
             <label for="description">Descripción:</label>
-            <textarea class="form-control" id="description" [(ngModel)]="product.editDescription" name="description" required></textarea>
+            <textarea class="form-control" id="description" [(ngModel)]="product.editDescription" name="description" required #editDescriptionInput="ngModel"
+            [ngClass]="{ 'is-invalid': editDescriptionInput.invalid && editDescriptionInput.touched }">
+          </textarea>
+          <div *ngIf="editDescriptionInput.invalid && editDescriptionInput.touched" class="text-danger">
+            <small>La descripcio es obligatoria.</small>
+          </div>
           </div>
         </div>
 
@@ -74,7 +80,10 @@
         <div *ngIf="product.editing">
           <div class="form-group mb-2">
             <label for="precio">Precio:</label>
-            <input type="text" class="form-control" id="price" [(ngModel)]="product.editPrice" name="price" required>
+            <input type="text" class="form-control" id="price" [(ngModel)]="product.editPrice" name="price" required #editPriceInput="ngModel"
+            [ngClass]="{ 'is-invalid': editPriceInput.invalid && editPriceInput.touched }">
+            <div *ngIf="editPriceInput.invalid && editPriceInput.touched" class="text-danger">
+              <small>El precio es obligatorio.</small>
           </div>
         </div>
         
@@ -85,7 +94,10 @@
         <div *ngIf="product.editing">
           <div class="form-group">
             <label for="stock">Stock:</label>
-            <input type="number" class="form-control" id="stock" [(ngModel)]="product.editStock" name="stock" required>
+            <input type="number" class="form-control" id="stock" [(ngModel)]="product.editStock" name="stock" required #editStockInput="ngModel"
+            [ngClass]="{ 'is-invalid': editStockInput.invalid && editStockInput.touched }">
+            <div *ngIf="editStockInput.invalid && editStockInput.touched" class="text-danger">
+              <small>El stock es obligatorio.</small>
           </div>
         </div>
 
@@ -93,10 +105,10 @@
           <h3 class="card-text" style="font-family: 'Quicksand', sans-serif;">Stock: {{ product.stock }}</h3>
         </div>
 
-        <div class="example-button-container" style="display: flex; justify-content: flex-end;">
-          <button mat-icon-button class="btn" *ngIf="product.editing" (click)="save(product)"
-            style="color: #e7c633;"><mat-icon>save_alt</mat-icon>
-          </button>       
+        <button mat-icon-button class="btn" *ngIf="product.editing" (click)="save(product)" style="color: #e7c633;"
+        [disabled]="!product.editName || !product.editDescription || !product.editPrice || !product.editStock">
+        <mat-icon>save_alt</mat-icon>
+      </button>
       </div>
     </div>
   </div>

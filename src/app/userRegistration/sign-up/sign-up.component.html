@@ -5,7 +5,7 @@
       <label for="firstName">Nombre</label>
       <input type="text" class="form-control" id="firstName" ngModel name="firstName" required firstName #firstNameInput="ngModel">
       <div *ngIf="firstNameInput.invalid && firstNameInput.touched" class="text-danger">
-        <small *ngIf="firstNameInput.errors?.['required']">El nombre es requerido.</small>
+        <small *ngIf="firstNameInput.errors?.['required']">El nombre es obligatorio.</small>
       </div>
     </div>
   </div>
@@ -15,7 +15,7 @@
       <label for="lastName">Apellido</label>
       <input type="text" class="form-control" id="lastName" ngModel name="lastName" required lastName #lastNameInput="ngModel">
       <div *ngIf="lastNameInput.invalid && lastNameInput.touched" class="text-danger">
-        <small *ngIf="lastNameInput.errors?.['required']">El apellido es requerido.</small>
+        <small *ngIf="lastNameInput.errors?.['required']">El apellido es obligatorio.</small>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@
       <label for="phone">Teléfono</label>
       <input type="number" class="form-control" id="phone" ngModel name="phone" required phone #phoneInput="ngModel">
       <div *ngIf="phoneInput.invalid && phoneInput.touched" class="text-danger">
-        <small *ngIf="phoneInput.errors?.['required']">El teléfono es requerido.</small>
+        <small *ngIf="phoneInput.errors?.['required']">El teléfono es obligatorio.</small>
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@
         </span>
       </div>
       <div *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger mt-1">
-        <small *ngIf="passwordInput.errors?.['required']">La contraseña es requerida.</small>
+        <small *ngIf="passwordInput.errors?.['required']">La contraseña es obligatoria.</small>
         <small *ngIf="passwordInput.errors?.['pattern']">
           La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, un número y un carácter especial.
         </small>
@@ -65,7 +65,7 @@
       <label for="street">Calle</label>
       <input type="text" class="form-control" id="street" ngModel name="street" required street #streetInput="ngModel">
       <div *ngIf="streetInput.invalid && streetInput.touched" class="text-danger">
-        <small *ngIf="streetInput.errors?.['required']">La calle es requerido.</small>
+        <small *ngIf="streetInput.errors?.['required']">La calle es obligatoria.</small>
       </div>
     </div>
   </div>
@@ -75,7 +75,7 @@
       <label for="streetNumber">Número</label>
       <input type="number" class="form-control" id="streetNumber" ngModel name="streetNumber" required streetNumber #streetNumberInput="ngModel">
       <div *ngIf="streetNumberInput.invalid && streetNumberInput.touched" class="text-danger">
-        <small *ngIf="streetNumberInput.errors?.['required']">El número de calle es requerido.</small>
+        <small *ngIf="streetNumberInput.errors?.['required']">El número de calle es obligatorio.</small>
       </div>
     </div>
   </div>
