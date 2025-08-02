@@ -25,6 +25,15 @@ export class EditListProductsComponent {
   selectedSupplierCuit: number | null = null;
   selectedCategoryName: string | null = null;
 
+  getImageUrl(imageUrl: string): string {
+    // Si la imagen ya es una URL completa (Cloudinary), la retornamos tal como está
+    if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      return imageUrl;
+    }
+    // Si no, concatenamos con la apiUrl para imágenes locales
+    return this.apiUrl + imageUrl;
+  }
+
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
