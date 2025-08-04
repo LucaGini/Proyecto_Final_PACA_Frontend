@@ -26,6 +26,10 @@ export class CartComponent implements OnInit {
   userData: any = null;
   cityCharge: number = 0;
 
+  get isCartEmpty(): boolean {
+    return this.items.length === 0;
+  }
+
   getImageUrl(imageUrl: string): string {
     // Si la imagen ya es una URL completa (Cloudinary), la retornamos tal como está
     if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
@@ -57,7 +61,8 @@ export class CartComponent implements OnInit {
         this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
       });
 
-    this.showConfirmButton = this.cartService.isOrderFinished();
+    // Solo mostrar el botón de confirmar compra si estamos en la ruta /cart
+    this.showConfirmButton = this.router.url === '/cart';
     this.loadUserData();
   }
 
@@ -88,6 +93,12 @@ export class CartComponent implements OnInit {
   }
 
   confirmPurchase() {
+    // Verificar si el carrito está vacío
+    if (this.isCartEmpty) {
+      this.utils.showAlert('warning', 'Carrito vacío', 'Debes agregar productos al carrito para poder confirmar una compra.');
+      return;
+    }
+
     if (!this.userData) { this.utils.showAlert('error', 'Acción no permitida', 'Debes iniciar sesión para confirmar tu compra.'); 
       this.router.navigate(['UserRegistration/login']);
       return;

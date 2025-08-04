@@ -13,6 +13,26 @@
       <h2>Recargo por domicilio seleccionado: {{ cityCharge }}%</h2>
     </div>
   <h2 style="font-family: 'Quicksand', sans-serif;">Total: <span>{{ totalAmount | currency }}</span></h2>
-  <!-- <button type="button" class="btn btn-warning" *ngIf="showConfirmButton" id="ConfirmarCompra" (click)="confirmPurchase()">Confirmar compra</button>  -->
-  <button type="button" class="btn btn-warning" id="ConfirmarCompra" (click)="confirmPurchase()">Confirmar compra</button> 
+  
+  <!-- Mensaje cuando el carrito está vacío -->
+  <div *ngIf="showConfirmButton && isCartEmpty" class="text-center" style="font-family: 'Quicksand', sans-serif; margin: 10px 0; background-color: #F4E3C1; border: 1px solid #d4b876; border-radius: 5px; padding: 15px; color: #8a6914;">
+    <i class="material-icons" style="vertical-align: middle; margin-right: 5px;">shopping_cart</i>
+    Agrega productos al carrito para poder confirmar tu compra
+  </div>
+  
+  <!-- Botón de confirmar compra -->
+  <button 
+    type="button" 
+    class="btn"
+    [class.btn-warning]="!isCartEmpty"
+    [class.btn-secondary]="isCartEmpty"
+    [disabled]="isCartEmpty"
+    *ngIf="showConfirmButton" 
+    id="ConfirmarCompra" 
+    (click)="confirmPurchase()"
+    [style.opacity]="isCartEmpty ? '0.6' : '1'"
+    [style.cursor]="isCartEmpty ? 'not-allowed' : 'pointer'"
+  >
+    Confirmar compra
+  </button>
 </div>
