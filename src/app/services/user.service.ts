@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http'; // Asegúrate de incluir esto
+import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http'; // Asegúrate de incluir esto
 import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { User } from './userInterface'; // Asegúrate de que la ruta sea correcta
 
 @Injectable({
   providedIn: 'root'
@@ -86,4 +87,17 @@ update(user: any): Observable<any> {
     })
   );
 }
+getUsers(isActive: boolean | null, searchTerm?: string): Observable<User[]> {
+    let params = new HttpParams();
+
+    if (isActive !== null) {
+      params = params.set('isActive', isActive.toString());
+    }
+
+    if (searchTerm && searchTerm.trim() !== '') {
+      params = params.set('q', searchTerm.trim());
+    }
+
+    return this.http.get<User[]>(`${this.URL}/users`, { params });
+  }
 }

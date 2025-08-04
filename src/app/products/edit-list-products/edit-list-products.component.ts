@@ -3,9 +3,9 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
 import { Router } from '@angular/router';
 import { SupplierService } from 'src/app/services/supplier.service';
-import { FilterProductsSupplierService } from 'src/app/services/filter-products-supplier.service';
+import { FilterProductsSupplierService } from 'src/app/services/filters/filter-products-supplier.service';
 import { CategoryService } from 'src/app/services/category.service';
-import { FilterProductsCategoryService } from 'src/app/services/filter-products-category.service';
+import { FilterProductsCategoryService } from 'src/app/services/filters/filter-products-category.service';
 import { environment } from '../../../environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
 

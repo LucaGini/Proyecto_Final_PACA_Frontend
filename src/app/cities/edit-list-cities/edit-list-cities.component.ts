@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CityService } from 'src/app/services/city.service';
 import { ProvinceService } from 'src/app/services/province.service';
-import { FilterCitiesProvinceService } from 'src/app/services/filter-cities-province.service';
+import { FilterCitiesProvinceService } from 'src/app/services/filters/filter-cities-province.service';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/services/utils.service';
 
