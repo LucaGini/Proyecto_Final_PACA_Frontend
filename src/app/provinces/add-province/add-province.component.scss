@@ -61,4 +61,18 @@
   &:active {
     transform: translateY(1px);
   }
+
+  &:disabled {
+    background: #ccc;
+    color: #777;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
 }
+
+.form-control.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+}
+

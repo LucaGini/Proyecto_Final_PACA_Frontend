@@ -102,3 +102,13 @@
         }
     }
 }
+
+.form-control.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+}
+
+button:disabled, button[disabled] {
+  background: #ccc !important;
+  color: #777 !important;
+}

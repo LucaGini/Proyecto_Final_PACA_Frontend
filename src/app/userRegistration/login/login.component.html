@@ -2,7 +2,7 @@
   
   <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
     <label for="exampleInputEmail1" class="form-label">Email</label>
-    <input formControlName="email" type="email" class="form-control" [ngClass]="{ 'is-invalid': isPasswordIncorrect}" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <input formControlName="email" type="email" class="form-control" [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched)}" id="exampleInputEmail1" aria-describedby="emailHelp">
     <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger">
       <small *ngIf="email.errors?.['required']">
         El email es requerido.
@@ -12,6 +12,7 @@
       </small>
     </div>
   </div>
+  
   
   <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
     <label for="exampleInputPassword1" class="form-label">Contraseña</label>
@@ -38,6 +39,6 @@
   </div>
   
   <div class="d-flex justify-content-center">
-    <button type="submit" (click)="login()" class="btn btn-warning" id="logIn">Iniciar Sesión</button>
+    <button type="submit" (click)="login()" [disabled]="loginForm.invalid" class="btn btn-warning" id="logIn">Iniciar Sesión</button>
   </div>
 </form>
