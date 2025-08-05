@@ -39,7 +39,18 @@
       <div *ngIf="city.editing">
         <div class="form-group">
         <label for="postCode">Código postal:</label>
-        <input type="string" class="form-control" id="postCode" [(ngModel)]="city.editPostCode" name="postCode" required>
+        <input type="text" class="form-control" id="postCode" [(ngModel)]="city.editPostCode" 
+               (input)="onPostCodeInput($event)" 
+               pattern="[A-Za-z0-9]{8,10}"
+               style="text-transform: uppercase;" name="postCode" required minlength="8" maxlength="10"
+               #editPostCodeInput="ngModel"
+               [ngClass]="{ 'is-invalid': editPostCodeInput.invalid && editPostCodeInput.touched }">
+        <div *ngIf="editPostCodeInput.invalid && editPostCodeInput.touched" class="text-danger">
+          <small *ngIf="editPostCodeInput.errors?.['required']">El código postal es obligatorio.</small>
+          <small *ngIf="editPostCodeInput.errors?.['minlength']">El código postal debe tener entre 8 y 10 caracteres.</small>
+          <small *ngIf="editPostCodeInput.errors?.['maxlength']">El código postal debe tener entre 8 y 10 caracteres.</small>
+          <small *ngIf="editPostCodeInput.errors?.['pattern']">El código postal solo puede contener letras y números.</small>
+        </div>
       </div>
     </div>
 
