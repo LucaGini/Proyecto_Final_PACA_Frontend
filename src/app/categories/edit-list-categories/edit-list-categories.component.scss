@@ -108,7 +108,7 @@
   box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
 }
 
-#Accept:disabled {
+button:disabled, button[disabled] {
   background: #ccc !important;
   color: #777 !important;
 }
