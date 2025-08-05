@@ -61,6 +61,7 @@ export class EditListCategoriesComponent {
   }
 
  save(category: any): void {
+  category.editName = this.utils.capitalize(category.editName ?? '');
   const original = {
     name: category.name,
     description: category.description
@@ -77,7 +78,6 @@ export class EditListCategoriesComponent {
 }
   if (this.utils.hasObjectChanged(original, updated)) {
     category.editName = this.utils.capitalize(category.editName ?? '');
-
     this.categoryService.findCategoryByName(category.editName).subscribe(
       (existingCategory: any) => {
         if (existingCategory === null || category.name === category.editName) {

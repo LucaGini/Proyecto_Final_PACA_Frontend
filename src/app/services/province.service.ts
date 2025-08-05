@@ -62,12 +62,23 @@ export class ProvinceService {
     return this.http.patch<any>(updateUrl, province, { headers: this.getAuthHeaders() }); 
   }
   
-findProvinceByName(name: string): Observable<any> {
-  const url =`${this.URL}/provinces/${name}`;
-  return this.http.get(url,{ headers: this.getAuthHeaders() }).pipe(
+findProvinceByName(name: string): Observable<any | null> {
+  const url = `${this.URL}/provinces/${name}`;
+  return this.http.get(url, { headers: this.getAuthHeaders(), observe: 'response' }).pipe(
+    map(response => {
+      if (response.status === 200) {
+        return null;
+      } else {
+        return response.body;
+      }
+    }),
     catchError((error: any) => {
-      console.error('Error en la solicitud:', error);
-      return of(null); 
+      if (error.status === 404) {
+        return of(error.error.data); 
+      } else {
+        console.error('Error en la solicitud:', error);
+        throw error;
+      }
     })
   );
 }

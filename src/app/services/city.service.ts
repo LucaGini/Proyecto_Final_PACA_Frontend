@@ -66,17 +66,26 @@ export class CityService {
     );
   }
   
-
   findCityByPostCode(postCode: string): Observable<any> {
     const url =`${this.URL}/cities/postCode/${postCode}`;
-    return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
-      catchError((error: any) => {
+    return this.http.get(url, {
+    headers: this.getAuthHeaders(),
+    observe: 'response'
+  }).pipe(
+    map(response => {
+    
+      return null;
+    }),
+    catchError((error: any) => {
+      if (error.status === 404) {
+        return of(error.error?.data ?? true); 
+      } else {
         console.error('Error en la solicitud:', error);
-        return of(null); 
-      })
-    );
-  }
-
+        throw error;
+      }
+    })
+  );
+}
   findCityById(cityId: string): Observable<any> {
     const url = `${this.URL}/cities/${cityId}`;
     return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
