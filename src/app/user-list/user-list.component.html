@@ -10,18 +10,20 @@
     </li>
 <div class="row">
   <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 py-2 mb-3" *ngFor="let user of users" id="user">
-    <a [routerLink]="['/user', user.id]" class="no-underline">
-      <div class="card">
+      <div class="card card-user">
         <div class="card-body">
+          <button mat-icon-button class="delete-button" *ngIf="user.isActive" (click)="deleteUser(user)">
+            <span class="material-symbols-outlined">cancel</span>
+          </button>
           <h3 class="card-text truncate">Nombre: {{ user.firstName }}</h3>
           <h3 class="card-text truncate">Apellido: {{ user.lastName }}</h3>
           <h3 class="card-text truncate">Email: {{ user.email }}</h3>
           <h3 class="card-text truncate">Telefono: {{ user.phone }}</h3>
           <h3 class="card-text truncate">Calle: {{ user.street }}</h3>
           <h3 class="card-text truncate">Número: {{ user.streetNumber }}</h3>
+          <h3 class="card-text truncate">Estado: {{ user.isActive }}</h3>
         </div>
       </div>
-    </a>
   </div>
 </div>
 

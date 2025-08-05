@@ -120,3 +120,16 @@ li.nav-item > .form-group > select.form-control {
     box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
   }
 }
+
+
+.card-user {
+  position: relative;
+}
+
+.delete-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: #f76666;
+  z-index: 10; // por si necesitás que quede encima de algo
+}

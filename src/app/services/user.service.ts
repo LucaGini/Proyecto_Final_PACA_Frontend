@@ -52,7 +52,7 @@ findUserByEmail(email: string): Observable<any> {
   }
 
   delete(userId: any): Observable<void> {
-    return this.http.delete<void>(`${this.URL}/users/${userId}`,{ headers: this.getAuthHeaders() })
+    return this.http.delete<void>(`${this.URL}/users/${userId}`)
     .pipe(
       catchError(error => {
         console.error('Delete error: ', error);
