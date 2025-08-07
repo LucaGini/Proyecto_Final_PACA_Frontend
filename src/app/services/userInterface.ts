@@ -10,4 +10,5 @@ export interface User {
   streetNumber: string;
   city: string;
   password?: string;
+  message?: string;
 }

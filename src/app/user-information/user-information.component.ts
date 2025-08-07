@@ -6,7 +6,7 @@ import { UserService } from '../services/user.service';
 import { ProvinceService } from '../services/province.service';
 import { CityService } from '../services/city.service';
 import { User } from '../services/userInterface.js';
-import { UtilsService } from '../services/utils.service'; // 👈 agregado
+import { UtilsService } from '../services/utils.service'; 
 
 @Component({
   selector: 'app-user-information',
@@ -214,13 +214,13 @@ export class UserInformationComponent implements OnInit {
   delete(): void {
     if (!this.userData?.email) return;
 
-    this.utils.showConfirm('¿Estás seguro?', 'Esta acción es permanente').then((result) => {
+    this.utils.showConfirm('¿Estás seguro?', 'Esta acción es permanente. No podrá volver a loguearse con este mail').then((result) => {
       if (result.isConfirmed) {
         this.userService.delete(this.userData?.id).subscribe({
           next: () => {
             this.authService.logout();
             localStorage.removeItem('accessToken');
-            this.utils.showAlert('success', 'Dado de baja!', 'Cuenta eliminada exitosamente').then(() => {
+            this.utils.showAlert('success', 'Dado de baja!', 'Su cuenta fue eliminada, no podrá volver a usarla en esta página').then(() => {
               this.router.navigate(['/UserRegistration']);
             });
           },

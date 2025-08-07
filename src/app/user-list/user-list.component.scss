@@ -94,3 +94,42 @@ a {
     max-width: 100%;
   }
 }
+
+li.nav-item {
+  list-style: none; //lo tenemos que dejar pq si no al usar li pone un punto
+  padding-left: 0;  
+  margin: 0;
+}
+
+li.nav-item > .form-group {
+  width: 280px; 
+  display: flex;
+  flex-direction: column;
+}
+
+li.nav-item > .form-group > select.form-control {
+  width: 100%;
+  min-width: 280px; 
+  padding: 0.8rem;
+  border: 2px solid #eee;
+  border-radius: 8px;
+
+  &:focus {
+    outline: none;
+    border-color: #e7c633;
+    box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
+  }
+}
+
+
+.card-user {
+  position: relative;
+}
+
+.delete-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: #f76666;
+  z-index: 10; // por si necesitás que quede encima de algo
+}

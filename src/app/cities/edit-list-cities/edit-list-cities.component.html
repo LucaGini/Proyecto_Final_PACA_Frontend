@@ -25,12 +25,19 @@
 <div class="cities-container" style="display: flex; flex-wrap: wrap; gap: 15px;">
   <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex" style="flex: 0 0 calc(50% - 15px); margin-bottom: 15px;" *ngFor="let city of cities">
     <div class="card-body">
+
       <div *ngIf="city.editing">
         <div class="form-group">
           <label for="name">Nombre: </label>
-          <input type="text" class="form-control" id="name" [(ngModel)]="city.editName" name="name" required>
+          <textarea class="form-control" id="name" name="editName" [(ngModel)]="city.editName" required #editNameInput="ngModel"
+            [ngClass]="{ 'is-invalid': editNameInput.invalid && editNameInput.touched }"
+          ></textarea>
+          <div *ngIf="editNameInput.invalid && editNameInput.touched" class="text-danger">
+            <small>El nombre es obligatorio.</small>
+          </div>
         </div>
       </div>
+
 
       <div *ngIf="!city.editing">
         <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Nombre: {{ city.name }}</h2>
@@ -39,7 +46,18 @@
       <div *ngIf="city.editing">
         <div class="form-group">
         <label for="postCode">Código postal:</label>
-        <input type="string" class="form-control" id="postCode" [(ngModel)]="city.editPostCode" name="postCode" required>
+        <input type="text" class="form-control" id="postCode" [(ngModel)]="city.editPostCode" 
+               (input)="onPostCodeInput($event)" 
+               pattern="[A-Za-z0-9]{8,10}"
+               style="text-transform: uppercase;" name="postCode" required minlength="8" maxlength="10"
+               #editPostCodeInput="ngModel"
+               [ngClass]="{ 'is-invalid': editPostCodeInput.invalid && editPostCodeInput.touched }">
+        <div *ngIf="editPostCodeInput.invalid && editPostCodeInput.touched" class="text-danger">
+          <small *ngIf="editPostCodeInput.errors?.['required']">El código postal es obligatorio.</small>
+          <small *ngIf="editPostCodeInput.errors?.['minlength']">El código postal debe tener entre 8 y 10 caracteres.</small>
+          <small *ngIf="editPostCodeInput.errors?.['maxlength']">El código postal debe tener entre 8 y 10 caracteres.</small>
+          <small *ngIf="editPostCodeInput.errors?.['pattern']">El código postal solo puede contener letras y números.</small>
+        </div>
       </div>
     </div>
 
@@ -50,7 +68,12 @@
     <div *ngIf="city.editing">
       <div class="form-group">
       <label for="surcharge">Recargo:</label>
-      <input type="number" class="form-control" id="surcharge" [(ngModel)]="city.editSurcharge" name="surcharge" required>
+      <textarea type="number" class="form-control" id="surcharge" [(ngModel)]="city.editSurcharge" name="surcharge" required #editSurchargeInput="ngModel"
+        [ngClass]="{ 'is-invalid': editSurchargeInput.invalid && editSurchargeInput.touched }">
+      </textarea>
+        <div *ngIf="editSurchargeInput.invalid && editSurchargeInput.touched" class="text-danger">
+          <small>El código postal es obligatorio.</small>
+        </div>
     </div>
   </div>
 
@@ -58,11 +81,20 @@
     <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Recargo: {{ city.surcharge }}</h2>
   </div>
   </div>
+  
+<div class="example-button-container" style="display: flex; justify-content: flex-end;">
+      <button mat-icon-button class="btn" *ngIf="!city.editing" (click)="edit(city)" style="color: #e7c633;">
+        <mat-icon>create</mat-icon>
+      </button>
 
-  <div class="example-button-container" style="display: flex; justify-content: flex-end;" >
-    <button mat-icon-button class="btn" *ngIf="!city.editing" (click)="edit(city)" style="color: #e7c633;"><mat-icon>create</mat-icon></button>
-    <button mat-icon-button class="btn" *ngIf="city.editing" (click)="save(city)" style="color: #e7c633;"><mat-icon>save_alt</mat-icon></button>
-    <button mat-icon-button class="btn" (click)="delete(city)" style="color: #f76666;"><mat-icon>delete</mat-icon></button>
+      <button mat-icon-button class="btn" *ngIf="city.editing" (click)="save(city)" style="color: #e7c633;"
+        [disabled]="!city.editName || !city.editPostCode || !city.editSurcharge">
+        <mat-icon>save_alt</mat-icon>
+      </button>
+
+      <button mat-icon-button class="btn" *ngIf="!city.editing" (click)="delete(city)" style="color: #f76666;">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
   </div>
 </div>
-  

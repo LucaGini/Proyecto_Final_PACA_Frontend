@@ -1,16 +1,20 @@
 <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
   <div class="card-body">
-    <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data" ngNativeValidate >
+    <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data" >
 
       <div class="form-group">
         <label for="name">Nombre</label>
-        <input type="text" class="form-control" id="name" ngModel name="name" required>
+        <input type="text" class="form-control" id="name" ngModel name="name" required #nameInput="ngModel"[ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }"/>
+        <div *ngIf="nameInput.invalid && nameInput.touched" class="text-danger">
+          <small *ngIf="nameInput.errors?.['required']">El nombre es obligatorio.</small>
+        </div>
       </div>
     
+      
     </form>
   </div>
 </div>
 
 <div class="d-flex justify-content-center">
-  <button type="submit" class="btn btn-warning mx-2" form="addForm" id="Accept">Guardar</button>
+  <button type="submit" class="btn btn-warning mx-2" form="addForm" id="Accept" [disabled]="addForm.invalid">Guardar</button>
 </div>
