@@ -4,9 +4,13 @@
       <div *ngIf="province.editing">
         <div class="form-group">
           <label for="name">Nombre: </label>
-          <input type="text" class="form-control" id="name" [(ngModel)]="province.editName" name="name" required>
+          <input type="text" class="form-control" id="name" [(ngModel)]="province.editName" name="name" required #editNameInput="ngModel"
+            [ngClass]="{ 'is-invalid': editNameInput.invalid && editNameInput.touched }"/>
+          <div *ngIf="editNameInput.invalid && editNameInput.touched" class="text-danger">
+            <small>El nombre es obligatorio.</small>
+          </div>
         </div>
-        
+
       </div>
 
       <div *ngIf="!province.editing">
@@ -14,11 +18,19 @@
       </div>
     </div>
   
-    <div class="example-button-container">
-      <button mat-icon-button class="btn" *ngIf="!province.editing" (click)="edit(province)" style="color: #e7c633;"><mat-icon>create</mat-icon></button>
-      <button mat-icon-button class="btn" *ngIf="province.editing" (click)="save(province)" style="color: #e7c633;"><mat-icon>save_alt</mat-icon></button>
-      <button mat-icon-button class="btn" (click)="delete(province.id)" style="color: #f76666;"><mat-icon>delete</mat-icon></button>
+  <div class="example-button-container" style="display: flex; justify-content: flex-end;">
+      <button mat-icon-button class="btn" *ngIf="!province.editing" (click)="edit(province)" style="color: #e7c633;">
+        <mat-icon>create</mat-icon>
+      </button>
+
+      <button mat-icon-button class="btn" *ngIf="province.editing" (click)="save(province)" style="color: #e7c633;"
+        [disabled]="!province.editName ">
+        <mat-icon>save_alt</mat-icon>
+      </button>
+
+      <button mat-icon-button class="btn" *ngIf="!province.editing" (click)="delete(province.id)" style="color: #f76666;">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
   </div>
-</div> 
-
+</div>
