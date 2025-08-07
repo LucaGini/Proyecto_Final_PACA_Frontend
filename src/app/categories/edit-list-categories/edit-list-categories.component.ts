@@ -10,7 +10,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 })
 export class EditListCategoriesComponent {
   categories: any[] = [];
-  
+
   constructor(
     private categoryService: CategoryService,
     private route: ActivatedRoute,
@@ -60,8 +60,9 @@ export class EditListCategoriesComponent {
     category.editing = true;
   }
 
- save(category: any): void {
+save(category: any): void {
   category.editName = this.utils.capitalize(category.editName ?? '');
+
   const original = {
     name: category.name,
     description: category.description
@@ -71,37 +72,31 @@ export class EditListCategoriesComponent {
     name: category.editName,
     description: category.editDescription
   };
-  
+
   if (!this.utils.areValidFields([category.editName, category.editDescription])) {
-  this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
-  return;
-}
+    this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
+    return;
+  }
+
   if (this.utils.hasObjectChanged(original, updated)) {
-    category.editName = this.utils.capitalize(category.editName ?? '');
-    this.categoryService.findCategoryByName(category.editName).subscribe(
-      (existingCategory: any) => {
-        if (existingCategory === null || category.name === category.editName) {
-          this.utils.copyProperties(category,updated)
-          this.categoryService.update(category).subscribe(
-            (response: any) => {
-              this.utils.showAlert('success', 'Categoría registrada con éxito!!');
-              category.editing = false;
-            },
-            (err: any) => {
-              this.utils.showAlert('error', 'Registro fallido', err.message);
-            }
-          );
-        } else {
-          this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
-        }
+    this.categoryService.update({...category, name: updated.name, description: updated.description}).subscribe({
+      next: (response: any) => {
+        this.utils.showAlert('success', 'Categoría actualizada con éxito!!');
+        this.utils.copyProperties(category, updated);
+        category.editing = false;
       },
-      (err: any) => {
-        this.utils.showAlert('error', 'Error', 'Error en la verificación del nombre.');
+      error: (err: any) => {
+        if (err.status === 409) {
+          this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
+        } else {
+          this.utils.showAlert('error', 'Registro fallido', err.message || 'Error desconocido');
+        }
       }
-    );
+    });
   } else {
     this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en la categoría.');
     category.editing = false;
   }
 }
+
 }
