@@ -12,9 +12,18 @@
 
       <div class="form-group">
         <label for="postCode">Código postal</label>
-        <input type="text" class="form-control" id="postCode" ngModel name="postCode"ngModel required #postCodeInput="ngModel"[ngClass]="{ 'is-invalid': postCodeInput.invalid && postCodeInput.touched }"/>
+
+        <input type="text" class="form-control" id="postCode" ngModel name="postCode" 
+               (input)="onPostCodeInput($event)" 
+               pattern="[A-Za-z0-9]{8,10}"
+               style="text-transform: uppercase;" required minlength="8" maxlength="10" 
+               #postCodeInput="ngModel" [ngClass]="{ 'is-invalid': postCodeInput.invalid && postCodeInput.touched }">
         <div *ngIf="postCodeInput.invalid && postCodeInput.touched" class="text-danger">
           <small *ngIf="postCodeInput.errors?.['required']">El código postal es obligatorio.</small>
+          <small *ngIf="postCodeInput.errors?.['minlength']">El código postal debe tener entre 8 y 10 caracteres.</small>
+          <small *ngIf="postCodeInput.errors?.['maxlength']">El código postal debe tener entre 8 y 10 caracteres.</small>
+          <small *ngIf="postCodeInput.errors?.['pattern']">El código postal solo puede contener letras y números.</small>
+
         </div>
       </div>
 

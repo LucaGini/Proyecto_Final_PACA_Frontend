@@ -68,7 +68,9 @@ export class CityService {
   
 
   findCityByPostCode(postCode: string): Observable<any> {
-    const url =`${this.URL}/cities/postCode/${postCode}`;
+    // Normalizar el código postal a mayúsculas antes de la búsqueda
+    const normalizedPostCode = (postCode || '').toUpperCase();
+    const url =`${this.URL}/cities/postCode/${normalizedPostCode}`;
     return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
       catchError((error: any) => {
         console.error('Error en la solicitud:', error);

@@ -41,6 +41,23 @@ export class AddCityComponent {
     });
   }
 
+  onPostCodeInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input) {
+      let value = input.value.toUpperCase();
+      
+      // Filtrar solo caracteres alfanuméricos
+      value = value.replace(/[^A-Z0-9]/g, '');
+      
+      // Limitar a máximo 10 caracteres
+      if (value.length > 10) {
+        value = value.substring(0, 10);
+      }
+      
+      input.value = value;
+    }
+  }
+
   add(addForm: NgForm) {
     const newCity = addForm.value;
 
@@ -56,7 +73,21 @@ export class AddCityComponent {
       return;
     }
 
+    // Validar longitud del código postal
+    if (newCity.postCode.length < 8 || newCity.postCode.length > 10) {
+      this.utils.showAlert('error', 'Error en el código postal', 'El código postal debe tener entre 8 y 10 caracteres.');
+      return;
+    }
+
+    // Validar que el código postal sea solo alfanumérico
+    const alphanumericRegex = /^[A-Z0-9]+$/;
+    if (!alphanumericRegex.test(newCity.postCode)) {
+      this.utils.showAlert('error', 'Error en el código postal', 'El código postal solo puede contener letras y números.');
+      return;
+    }
+
     newCity.name = this.utils.capitalize(newCity.name ?? '');
+    newCity.postCode = (newCity.postCode ?? '').toUpperCase();
 
     this.cityService.findCityByPostCode(newCity.postCode).subscribe({
       next: (existingCity: any) => {
