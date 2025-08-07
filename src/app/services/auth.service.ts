@@ -17,7 +17,7 @@ type DecodeUserPayload = {
   providedIn: 'root'
 })
 export class AuthService {
-  private URL = `${environment.apiUrl}api`; 
+  private URL = `${environment.apiUrl}api`;
   private tokenKey = 'access_token'
 
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.checkToken());
@@ -100,20 +100,20 @@ export class AuthService {
     this.isAdminInSubject.next(false);
     this.router.navigate(['/UserRegistration']);
   }
-  
+
   sendResetPasswordEmail(email: string): Observable<any> {
   const url = `${this.URL}/auth/password/recovery`;
   return this.http.post<any>(url, { email }, { headers: this.getAuthHeaders() }).pipe(
     catchError((error: any) => {
       console.error('Error en la solicitud:', error);
-      return of(null); // Devuelve null en caso de error
+      return of(null);
     })
   );
 }
 
-sendRequestToLogin(email: string, password: any): Observable<any> {
+sendRequestToLogin(email: string, password: any, captchaToken: string): Observable<any> {
   const url = `${this.URL}/auth/login`;
-  return this.http.post<any>(url, { email, password }, { headers: this.getAuthHeaders() }).pipe(
+  return this.http.post<any>(url, { email, password, captchaToken  }, { headers: this.getAuthHeaders() }).pipe(
     catchError((err) => {
       console.error('Error en el servicio:', err);
       return throwError(() => err); // Reemite el error
@@ -131,17 +131,17 @@ updateUserEmail(newEmail: string): void {
         ...decodedToken,
         email: newEmail
       };
-      
+
       // Store updated email immediately
       localStorage.setItem('currentUserEmail', newEmail);
     } catch (error) {
       console.error('Token update failed:', error);
     }
-  } 
+  }
 
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
-  
+
 }
 

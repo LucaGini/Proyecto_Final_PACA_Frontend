@@ -78,7 +78,7 @@ form {
     color: #ffd700;
     text-decoration: underline;
   }
-  
+
   &:disabled {
     background: #ccc;
     color: #777;
@@ -129,3 +129,6 @@ form {
   animation: fadeIn 0.5s ease-out;
 }
 
+.d-flex.flex-column.align-items-center {
+  margin-top: 1rem;
+}
