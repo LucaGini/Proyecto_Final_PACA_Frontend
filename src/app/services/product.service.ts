@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable , of, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
@@ -55,12 +55,19 @@ loadProducts() {
   findProductByName(name: string): Observable<any> {
     const url =`${this.URL}/products/product/${name}`;
     return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
-      catchError((error: any) => {
-        console.error('Error en la solicitud:', error);
-        return of(null); 
-      })
-    );
-  }
+      map(response => { 
+        return null;
+       }),
+       catchError((error: any) => {
+         if (error.status === 404) {
+           return of(error.error?.data ?? true); 
+         } else {
+           console.error('Error en la solicitud:', error);
+           throw error;
+         }
+       })
+     );
+   }
 
 searchProducts(query: string): Observable<any> {
   return this.http.get<any>(`${this.URL}/products/search?query=${encodeURIComponent(query)}`).pipe(
