@@ -1,17 +1,4 @@
-form {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 2.5rem;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(231, 198, 51, 0.1);
-  transition: all 0.3s ease;
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(231, 198, 51, 0.2);
-  }
-}
 
 .form-group {
   margin-bottom: 2rem;
@@ -82,22 +69,35 @@ form {
 
 .input-group {
   position: relative;
+  width: 100%;
   margin-bottom: 1.5rem;
+}
+
+.input-group .form-control {
+  width: 100%;
+  padding-right: 0.5rem;
+  box-sizing: border-box;
+}
+
+.input-group-text {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
   display: flex;
   align-items: center;
-
-  .input-group-text {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    z-index: 5;
-    padding: 0.5rem;
-    cursor: pointer;
-  }
+  justify-content: center;
+  color: #666;
+  font-size: 1.1rem;
+  z-index: 10;
 }
+
+.input-group-text:hover {
+  color: #e7c633;
+}
+
 
 .ng-valid:not(form).ng-touched {
   border-color: #42a942;
@@ -119,9 +119,3 @@ form {
     transform: translateY(0);
   }
 }
-
-
-form {
-  animation: fadeIn 0.5s ease-out;
-}
-

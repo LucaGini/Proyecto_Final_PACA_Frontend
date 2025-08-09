@@ -48,6 +48,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { NotFoundComponent } from './not-found/not-found.component';
 
+import { SharedModule } from './shared/shared.module';
+
 @NgModule({
   declarations: [
     AboutUsComponent,
@@ -69,9 +71,9 @@ import { NotFoundComponent } from './not-found/not-found.component';
     SurchargelistComponent,
     OrderListComponent,
     OrdersHistoryComponent,
-    NotFoundComponent
+    NotFoundComponent,
   ],
-  
+
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -91,6 +93,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     MatTabsModule,
     CommonModule,
     AdminModule,
+    SharedModule,
   ],
   exports: [],
   providers: [
