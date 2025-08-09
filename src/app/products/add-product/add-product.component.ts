@@ -17,6 +17,8 @@ export class AddProductComponent implements OnInit {
   suppliers: any[] = [];
   selectedImage: File | null = null;
   imagePreviewUrl: string | ArrayBuffer | null = null;
+  stockMinInvalid: boolean = false;
+
 
   constructor(
     private productService: ProductService,
@@ -75,6 +77,7 @@ export class AddProductComponent implements OnInit {
       newProduct.description,
       newProduct.price,
       newProduct.stock,
+      newProduct.minimumStock,
       newProduct.category,
       newProduct.supplier
     ];
@@ -84,6 +87,13 @@ export class AddProductComponent implements OnInit {
       return;
     }
 
+    if (!this.utils.isValidStock(newProduct.minimumStock, newProduct.stock)) {
+      this.stockMinInvalid = true;
+      console.log("bandera entrando", this.stockMinInvalid);
+      this.utils.showAlert('error', 'Error en el stock', 'El stock mínimo debe ser menor que el stock total.');
+      return;
+    }
+    console.log("bandera stock sin entrar", this.stockMinInvalid);
     newProduct.name = this.utils.capitalize(newProduct.name ?? '');
 
     const formData = new FormData();

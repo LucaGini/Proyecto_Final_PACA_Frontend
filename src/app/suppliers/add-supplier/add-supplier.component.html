@@ -3,15 +3,12 @@
         <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data">
             
             <div class="form-group">
-            <label for="cuit">CUIT</label>
-            <input type="text" class="form-control" id="cuit" ngModel name="cuit" required pattern="^[0-9]{11}$"
-                    #cuitInput="ngModel"
-                    [ngClass]="{ 'is-invalid': cuitInput.invalid && cuitInput.touched }" />
-            
-            <div *ngIf="cuitInput.invalid && cuitInput.touched" class="text-danger">
-                <small *ngIf="cuitInput.errors?.['required']">El CUIT es obligatorio.</small>
-                <small *ngIf="cuitInput.errors?.['pattern']">El CUIT debe tener exactamente 11 números.</small>
-            </div>
+                <label for="cuit">Cuit:</label>
+                <input type="number" class="form-control" id="cuit" ngModel name="cuit" [formControl]="cuitControl" required>
+                <div *ngIf="cuitControl.invalid && (cuitControl.dirty || cuitControl.touched)" class="text-danger">
+                    <div *ngIf="cuitControl.errors?.['required']">CUIT es obligatorio.</div>
+                    <div *ngIf="cuitControl.errors?.['pattern']">CUIT debe tener exactamente 11 caracteres numéricos.</div>
+                </div>
             </div>
 
             <div class="form-group">

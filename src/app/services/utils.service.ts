@@ -56,6 +56,12 @@ export class UtilsService {
     const phoneRegex = /^\d{10,15}$/; // Ajusta el rango según tus necesidades
     return phoneRegex.test(phone);
   }
+  isValidStock(minimumStock: any, stock: any): boolean {
+    const min = Number(minimumStock);
+    const total = Number(stock);
+    return !isNaN(min) && !isNaN(total) && min < total;
+}
+
 
   markAllControlsAsTouched(formGroup: { [key: string]: AbstractControl }) {
     Object.values(formGroup).forEach(control => control.markAsTouched());
@@ -87,6 +93,7 @@ export class UtilsService {
       timerProgressBar: true
     });
   }
+  
 }
 
 

@@ -145,7 +145,7 @@ export class CartComponent implements OnInit {
             this.items = [];
             this.totalAmount = 0;
             this.productService.loadProducts();
-            this.router.navigate(['/']);
+            this.router.navigate(['/products']);
           },
           error: (err) => {
             console.error('Error creando la orden:', err);

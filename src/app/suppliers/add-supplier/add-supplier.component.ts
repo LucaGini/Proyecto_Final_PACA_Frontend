@@ -41,13 +41,15 @@ export class AddSupplierComponent {
       newSupplier.cuit
     ];
 
+    console.log("el cuit es: ", newSupplier.cuit);
+    console.log("campos obligatorios: ", camposObligatorios);
     if (!this.utils.areValidFields(camposObligatorios)) {
       this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
       return;
     }
 
     newSupplier.businessName = this.utils.capitalize(newSupplier.businessName ?? '');
-
+    console.log("el cuit es: ", newSupplier.cuit);
     this.supplierService.findSupplierByCuit(newSupplier.cuit)
       .subscribe({
         next: (existingSupplier: any) => {
@@ -56,6 +58,7 @@ export class AddSupplierComponent {
               next: () => {
                 this.utils.showAlert('success', 'Proveedor agregado con éxito!!');
                 addForm.resetForm();
+                this.cuitControl.reset();
                 this.router.navigate(['AdminSuppliers']);
               },
               error: (err: any) => {
