@@ -125,9 +125,6 @@
       <div *ngIf="!product.editing">
         <h3 class="card-text" style="font-family: 'Quicksand', sans-serif;">Stock mínimo: {{ product.minimumStock }}</h3>
       </div>
-      <div *ngIf="!product.editing">
-        <h3 class="card-text" style="font-family: 'Quicksand', sans-serif;">MAILo: {{ product.mailSent }}</h3>
-      </div>
 
       <div *ngIf="product.editing" style="margin-top: 10px;">
         <button mat-icon-button class="btn" (click)="save(product)" style="color: #e7c633;"
