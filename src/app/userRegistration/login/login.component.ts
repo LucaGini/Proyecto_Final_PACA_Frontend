@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { UtilsService } from '../../services/utils.service';
+
+import { RecaptchaComponent } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-login',
@@ -11,6 +13,8 @@ import { UtilsService } from '../../services/utils.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
+    @ViewChild('captchaRef') captchaRef!: RecaptchaComponent;
+
   captchaToken: string | null = null;
 
   loginError: string = '';
@@ -78,6 +82,11 @@ export class LoginComponent {
             this.isPasswordIncorrect = true;
             this.loginError = error?.message || 'Contraseña incorrecta';
             this.utils.showAlert('error', 'Error', 'Usuario no encontrado.');
+
+            if (this.captchaRef) {
+              this.captchaRef.reset();
+            }
+            this.captchaToken = null;
           },
         });
     } else {
