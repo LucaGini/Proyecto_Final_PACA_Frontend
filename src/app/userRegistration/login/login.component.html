@@ -1,5 +1,5 @@
 <form [formGroup]="loginForm">
-  
+
   <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
     <label for="exampleInputEmail1" class="form-label">Email</label>
     <input formControlName="email" type="email" class="form-control" [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched)}" id="exampleInputEmail1" aria-describedby="emailHelp">
@@ -12,8 +12,8 @@
       </small>
     </div>
   </div>
-  
-  
+
+
   <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
     <label for="exampleInputPassword1" class="form-label">Contraseña</label>
     <div class="input-group">
@@ -32,13 +32,24 @@
     <small *ngIf="isPasswordIncorrect" class="text-danger" id="password-error">
       El mail o la contraseña es incorrecto.
     </small>
-  
+
     <div>
       <a href="/reset-password" class="btn-link font-small">¿Olvidaste tu contraseña?</a>
     </div>
   </div>
-  
-  <div class="d-flex justify-content-center">
-    <button type="submit" (click)="login()" [disabled]="loginForm.invalid" class="btn btn-warning" id="logIn">Iniciar Sesión</button>
-  </div>
+
+<div class="d-flex flex-column align-items-center">
+<re-captcha
+  #captchaRef
+  (resolved)="onCaptchaResolved($event)"
+  siteKey="6Ld1vp0rAAAAAC7PNqnpJlclDZENU7DVWV-djyAq">
+</re-captcha>
+
+  <button type="submit" (click)="login()" [disabled]="loginForm.invalid || !captchaToken" class="btn btn-warning" id="logIn">
+    Iniciar Sesión
+  </button>
+</div>
+
+
 </form>
+
