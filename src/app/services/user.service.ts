@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http'; // Asegúrate de incluir esto
 import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from './userInterface'; // Asegúrate de que la ruta sea correcta
 
@@ -34,12 +34,19 @@ export class UserService {
 findUserByEmail(email: string): Observable<any> {
   const url = `${this.URL}/users/by-email?email=${email}`; 
   return this.http.get(url).pipe(
-    catchError((error: any) => {
-      console.error('Error en la solicitud:', error);
-      return of(null); 
-    })
-  );
-}
+       map(response => { 
+         return null;
+        }),
+        catchError((error: any) => {
+          if (error.status === 404) {
+            return of(error.error?.data ?? true); 
+          } else {
+            console.error('Error en la solicitud:', error);
+            throw error;
+          }
+        })
+      );
+    }
 
   updatePassword(email: string, password: string): Observable<any> {
     const url = `${this.URL}/users/update-password`;

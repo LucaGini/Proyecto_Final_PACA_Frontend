@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders  } from '@angular/common/http';
 import { Observable, of, throwError, BehaviorSubject } from 'rxjs'; 
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
@@ -68,13 +68,24 @@ export class CategoryService {
     return this.http.get<any[]>(`${this.URL}/categories/${name}/products`);
   }
 
-  findCategoryByName(name: string): Observable<any> {
-    const url =`${this.URL}/categories/${name}`;
-    return this.http.get(url,{ headers: this.getAuthHeaders() }).pipe(
-      catchError((error: any) => {
+ findCategoryByName(name: string): Observable<any | null> {
+  const url = `${this.URL}/categories/${name}`;
+  return this.http.get(url, {
+    headers: this.getAuthHeaders(),
+    observe: 'response'
+  }).pipe(
+    map(response => {
+    
+      return null;
+    }),
+    catchError((error: any) => {
+      if (error.status === 404) {
+        return of(error.error?.data ?? true); 
+      } else {
         console.error('Error en la solicitud:', error);
-        return of(null); 
-      })
-    );
-  }
+        throw error;
+      }
+    })
+  );
+}
 }
