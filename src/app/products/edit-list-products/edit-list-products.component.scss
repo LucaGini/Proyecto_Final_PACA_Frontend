@@ -184,3 +184,18 @@ button:disabled, button[disabled] {
   background: #ccc !important;
   color: #777 !important;
 }
+
+.example-button-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+/* Posicionamos el botón de warning a la izquierda, fuera del contenedor de botones */
+.low-stock-sent {
+  position: absolute;
+  left: -10px; /* Ajustá según tamaño del botón */
+  top: 50%;
+  transform: translateY(-50%);
+}

@@ -47,14 +47,20 @@ export class EditListProductsComponent {
   ) {}
 
   ngOnInit() {
-    this.getSuppliers();
-    this.getCategories();
-    
-    // Cargar todos los productos inicialmente
-    this.productService.products$.subscribe((data: any) => {
-      this.allProducts = data;
-      this.applyFilters(); // Aplicar filtros cada vez que se actualicen los productos
-    });
+  this.getSuppliers();
+  this.getCategories();
+  this.loadProducts();
+  
+  // Cargar todos los productos, activos e inactivos
+  // this.productService.findAll().subscribe({
+  //   next: (res: any) => {
+  //     this.allProducts = res.data; // guardamos todos
+  //     this.applyFilters();         // aplicamos los filtros si hubiera
+  //   },
+  //   error: (err) => {
+  //     console.error('Error al cargar productos', err);
+  //   }
+  // });
 
     // Escuchar cambios en el filtro de proveedor
     this.filterProductsSupplierService.supplierSelected$.subscribe((cuit: number) => {
@@ -69,6 +75,18 @@ export class EditListProductsComponent {
     });
   }
 
+  loadProducts() {
+  this.productService.findAll().subscribe({
+    next: (res: any) => {
+      this.allProducts = res.data;
+      this.applyFilters();
+    },
+    error: (err) => {
+      console.error('Error loading products:', err);
+    }
+  });
+}
+
   delete(id: string) {
     this.utils.showConfirm('Desea eliminar el producto', 'Esta acción no se puede deshacer')
       .then((result) => {
@@ -76,6 +94,7 @@ export class EditListProductsComponent {
           this.productService.delete(id).subscribe({
             next: () => {
               this.utils.showAlert('success', 'La acción ha sido confirmada');
+              this.loadProducts();
             },
             error: err => {
               console.error(err);
@@ -138,6 +157,7 @@ save(product: any): void {
             }
             this.utils.showAlert('success', 'Producto actualizado con éxito');
             product.editing = false;
+            this.loadProducts();
           },
           error: (err: any) => {
             console.error(err);
@@ -274,4 +294,15 @@ save(product: any): void {
     }
   });
 }
+reActive(productId: string) {
+  console.log('Reactivating product with ID:', productId);
+    this.productService.reActivate(productId).subscribe({
+      next: () => {
+        this.loadProducts(); // recarga la lista
+      },
+      error: (err) => {
+        console.error('Error reactivating product:', err);
+      }
+    });
+  }
 }

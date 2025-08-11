@@ -35,9 +35,12 @@ loadProducts() {
     return this.http.post<any>(`${this.URL}/products`, productData, { headers: this.getAuthHeaders() }).pipe(tap(() => this.loadProducts()));
   }
 
-  findAll(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.URL}/products`);
+  findAllActive(): Observable<any> {
+  return this.http.get(`${this.URL}/products`);
   }
+  findAll(): Observable<any> {
+  return this.http.get(`${this.URL}/products/all/products`, { headers: this.getAuthHeaders() });
+}
 
   delete(productId: string): Observable<any> {
     return this.http.delete(`${this.URL}/products/${productId}`, { headers: this.getAuthHeaders() })
@@ -91,4 +94,11 @@ findOne(productId: string): Observable<any> {
     })
   );
 }
+reActivate(id: string): Observable<any> {
+  const url = `${this.URL}/products/${id}/reactivate`;
+  console.log('PATCH URL:', url);
+  return this.http.patch(url, {}, { headers: this.getAuthHeaders() });
 }
+
+}
+

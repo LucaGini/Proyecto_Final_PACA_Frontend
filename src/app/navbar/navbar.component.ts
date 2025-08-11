@@ -133,7 +133,7 @@ onSearch(event: Event) {
         } else {
           Swal.fire('No se encuentran productos que cumplan con la búsqueda', '', 'info');
           // Fetch all products and emit the event
-          this.productService.findAll().subscribe((allProductsResponse: any) => {
+          this.productService.findAllActive().subscribe((allProductsResponse: any) => {
             this.navbarEventService.emitSearchResults(allProductsResponse.data);
             // Navigate to the body component without query params
             this.router.navigate(['/']);

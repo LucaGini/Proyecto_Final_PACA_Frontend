@@ -44,7 +44,7 @@ export class BodyComponent implements OnInit {
         });
       } else {
         this.isSearching = false; 
-        this.productService.findAll().subscribe((data: any) => {
+        this.productService.findAllActive().subscribe((data: any) => {
           this.products = data.data;
         });
       }
