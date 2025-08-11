@@ -28,10 +28,18 @@
       </div>
 
       <div class="form-group">
+        <label for="minimumStock">Stock minimo</label>
+        <input type="number" class="form-control" id="minimumStock"  ngModel name="minimumStock" required #minimumStockInput="ngModel"[ngClass]="{ 'is-invalid': minimumStockInput.invalid && minimumStockInput.touched }"/>
+        <div *ngIf="minimumStockInput.invalid && minimumStockInput.touched" class="text-danger">
+          <small *ngIf="minimumStockInput.errors?.['required']">El stock mínimo es obligatorio, debe ser menor al stock ingresado.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label for="precio">Precio</label>
-        <input type="text" class="form-control" id="price"  ngModel name="price" required #priceInput="ngModel"[ngClass]="{ 'is-invalid': priceInput.invalid && stockInput.touched }"/>
+        <input type="text" class="form-control" id="price"  ngModel name="price" required #priceInput="ngModel"[ngClass]="{ 'is-invalid': priceInput.invalid && priceInput.touched }"/>
         <div *ngIf="priceInput.invalid && priceInput.touched" class="text-danger">
-          <small *ngIf="stockInput.errors?.['required']">El precio es obligatorio.</small>
+          <small *ngIf="priceInput.errors?.['required']">El precio es obligatorio.</small>
         </div>
       </div>
 

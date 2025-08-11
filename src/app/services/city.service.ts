@@ -42,7 +42,7 @@ export class CityService {
   }
 
   findOne(id: string): Observable<any> {
-    const url =`${this.URL}/cities/${id}`;
+    const url =`${this.URL}/cities/by-id/${id}`;
     return this.http.get(url).pipe(
       catchError((error: any) => {
         console.error('Error en la solicitud:', error);

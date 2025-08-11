@@ -47,6 +47,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
     OrdersHistoryComponent,
     NotFoundComponent
   ],
-  
+
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -91,6 +92,9 @@ import { NotFoundComponent } from './not-found/not-found.component';
     MatTabsModule,
     CommonModule,
     AdminModule,
+
+        RecaptchaModule,
+    RecaptchaFormsModule
   ],
   exports: [],
   providers: [

@@ -1,16 +1,22 @@
-import { Component } from '@angular/core';
-import { Router } from "@angular/router";
+import { Component, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LoginService } from '../../services/login.service';
 import { UtilsService } from '../../services/utils.service';
 
+import { RecaptchaComponent } from 'ng-recaptcha';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
+    @ViewChild('captchaRef') captchaRef!: RecaptchaComponent;
+
+  captchaToken: string | null = null;
+
   loginError: string = '';
   isPasswordIncorrect: boolean = false;
   showPassword: boolean = false;
@@ -36,32 +42,59 @@ export class LoginComponent {
     return this.loginForm.controls.password;
   }
 
+  onCaptchaResolved(token: string | null) {
+    if (token) {
+      this.captchaToken = token;
+    } else {
+      this.captchaToken = null;
+    }
+  }
+
   login() {
+    if (!this.captchaToken) {
+      this.utils.showAlert('error', 'Error', 'Por favor completa el captcha.');
+      return;
+    }
+
     if (this.loginForm.valid) {
       const email = this.email.value?.toLowerCase() || '';
       const password = this.password.value || '';
 
       if (!this.utils.validateEmail(email)) {
-        this.utils.showAlert('error', 'Email inválido', 'Por favor ingrese un email válido.');
+        this.utils.showAlert(
+          'error',
+          'Email inválido',
+          'Por favor ingrese un email válido.'
+        );
         return;
       }
 
-      this.authService.sendRequestToLogin(email, password).subscribe({
-        next: (data) => {
-          this.authService.saveToken(data.accessToken);
-          this.isPasswordIncorrect = false;
-          this.loginError = '';
-          this.router.navigate(['/']);
-        },
-        error: (error) => {
-          this.isPasswordIncorrect = true;
-          this.loginError = error?.message || 'Contraseña incorrecta';
-          this.utils.showAlert('error', 'Error', 'Usuario no encontrado.');
-        }
-      });
+      this.authService
+        .sendRequestToLogin(email, password, this.captchaToken!)
+        .subscribe({
+          next: (data) => {
+            this.authService.saveToken(data.accessToken);
+            this.isPasswordIncorrect = false;
+            this.loginError = '';
+            this.router.navigate(['/']);
+          },
+          error: (error) => {
+            this.isPasswordIncorrect = true;
+            this.loginError = error?.message || 'Contraseña incorrecta';
+            this.utils.showAlert('error', 'Error', 'Usuario no encontrado.');
+
+            if (this.captchaRef) {
+              this.captchaRef.reset();
+            }
+            this.captchaToken = null;
+          },
+        });
     } else {
       this.utils.markAllControlsAsTouched(this.loginForm.controls);
-      this.utils.showAlert( 'error', 'Campos incompletos', 'Por favor completá todos los campos requeridos.'
+      this.utils.showAlert(
+        'error',
+        'Campos incompletos',
+        'Por favor completá todos los campos requeridos.'
       );
     }
   }
