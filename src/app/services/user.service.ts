@@ -33,20 +33,21 @@ export class UserService {
 
 findUserByEmail(email: string): Observable<any> {
   const url = `${this.URL}/users/by-email?email=${email}`; 
-  return this.http.get(url).pipe(
-       map(response => { 
-         return null;
-        }),
-        catchError((error: any) => {
-          if (error.status === 404) {
-            return of(error.error?.data ?? true); 
-          } else {
-            console.error('Error en la solicitud:', error);
-            throw error;
-          }
-        })
-      );
-    }
+  return this.http.get<any>(url).pipe(
+    map(response => {
+      console.log('Respuesta del backend:', response);
+      return response?.data ?? null; // Si existe data, la devuelve, si no, null
+    }),
+    catchError((error: any) => {
+      if (error.status === 404) {
+        return of(null); // Usuario no encontrado → null
+      } else {
+        console.error('Error en la solicitud:', error);
+        return throwError(() => error);
+      }
+    })
+  );
+}
 
   updatePassword(email: string, password: string): Observable<any> {
     const url = `${this.URL}/users/update-password`;

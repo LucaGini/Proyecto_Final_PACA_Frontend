@@ -165,7 +165,7 @@ export class CartComponent implements OnInit {
     if (user) {
       this.userService.findUserByEmail(user.email).subscribe({
         next: (data) => {
-          this.userData = data.data;
+          this.userData = data;
 
           this.cityService.findOne(this.userData.city).subscribe({
             next: (city) => {
