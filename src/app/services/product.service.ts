@@ -39,6 +39,10 @@ loadProducts() {
     return this.http.get<any[]>(`${this.URL}/products`);
   }
 
+  findActive(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.URL}/products/active-products`); 
+  }
+
   delete(productId: string): Observable<any> {
     return this.http.delete(`${this.URL}/products/${productId}`, { headers: this.getAuthHeaders() })
   }
