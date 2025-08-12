@@ -86,10 +86,15 @@ export class CityService {
    }
 
   findCityById(cityId: string): Observable<any> {
-    const url = `${this.URL}/cities/${cityId}`;
-    return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
+    const url = `${this.URL}/cities/by-id/${cityId}`;
+    console.log('🏙️ Buscando ciudad por ID:', cityId, 'URL:', url);
+    return this.http.get(url).pipe(
+      map((response: any) => {
+        console.log('🏙️ Respuesta de ciudad:', response);
+        return response;
+      }),
       catchError((error: any) => {
-        console.error('Error fetching city:', error);
+        console.error('❌ Error fetching city:', error);
         return of(null); 
       })
     );

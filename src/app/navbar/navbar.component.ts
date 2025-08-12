@@ -115,7 +115,9 @@ export class NavbarComponent implements OnInit {
 
 onSearch(event: Event) {
     event.preventDefault();
-    const query = (document.getElementById('search-input') as HTMLInputElement).value;
+    const searchInput = (document.getElementById('search-input') as HTMLInputElement);
+    const query = searchInput.value.trim();
+    
     if (!query) {
       Swal.fire('Ingrese un término para buscar', '', 'warning');
       return;
@@ -126,17 +128,20 @@ onSearch(event: Event) {
         if (response.message === 'found products' && response.data.length > 0) {
           // Emit the search results event
           this.navbarEventService.emitSearchResults(response.data);
-          // Navigate to the body component with the search query
-          this.router.navigate(['/'], { queryParams: { q: query } }).then(()=>{
+          // Navigate to the products page with the search query
+          this.router.navigate(['/products'], { queryParams: { q: query } }).then(()=>{
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            searchInput.value = ''; // Limpiar el input después de la búsqueda
           })
         } else {
           Swal.fire('No se encuentran productos que cumplan con la búsqueda', '', 'info');
           // Fetch all products and emit the event
           this.productService.findActive().subscribe((allProductsResponse: any) => {
             this.navbarEventService.emitSearchResults(allProductsResponse.data);
-            // Navigate to the body component without query params
-            this.router.navigate(['/']);
+            // Navigate to the products page without query params
+            this.router.navigate(['/products']).then(() => {
+              searchInput.value = ''; // Limpiar el input
+            });
           });
         }
       },
