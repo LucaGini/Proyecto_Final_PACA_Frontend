@@ -38,7 +38,7 @@ export class ProductDetailsComponent implements OnInit {
     this.route.queryParams.subscribe((queryParams) => {
       const searchTerm = queryParams['q'];
 
-      this.productService.findAll().subscribe((data:any) => {
+      this.productService.findActive().subscribe((data:any) => {
         this.products = data.data;  // dentro de data están los productos
 
         this.buildData()

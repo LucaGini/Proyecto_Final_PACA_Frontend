@@ -50,6 +50,8 @@
           style="color: #e7c633;"><mat-icon>create</mat-icon></button>
         <button mat-icon-button class="btn" *ngIf="!product.editing && product.isActive" (click)="delete(product.id)"
           style="color: #f76666;"><mat-icon>delete</mat-icon></button>
+          <button mat-icon-button class="btn" *ngIf="!product.editing && !product.isActive" (click)="reactivate(product)"
+          style="color: #e7c633;"><mat-icon>restore</mat-icon></button>
 
       </div>
 

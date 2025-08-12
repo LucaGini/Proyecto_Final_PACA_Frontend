@@ -274,4 +274,19 @@ save(product: any): void {
     }
   });
 }
+
+reactivate(product: any) {
+  console.log('Reactivating product:', product.id);
+  this.productService.reactivateProduct(product.id).subscribe({
+    next: () => {
+      this.utils.showAlert('success', 'Producto reactivado', `El producto ${product.name} ha sido reactivado.`);
+      product.isActive = true;  // Actualiza el estado en UI
+    },
+    error: (err) => {
+      this.utils.showAlert('error', 'Error', 'No se pudo reactivar el producto.');
+      console.error(err);
+    }
+  });
+}
+
 }

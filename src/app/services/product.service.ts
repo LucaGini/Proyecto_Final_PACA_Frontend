@@ -44,7 +44,17 @@ loadProducts() {
   }
 
   delete(productId: string): Observable<any> {
-    return this.http.delete(`${this.URL}/products/${productId}`, { headers: this.getAuthHeaders() })
+    const url =  this.http.delete(`${this.URL}/products/${productId}`, { headers: this.getAuthHeaders() })
+    return url.pipe(
+    tap(() => {
+      this.loadProducts(); 
+    }),
+    catchError((error: any) => {
+      console.error('Error deletinting product:', error);
+      return throwError(error);
+    })
+  );
+
   }
   
   update(product: any): Observable<any> {
@@ -95,4 +105,18 @@ findOne(productId: string): Observable<any> {
     })
   );
 }
+reactivateProduct(productId: string) {
+  const url = this.http.put(`${this.URL}/products/${productId}/reactivate`, { headers: this.getAuthHeaders()  });
+  return url.pipe(
+    tap(() => {
+      this.loadProducts(); 
+    }),
+    catchError((error: any) => {
+      console.error('Error reactivating product:', error);
+      return throwError(error);
+    })
+  );
+
+}
+
 }
