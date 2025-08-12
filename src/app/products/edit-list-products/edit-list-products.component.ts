@@ -25,6 +25,7 @@ export class EditListProductsComponent {
   // Variables para mantener el estado de los filtros
   selectedSupplierCuit: number | null = null;
   selectedCategoryName: string | null = null;
+  selectedStatus: boolean | null = null;
 
   getImageUrl(imageUrl: string): string {
     // Si la imagen ya es una URL completa (Cloudinary), la retornamos tal como está
@@ -204,6 +205,13 @@ save(product: any): void {
       }
     }
 
+    // Aplicar filtro de estado si está seleccionado
+    if (this.selectedStatus !== null) {
+      filteredProducts = filteredProducts.filter(product => 
+        product.isActive === this.selectedStatus
+      );
+    }
+
     this.products = filteredProducts;
   }
 
@@ -231,6 +239,16 @@ save(product: any): void {
       this.selectedCategoryName = null;
     } else {
       this.selectedCategoryName = selectedCategory;
+    }
+    this.applyFilters();
+  }
+
+  onStatusChange(event: any) {
+    const selectedStatus = event.target.value;
+    if (selectedStatus === "") {
+      this.selectedStatus = null;
+    } else {
+      this.selectedStatus = selectedStatus === "true";
     }
     this.applyFilters();
   }
@@ -274,4 +292,19 @@ save(product: any): void {
     }
   });
 }
+
+reactivate(product: any) {
+  console.log('Reactivating product:', product.id);
+  this.productService.reactivateProduct(product.id).subscribe({
+    next: () => {
+      this.utils.showAlert('success', 'Producto reactivado', `El producto ${product.name} ha sido reactivado.`);
+      product.isActive = true;  // Actualiza el estado en UI
+    },
+    error: (err) => {
+      this.utils.showAlert('error', 'Error', 'No se pudo reactivar el producto.');
+      console.error(err);
+    }
+  });
+}
+
 }

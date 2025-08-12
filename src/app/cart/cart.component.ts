@@ -149,7 +149,12 @@ export class CartComponent implements OnInit {
           },
           error: (err) => {
             console.error('Error creando la orden:', err);
-            this.utils.showAlert('error', 'Error', 'Ocurrió un error al procesar la orden.');
+            const backendMessage = err.error?.message || '';
+            if (backendMessage.includes('ya no se encuentra a la venta') || backendMessage.includes('no está activo')) {
+              this.utils.showAlert('error', 'Producto no disponible', backendMessage);
+            } else {
+              this.utils.showAlert('error', 'Error', 'Ocurrió un error al procesar la orden.');
+            }
           },
         });
       })

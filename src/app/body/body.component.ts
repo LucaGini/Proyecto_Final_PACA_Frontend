@@ -44,14 +44,14 @@ export class BodyComponent implements OnInit {
         });
       } else {
         this.isSearching = false; 
-        this.productService.findAll().subscribe((data: any) => {
+        this.productService.findActive().subscribe((data: any) => {
           this.products = data.data;
         });
       }
     });
 
     this.navBarEventService.categoryButtonClick$.subscribe(async (name: string) => {
-      await this.categoryService.findProductsByCategory(name).subscribe((data: any) => {
+      await this.categoryService.findActiveProductsByCategory(name).subscribe((data: any) => {
         this.products = data.data;
       });
     });

@@ -48,7 +48,7 @@ export class CollectionComponent implements OnInit {
     }
 
     getProductsByCategory (name: string) {
-        this.categoryService.findProductsByCategory(name).subscribe((data:any) => {
+        this.categoryService.findActiveProductsByCategory(name).subscribe((data:any) => {
             this.products = data.data;
         });
     }

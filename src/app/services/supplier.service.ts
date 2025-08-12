@@ -33,7 +33,7 @@ export class SupplierService {
   }
     findOne(id: string): Observable<any> {
     const url =`${this.URL}/suppliers/by-id/${id}`;
-    return this.http.get(url).pipe(
+    return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
       catchError((error: any) => {
         console.error('Error en la solicitud:', error);
         return of(null); 
@@ -48,7 +48,8 @@ export class SupplierService {
   }
 
   findAll(): Observable<any[]> {
-    return this.http.get<any[]>(this.URL + '/suppliers');
+    return this.http.get<any[]>(this.URL + '/suppliers')
+    //.pipe(tap(() => this.loadSuppliers()));
   }
 
   delete(supplierId: any) {
@@ -88,8 +89,8 @@ export class SupplierService {
   }  
 
   requestRestockEmail(productId: string, supplierId: string) {
-  const url = `http://localhost:3000/api/suppliers/restock/${supplierId}`;
-  return this.http.post(url, { productId }).pipe(
+  const url = `${this.URL}/suppliers/restock/${supplierId}`;
+  return this.http.post(url, { productId }, { headers: this.getAuthHeaders() }).pipe(
     tap(response => {
     }),
     catchError(error => {
