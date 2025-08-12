@@ -49,7 +49,7 @@ export class SupplierService {
 
   findAll(): Observable<any[]> {
     return this.http.get<any[]>(this.URL + '/suppliers')
-    .pipe(tap(() => this.loadSuppliers()));
+    //.pipe(tap(() => this.loadSuppliers()));
   }
 
   delete(supplierId: any) {
