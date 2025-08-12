@@ -1,5 +1,5 @@
 <div class="user-information-container">
-    <div class="user-info-preview" *ngIf="!isEditMode && userData" else loading>
+    <div class="user-info-preview" *ngIf="!isEditMode && userData">
         <h2>Información de Usuario</h2>
         <div class="info-card">
             <div class="info-item">
@@ -41,6 +41,14 @@
                     <i class="fas fa-trash"></i> Dar de baja
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- Loading state when no user data -->
+    <div class="loading-container" *ngIf="!userData && !isEditMode">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Cargando información del usuario...</p>
         </div>
     </div>
 

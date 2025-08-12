@@ -104,7 +104,11 @@ export class CartComponent implements OnInit {
       return;
     }
 
-    this.utils.showConfirm( '¿Desea enviar la compra a su dirección registrada?', `Dirección registrada: ${this.userData.street} ${this.userData.streetNumber}`
+    const street = this.userData.street || 'Calle no especificada';
+    const streetNumber = this.userData.streetNumber || 'S/N';
+    const fullAddress = `${street} ${streetNumber}`;
+
+    this.utils.showConfirm( '¿Desea enviar la compra a su dirección registrada?', `Dirección registrada: ${fullAddress}`
     ).then((result) => {
       if (result.isConfirmed) {
         this.createOrder(this.items);
@@ -164,22 +168,41 @@ export class CartComponent implements OnInit {
 
     if (user) {
       this.userService.findUserByEmail(user.email).subscribe({
-        next: (data) => {
-          this.userData = data;
-
-          this.cityService.findOne(this.userData.city).subscribe({
-            next: (city) => {
-              if (city && city.data.surcharge !== undefined) {
-                this.cityCharge = city.data.surcharge;
-                this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
-              } else {
-                console.error("City no contiene un surcharge válido:", city);
-              }
-            },
-            error: (err) => {
-              console.error("Error cargando datos de la ciudad:", err);
-            },
-          });
+        next: (response) => {
+          if (response && response.data) {
+            this.userData = response.data;
+            console.log('🛒 Datos de usuario en cart:', this.userData);
+            
+            // userData.city contiene el ID de la ciudad, no el nombre
+            if (this.userData.city) {
+              console.log('🏙️ Buscando ciudad con ID:', this.userData.city);
+              this.cityService.findCityById(this.userData.city).subscribe({
+                next: (cityResponse) => {
+                  console.log('🏙️ Respuesta de ciudad en cart:', cityResponse);
+                  if (cityResponse && cityResponse.data && cityResponse.data.surcharge !== undefined) {
+                    this.cityCharge = cityResponse.data.surcharge;
+                    this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+                    console.log('💰 Surcharge aplicado:', this.cityCharge);
+                  } else {
+                    console.error("City no contiene un surcharge válido:", cityResponse);
+                    this.cityCharge = 0; // Valor por defecto
+                    this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+                  }
+                },
+                error: (err) => {
+                  console.error("Error cargando datos de la ciudad:", err);
+                  this.cityCharge = 0; // Valor por defecto en caso de error
+                  this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+                },
+              });
+            } else {
+              console.warn("Usuario no tiene ciudad asignada");
+              this.cityCharge = 0;
+              this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+            }
+          } else {
+            console.error("No se encontraron datos de usuario");
+          }
         },
         error: (err) => {
           console.error("Error al buscar usuario por email:", err);

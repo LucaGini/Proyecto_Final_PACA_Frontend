@@ -18,7 +18,9 @@ export class UserService {
   ) {}
 
   private getAuthHeaders(): HttpHeaders {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token'); // Usar la misma clave que AuthService
+    console.log('🔑 Token obtenido:', token ? 'Token presente' : 'No hay token');
+    console.log('🔑 Token completo:', token);
     return new HttpHeaders({
       'Authorization': token ? `Bearer ${token}` : ''
     });
@@ -33,16 +35,21 @@ export class UserService {
 
 findUserByEmail(email: string): Observable<any> {
   const url = `${this.URL}/users/by-email?email=${email}`; 
+  console.log('🌐 Haciendo petición a:', url);
+  // El interceptor se encarga automáticamente de agregar los headers de autorización
   return this.http.get<any>(url).pipe(
     map(response => {
-      console.log('Respuesta del backend:', response);
-      return response?.data ?? null; // Si existe data, la devuelve, si no, null
+      console.log('📦 Respuesta del backend:', response);
+      // Devolver la respuesta completa para que el componente pueda acceder a response.data
+      return response;
     }),
     catchError((error: any) => {
+      console.error('❌ Error en findUserByEmail:', error);
       if (error.status === 404) {
+        console.log('🔍 Usuario no encontrado (404)');
         return of(null); // Usuario no encontrado → null
       } else {
-        console.error('Error en la solicitud:', error);
+        console.error('💥 Error en la solicitud:', error);
         return throwError(() => error);
       }
     })

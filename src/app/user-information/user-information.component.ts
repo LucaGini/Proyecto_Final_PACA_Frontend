@@ -5,7 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
 import { ProvinceService } from '../services/province.service';
 import { CityService } from '../services/city.service';
-import { User } from '../services/userInterface.js';
+import { User } from '../services/userInterface';
 import { UtilsService } from '../services/utils.service'; 
 
 @Component({
@@ -58,15 +58,21 @@ export class UserInformationComponent implements OnInit {
   }
 
   loadUserData(): void {
+    console.log('🔍 Iniciando carga de datos de usuario...');
     const user = this.authService.getLoggedUser();
     const updatedEmail = localStorage.getItem('currentUserEmail');
     const emailToUse = updatedEmail ? updatedEmail : user?.email;
 
+    console.log('👤 Usuario logueado:', user);
+    console.log('📧 Email a usar:', emailToUse);
+
     if (user && emailToUse) {
       this.userService.findUserByEmail(emailToUse).subscribe({
         next: (response) => {
+          console.log('✅ Respuesta del servicio:', response);
           if (response && response.data) {
             this.userData = response.data;
+            console.log('💾 Datos de usuario cargados:', this.userData);
             if (updatedEmail) {
               localStorage.removeItem('currentUserEmail');
             }
@@ -76,19 +82,25 @@ export class UserInformationComponent implements OnInit {
               id: this.userData?._id,
               password: ''
             });
-          }
 
-          if (this.userData?.city) {
-            this.loadCityById(this.userData.city);
+            if (this.userData?.city) {
+              this.loadCityById(this.userData.city);
+            }
+          } else if (response === null) {
+            console.warn('⚠️ Usuario no encontrado con el email:', emailToUse);
+            this.handleError('Usuario no encontrado');
+          } else {
+            console.warn('⚠️ Respuesta inesperada del servicio:', response);
+            this.handleError('Error en la respuesta del servicio');
           }
         },
         error: (err) => {
-          console.error('Error loading user data:', err);
+          console.error('❌ Error loading user data:', err);
           this.handleError('Error loading user data');
         }
       });
     } else {
-      console.error('No logged in user found');
+      console.error('❌ No logged in user found - User:', user, 'Email:', emailToUse);
     }
   }
 
@@ -122,20 +134,30 @@ export class UserInformationComponent implements OnInit {
   }
 
   loadCityById(cityId: string): void {
+    console.log('🏙️ Cargando ciudad con ID:', cityId);
     this.cityService.findCityById(cityId).subscribe({
-      next: (data) => {
-        if (this.userData) {
-          if (data && data.name) {
-            this.userData.city = data.name;
-          } else if (data && data.data && data.data.name) {
-            this.userData.city = data.data.name;
+      next: (response) => {
+        console.log('🏙️ Respuesta del servicio de ciudad:', response);
+        if (this.userData && response) {
+          // El backend devuelve { message: 'found one city', data: city }
+          if (response.data && response.data.name) {
+            this.userData.city = response.data.name;
+            console.log('✅ Ciudad actualizada:', this.userData.city);
+          } else if (response.name) {
+            // Por si acaso el backend devuelve directamente el objeto ciudad
+            this.userData.city = response.name;
+            console.log('✅ Ciudad actualizada (directo):', this.userData.city);
           } else {
-            console.error('City name not found in the response data');
+            console.warn('⚠️ No se encontró el nombre de la ciudad en la respuesta');
+            this.userData.city = 'Ciudad no disponible';
           }
         }
       },
       error: (err) => {
-        console.error('Error loading city:', err);
+        console.error('❌ Error loading city:', err);
+        if (this.userData) {
+          this.userData.city = 'Error al cargar ciudad';
+        }
         this.handleError('Error loading city');
       }
     });

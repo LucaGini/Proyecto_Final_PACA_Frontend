@@ -3,6 +3,28 @@
     margin: 2rem auto;
     padding: 0 1rem;
 
+    .loading-container {
+        text-align: center;
+        padding: 3rem;
+        background: linear-gradient(145deg, #ffffff, #f9f9f9);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(231, 198, 51, 0.1);
+
+        .loading-spinner {
+            i {
+                font-size: 2rem;
+                color: #e7c633;
+                margin-bottom: 1rem;
+            }
+
+            p {
+                color: #666;
+                font-size: 1.1rem;
+                margin: 0;
+            }
+        }
+    }
+
     .user-info-preview {
         background: linear-gradient(145deg, #ffffff, #f9f9f9);
         border-radius: 15px;
