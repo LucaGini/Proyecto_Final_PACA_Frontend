@@ -25,6 +25,7 @@ export class EditListProductsComponent {
   // Variables para mantener el estado de los filtros
   selectedSupplierCuit: number | null = null;
   selectedCategoryName: string | null = null;
+  selectedStatus: boolean | null = null;
 
   getImageUrl(imageUrl: string): string {
     // Si la imagen ya es una URL completa (Cloudinary), la retornamos tal como está
@@ -204,6 +205,13 @@ save(product: any): void {
       }
     }
 
+    // Aplicar filtro de estado si está seleccionado
+    if (this.selectedStatus !== null) {
+      filteredProducts = filteredProducts.filter(product => 
+        product.isActive === this.selectedStatus
+      );
+    }
+
     this.products = filteredProducts;
   }
 
@@ -231,6 +239,16 @@ save(product: any): void {
       this.selectedCategoryName = null;
     } else {
       this.selectedCategoryName = selectedCategory;
+    }
+    this.applyFilters();
+  }
+
+  onStatusChange(event: any) {
+    const selectedStatus = event.target.value;
+    if (selectedStatus === "") {
+      this.selectedStatus = null;
+    } else {
+      this.selectedStatus = selectedStatus === "true";
     }
     this.applyFilters();
   }

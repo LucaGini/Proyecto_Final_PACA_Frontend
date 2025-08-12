@@ -1,14 +1,28 @@
-<li class="nav-item">
-      <div class="form-group">
-        <label for="userStatus">Estado del usuario:</label>
-        <select class="form-control" id="userStatus" (change)="onUserStatusChange($event)" name="userStatus" [value]="selectedUserStatus || ''" required>
-          <option value="">Todos</option>
-          <option value="active">Activos</option>
-          <option value="inactive">Desactivados</option>
-        </select>
-      </div>
-    </li>
-<div class="row">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <div class="form-group">
+            <h2 style="font-family: 'Quicksand', sans-serif; ">Filtros</h2>
+            <label for="userStatus">Estado del usuario:</label>
+            <select class="form-control" id="userStatus" (change)="onUserStatusChange($event)" name="userStatus" [value]="selectedUserStatus || ''" required>
+              <option value="">Todos</option>
+              <option value="active">Activos</option>
+              <option value="inactive">Desactivados</option>
+            </select>
+          </div>  
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>  
+
+<div class="users-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
   <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 py-2 mb-3" *ngFor="let user of users" id="user">
       <div class="card card-user">
         <div class="card-body">
