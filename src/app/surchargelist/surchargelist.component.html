@@ -1,14 +1,20 @@
 <div class="mb-3">
-    <h3>Recargo de envio por ciudad</h3>
-    <h2 for="city">Seleccione su ciudad:</h2>
-    <select class="form-control" id="city" name="city" [(ngModel)]="selectedCityId" (change)="onCityChange($event)">
+  <div class="wrap">
+    <h3 for="city">Seleccione su ciudad:</h3>
+    <select
+      class="form-control"
+      id="city"
+      name="city"
+      [(ngModel)]="selectedCityId"
+      (change)="onCityChange($event)"
+    >
       <option *ngFor="let city of cities" [value]="city.id">
         {{ city.name }}
       </option>
     </select>
   </div>
+</div>
 
-  <div *ngIf="selectedCity && selectedCity.surcharge">
-    <h3>Recargo: {{ selectedCity.surcharge }}%</h3>
-  </div>
-
+<div *ngIf="selectedCity && selectedCity.surcharge" class="surcharge-info">
+  <h3 class="selected-city">Recargo: {{ selectedCity.surcharge }}%</h3>
+</div>

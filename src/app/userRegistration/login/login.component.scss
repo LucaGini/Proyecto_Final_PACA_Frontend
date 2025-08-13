@@ -1,20 +1,7 @@
-form {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 2.5rem;
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(231, 198, 51, 0.1);
-  transition: all 0.3s ease;
 
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(231, 198, 51, 0.2);
-  }
-}
 
 .form-group {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
 
   label {
     font-weight: 400;
@@ -90,27 +77,39 @@ form {
 
 .input-group {
   position: relative;
+  width: 100%;
   margin-bottom: 1.5rem;
-  display: flex;
-  align-items: center;
-
-  .input-group-text {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    z-index: 5;
-    padding: 0.5rem;
-    cursor: pointer;
-  }
 }
 
-.form-control.is-invalid {
-  border-color: #dc3545 !important;
-  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
-  background-image: none !important;
+.input-group .form-control {
+  width: 100%;
+  padding-right: 5rem;
+  box-sizing: border-box;
+}
+
+.input-group-text {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 1.1rem;
+  z-index: 10;
+}
+
+.input-group-text:hover {
+  color: #e7c633;
+}
+
+.ng-valid:not(form).ng-touched {
+  border-color: #42a942;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2342a942'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E") no-repeat calc(100% - 45px) 50%/20px auto;
+
 }
 
 @keyframes fadeIn {
@@ -123,12 +122,4 @@ form {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-form {
-  animation: fadeIn 0.5s ease-out;
-}
-
-.d-flex.flex-column.align-items-center {
-  margin-top: 1rem;
 }

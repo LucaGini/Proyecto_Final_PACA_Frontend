@@ -49,6 +49,8 @@ import { TokenInterceptorService } from './services/token-interceptor.service';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
+import { SharedModule } from './shared/shared.module';
+
 @NgModule({
   declarations: [
     AboutUsComponent,
@@ -70,7 +72,7 @@ import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
     SurchargelistComponent,
     OrderListComponent,
     OrdersHistoryComponent,
-    NotFoundComponent
+    NotFoundComponent,
   ],
 
   imports: [
@@ -92,8 +94,8 @@ import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
     MatTabsModule,
     CommonModule,
     AdminModule,
-
-        RecaptchaModule,
+    SharedModule,
+    RecaptchaModule,
     RecaptchaFormsModule
   ],
   exports: [],
