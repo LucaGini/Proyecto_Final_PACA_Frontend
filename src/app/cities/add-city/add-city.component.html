@@ -1,65 +1,131 @@
 <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
   <div class="card-body">
-
-    <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data">
-
+    <form
+      #addForm="ngForm"
+      id="addForm"
+      (ngSubmit)="add(addForm)"
+      enctype="multipart/form-data"
+    >
       <div class="form-group">
         <label for="name">Nombre</label>
-        <input type="text" class="form-control" id="name" name="name" ngModel required #nameInput="ngModel"[ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }"/>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          ngModel
+          required
+          #nameInput="ngModel"
+          [ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }"
+        />
         <div *ngIf="nameInput.invalid && nameInput.touched" class="text-danger">
-          <small *ngIf="nameInput.errors?.['required']">El nombre es obligatorio.</small>
+          <small *ngIf="nameInput.errors?.['required']"
+            >El nombre es obligatorio.</small
+          >
         </div>
       </div>
 
       <div class="form-group">
         <label for="postCode">Código postal</label>
 
-        <input type="text" class="form-control" id="postCode" ngModel name="postCode" 
-               (input)="onPostCodeInput($event)" 
-               pattern="[A-Za-z0-9]{8,10}"
-               style="text-transform: uppercase;" required minlength="8" maxlength="10" 
-               #postCodeInput="ngModel" [ngClass]="{ 'is-invalid': postCodeInput.invalid && postCodeInput.touched }">
-        <div *ngIf="postCodeInput.invalid && postCodeInput.touched" class="text-danger">
-          <small *ngIf="postCodeInput.errors?.['required']">El código postal es obligatorio.</small>
-          <small *ngIf="postCodeInput.errors?.['minlength']">El código postal debe tener entre 8 y 10 caracteres.</small>
-          <small *ngIf="postCodeInput.errors?.['maxlength']">El código postal debe tener entre 8 y 10 caracteres.</small>
-          <small *ngIf="postCodeInput.errors?.['pattern']">El código postal solo puede contener letras y números.</small>
-
+        <input
+          type="text"
+          class="form-control"
+          id="postCode"
+          ngModel
+          name="postCode"
+          (input)="onPostCodeInput($event)"
+          pattern="[A-Za-z0-9]{8,10}"
+          style="text-transform: uppercase"
+          required
+          minlength="8"
+          maxlength="10"
+          #postCodeInput="ngModel"
+          [ngClass]="{
+            'is-invalid': postCodeInput.invalid && postCodeInput.touched
+          }"
+        />
+        <div
+          *ngIf="postCodeInput.invalid && postCodeInput.touched"
+          class="text-danger"
+        >
+          <small *ngIf="postCodeInput.errors?.['required']"
+            >El código postal es obligatorio.</small
+          >
+          <small *ngIf="postCodeInput.errors?.['minlength']"
+            >El código postal debe tener entre 8 y 10 caracteres.</small
+          >
+          <small *ngIf="postCodeInput.errors?.['maxlength']"
+            >El código postal debe tener entre 8 y 10 caracteres.</small
+          >
+          <small *ngIf="postCodeInput.errors?.['pattern']"
+            >El código postal solo puede contener letras y números.</small
+          >
         </div>
       </div>
 
       <div class="form-group">
         <label for="postCode">Recargo</label>
-        <input type="number" class="form-control" id="surcharge" ngModel name="surcharge" ngModel required #surchargeInput="ngModel"[ngClass]="{ 'is-invalid': surchargeInput.invalid && surchargeInput.touched }"/>
-        <div *ngIf="surchargeInput.invalid && surchargeInput.touched" class="text-danger">
-          <small *ngIf="surchargeInput.errors?.['required']">El recargo es obligatorio.</small>
+        <input
+          type="number"
+          class="form-control"
+          id="surcharge"
+          ngModel
+          name="surcharge"
+          ngModel
+          required
+          #surchargeInput="ngModel"
+          [ngClass]="{
+            'is-invalid': surchargeInput.invalid && surchargeInput.touched
+          }"
+        />
+        <div
+          *ngIf="surchargeInput.invalid && surchargeInput.touched"
+          class="text-danger"
+        >
+          <small *ngIf="surchargeInput.errors?.['required']"
+            >El recargo es obligatorio.</small
+          >
         </div>
       </div>
 
       <div class="form-group">
         <label for="province">Provincia</label>
-        <select class = "form-control" id = "province" ngModel name = "province" required #provinceInput="ngModel"
-          [ngClass]="{ 'is-invalid': provinceInput.invalid && provinceInput.touched }">
-          <option disabled selected value ="">Seleccione una provincia</option>
-          <option *ngFor="let province of provinces" [value]="province.id">{{province.name}}</option>
-
-        </select> 
-        <div *ngIf="provinceInput.invalid && provinceInput.touched" class="text-danger">
+        <select
+          class="form-control"
+          id="province"
+          ngModel
+          name="province"
+          required
+          #provinceInput="ngModel"
+          [ngClass]="{
+            'is-invalid': provinceInput.invalid && provinceInput.touched
+          }"
+        >
+          <option disabled selected value="">Seleccione una provincia</option>
+          <option *ngFor="let province of provinces" [value]="province.id">
+            {{ province.name }}
+          </option>
+        </select>
+        <div
+          *ngIf="provinceInput.invalid && provinceInput.touched"
+          class="text-danger"
+        >
           <small>La provincia es obligatoria.</small>
         </div>
-
       </div>
     </form>
   </div>
 </div>
 
-
 <div class="d-flex justify-content-center">
-
-  <button type="submit" class="btn btn-warning mx-2" form="addForm" id="Accept">Guardar</button>
+  <button
+    type="submit"
+    class="btn btn-warning mx-2"
+    form="addForm"
+    id="Accept"
+    [disabled]="addForm.invalid"
+  >
+    Guardar
+  </button>
 </div>
-  <button type="submit" class="btn btn-warning mx-2" form="addForm" id="Accept" [disabled]="addForm.invalid">Guardar</button>
-</div>
-
-
-
