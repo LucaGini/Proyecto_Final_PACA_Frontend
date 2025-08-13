@@ -5,58 +5,49 @@
       formControlName="email"
       type="email"
       class="form-control"
-      [ngClass]="{
-        'is-invalid': email.invalid && (email.dirty || email.touched)
-      }"
+      [ngClass]="{ 'is-invalid': isPasswordIncorrect }"
       id="exampleInputEmail1"
       aria-describedby="emailHelp"
     />
-    <div
-      *ngIf="email.invalid && (email.dirty || email.touched)"
-      class="text-danger"
-    >
-      <small *ngIf="email.errors?.['required']"> El email es requerido. </small>
-      <small *ngIf="email.errors?.['email']">
-        El email debe tener un formato válido.
-      </small>
-    </div>
+    <form-error [visible]="email.invalid && (email.dirty || email.touched)">
+      <small *ngIf="email.errors?.['required']">El email es requerido.</small>
+      <small *ngIf="email.errors?.['email']"
+        >El email debe tener un formato válido.</small
+      >
+    </form-error>
   </div>
 
   <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
     <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-    <div class="input-group">
-      <input
-        [type]="showPassword ? 'text' : 'password'"
-        formControlName="password"
-        class="form-control"
-        [ngClass]="{
-          'is-invalid':
-            (password.invalid && (password.dirty || password.touched)) ||
-            isPasswordIncorrect
-        }"
-        id="exampleInputPassword1"
-      />
-      <span
-        class="input-group-text"
-        (click)="togglePasswordVisibility()"
-        style="cursor: pointer"
+    <div class="input-group flex-column">
+      <div class="d-flex align-items-center">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          formControlName="password"
+          class="form-control"
+          [ngClass]="{
+            'is-invalid':
+              (password.invalid && (password.dirty || password.touched)) ||
+              isPasswordIncorrect
+          }"
+          id="exampleInputPassword1"
+        />
+        <span
+          class="input-group-text"
+          (click)="togglePasswordVisibility()"
+          style="cursor: pointer"
+        >
+          <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+        </span>
+      </div>
+      <form-error
+        [visible]="password.invalid && (password.dirty || password.touched)"
       >
-        <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-      </span>
+        <small *ngIf="password.errors?.['required']"
+          >La contraseña es requerida.</small
+        >
+      </form-error>
     </div>
-    <div
-      *ngIf="password.invalid && (password.dirty || password.touched)"
-      class="text-danger"
-      id="password-error"
-    >
-      <small *ngIf="password.errors?.['required']">
-        La contraseña es requerida.
-      </small>
-    </div>
-
-    <small *ngIf="isPasswordIncorrect" class="text-danger" id="password-error">
-      El mail o la contraseña es incorrecto.
-    </small>
 
     <div>
       <a href="/reset-password" class="btn-link font-small"
