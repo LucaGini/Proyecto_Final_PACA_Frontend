@@ -1,29 +1,39 @@
 <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
     <div class="card-body">
-        <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data" ngNativeValidate>
+        <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data">
             
             <div class="form-group">
                 <label for="cuit">Cuit:</label>
                 <input type="number" class="form-control" id="cuit" ngModel name="cuit" [formControl]="cuitControl" required>
                 <div *ngIf="cuitControl.invalid && (cuitControl.dirty || cuitControl.touched)" class="text-danger">
-                    <div *ngIf="cuitControl.errors?.['required']">CUIT es requerido.</div>
+                    <div *ngIf="cuitControl.errors?.['required']">CUIT es obligatorio.</div>
                     <div *ngIf="cuitControl.errors?.['pattern']">CUIT debe tener exactamente 11 caracteres numéricos.</div>
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="businessName">Nombre:</label>
-
-                <input type="text" class="form-control" id="businessName" ngModel name="businessName" required>
+                <input type="text" class="form-control" id="businessName" ngModel name="businessName" required #businessNameInput="ngModel"[ngClass]="{ 'is-invalid': businessNameInput.invalid && businessNameInput.touched }"/>
+                <div *ngIf="businessNameInput.invalid && businessNameInput.touched" class="text-danger">
+                    <small *ngIf="businessNameInput.errors?.['required']">El nombre es obligatorio.</small>
+                </div>
             </div>
 
             <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" ngModel name="email" required>
-            </div> 
+                <label for="email">Mail</label>
+                <input type="email" class="form-control" id="email" ngModel name="email" required email #emailInput="ngModel" [ngClass]="{ 'is-invalid': emailInput.invalid && emailInput.touched }"/>
+                    <div *ngIf="emailInput.invalid && emailInput.touched" class="text-danger">
+                        <small *ngIf="emailInput.errors?.['required']">El email es obligatorio.</small>
+                        <small *ngIf="emailInput.errors?.['email']">El email debe tener un formato válido.</small>
+                    </div>
+                </div>
 
             <div class="form-group">                    
                 <label for="phone">Teléfono</label>
-                <input type="string" class="form-control" id="phone" ngModel name="phone" required>
+                <input type="string" class="form-control" id="phone" ngModel name="phone" required #phoneInput="ngModel"[ngClass]="{ 'is-invalid': phoneInput.invalid && phoneInput.touched }"/>
+                <div *ngIf="emailInput.invalid && phoneInput.touched" class="text-danger">
+                    <small *ngIf="emailInput.errors?.['required']">El telefono es obligatorio.</small>
+                </div>
             </div>
             
             <div class="form-group">
@@ -33,5 +43,5 @@
 </div>
 
 <div class="d-flex justify-content-center">
-    <button type="submit" class="btn btn-warning mx-2" form="addForm" id="Accept">Guardar</button>
+    <button type="submit" class="btn btn-warning mx-2" form="addForm" id="Accept" [disabled]="addForm.invalid">Guardar</button>
 </div>

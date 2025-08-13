@@ -50,7 +50,7 @@ const routes: Routes = [
   { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate: [AuthGuard], data: { roles: ['cliente'] }},
 
   // SOLO NO LOGUEADOS
-  { path: 'UserRegistration/new-password', component: NewPasswordComponent, canActivate: [AuthGuard], data: { onlyGuest: true } },
+  { path: 'UserRegistration/new-password', component: NewPasswordComponent},//, canActivate: [AuthGuard], data: { onlyGuest: true } },
   { path: 'reset-password', component: ResetPasswordComponent, canActivate: [AuthGuard], data: { onlyGuest: true } },
   { path: 'UserRegistration/login', component: LoginComponent , canActivate: [AuthGuard], data: { onlyGuest: true } },
   { path: 'UserRegistration', component: UserRegistrationComponent , canActivate: [AuthGuard], data: { onlyGuest: true } },
@@ -59,7 +59,6 @@ const routes: Routes = [
   { path: '', redirectTo: 'about-us', pathMatch: 'full' },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'products', component: BodyComponent },
-
   { path: 'product/:productId', component: ProductDetailsComponent },
   { path: 'collection/:collection', component: CollectionComponent },
   { path: '**', component: NotFoundComponent, data: { hideHeaderFooter: true } },

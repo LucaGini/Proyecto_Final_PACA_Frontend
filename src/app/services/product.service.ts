@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable , of, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
@@ -39,8 +39,22 @@ loadProducts() {
     return this.http.get<any[]>(`${this.URL}/products`);
   }
 
+  findActive(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.URL}/products/active-products`); 
+  }
+
   delete(productId: string): Observable<any> {
-    return this.http.delete(`${this.URL}/products/${productId}`, { headers: this.getAuthHeaders() })
+    const url =  this.http.delete(`${this.URL}/products/${productId}`, { headers: this.getAuthHeaders() })
+    return url.pipe(
+    tap(() => {
+      this.loadProducts(); 
+    }),
+    catchError((error: any) => {
+      console.error('Error deletinting product:', error);
+      return throwError(error);
+    })
+  );
+
   }
   
   update(product: any): Observable<any> {
@@ -55,12 +69,19 @@ loadProducts() {
   findProductByName(name: string): Observable<any> {
     const url =`${this.URL}/products/product/${name}`;
     return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
-      catchError((error: any) => {
-        console.error('Error en la solicitud:', error);
-        return of(null); 
-      })
-    );
-  }
+      map(response => { 
+        return null;
+       }),
+       catchError((error: any) => {
+         if (error.status === 404) {
+           return of(error.error?.data ?? true); 
+         } else {
+           console.error('Error en la solicitud:', error);
+           throw error;
+         }
+       })
+     );
+   }
 
 searchProducts(query: string): Observable<any> {
   return this.http.get<any>(`${this.URL}/products/search?query=${encodeURIComponent(query)}`).pipe(
@@ -84,4 +105,18 @@ findOne(productId: string): Observable<any> {
     })
   );
 }
+reactivateProduct(productId: string) {
+  const url = this.http.put(`${this.URL}/products/${productId}/reactivate`, { headers: this.getAuthHeaders()  });
+  return url.pipe(
+    tap(() => {
+      this.loadProducts(); 
+    }),
+    catchError((error: any) => {
+      console.error('Error reactivating product:', error);
+      return throwError(error);
+    })
+  );
+
+}
+
 }

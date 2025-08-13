@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CityService } from 'src/app/services/city.service';
 import { ProvinceService } from 'src/app/services/province.service';
-import { FilterCitiesProvinceService } from 'src/app/services/filter-cities-province.service';
+import { FilterCitiesProvinceService } from 'src/app/services/filters/filter-cities-province.service';
 import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/services/utils.service';
 
@@ -71,7 +71,7 @@ export class EditListCitiesComponent {
 
   edit(city: any): void {
     city.editName = city.name;
-    city.editPostCode = city.postCode;
+    city.editPostCode = (city.postCode ?? '').toUpperCase();
     city.editSurcharge = city.surcharge;
     city.editing = true;
   }
@@ -94,8 +94,22 @@ export class EditListCitiesComponent {
       return;
     } 
 
+    // Validar longitud del código postal
+    if (updated.postCode.length < 8 || updated.postCode.length > 10) {
+      this.utils.showAlert('error', 'Error en el código postal', 'El código postal debe tener entre 8 y 10 caracteres.');
+      return;
+    }
+
+    // Validar que el código postal sea solo alfanumérico
+    const alphanumericRegex = /^[A-Z0-9]+$/;
+    if (!alphanumericRegex.test(updated.postCode)) {
+      this.utils.showAlert('error', 'Error en el código postal', 'El código postal solo puede contener letras y números.');
+      return;
+    }
+
     if (this.utils.hasObjectChanged(original, updated)) {
       updated.name = this.utils.capitalize(updated.name ?? '');
+      updated.postCode = (updated.postCode ?? '').toUpperCase();
 
       this.cityService.findCityByPostCode(updated.postCode)
         .subscribe({
@@ -152,6 +166,34 @@ export class EditListCitiesComponent {
       });
     } else {
       this.onProvinceButtonClick(selectedProvince);
+    }
+  }
+
+  onPostCodeInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input) {
+      let upperCaseValue = input.value.toUpperCase();
+      
+      // Filtrar solo caracteres alfanuméricos
+      upperCaseValue = upperCaseValue.replace(/[^A-Z0-9]/g, '');
+      
+      // Limitar a máximo 10 caracteres
+      if (upperCaseValue.length > 10) {
+        upperCaseValue = upperCaseValue.substring(0, 10);
+      }
+      
+      input.value = upperCaseValue;
+      
+      // También actualizar el modelo vinculado directamente
+      // Buscar la ciudad correspondiente en el array y actualizar su editPostCode
+      const formElement = input.closest('form') || input.closest('.card-body');
+      if (formElement) {
+        const cityElements = document.querySelectorAll('.card-body');
+        const currentIndex = Array.from(cityElements).findIndex(element => element.contains(input));
+        if (currentIndex >= 0 && this.cities[currentIndex]) {
+          this.cities[currentIndex].editPostCode = upperCaseValue;
+        }
+      }
     }
   }
 }

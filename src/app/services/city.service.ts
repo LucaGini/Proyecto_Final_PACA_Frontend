@@ -42,7 +42,7 @@ export class CityService {
   }
 
   findOne(id: string): Observable<any> {
-    const url =`${this.URL}/cities/${id}`;
+    const url =`${this.URL}/cities/by-id/${id}`;
     return this.http.get(url).pipe(
       catchError((error: any) => {
         console.error('Error en la solicitud:', error);
@@ -68,20 +68,33 @@ export class CityService {
   
 
   findCityByPostCode(postCode: string): Observable<any> {
-    const url =`${this.URL}/cities/postCode/${postCode}`;
+    const normalizedPostCode = (postCode || '').toUpperCase();
+    const url =`${this.URL}/cities/postCode/${normalizedPostCode}`;
     return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
-      catchError((error: any) => {
-        console.error('Error en la solicitud:', error);
-        return of(null); 
-      })
-    );
-  }
+            map(response => { 
+        return null;
+       }),
+       catchError((error: any) => {
+         if (error.status === 404) {
+           return of(error.error?.data ?? true); 
+         } else {
+           console.error('Error en la solicitud:', error);
+           throw error;
+         }
+       })
+     );
+   }
 
   findCityById(cityId: string): Observable<any> {
-    const url = `${this.URL}/cities/${cityId}`;
-    return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
+    const url = `${this.URL}/cities/by-id/${cityId}`;
+    console.log('🏙️ Buscando ciudad por ID:', cityId, 'URL:', url);
+    return this.http.get(url).pipe(
+      map((response: any) => {
+        console.log('🏙️ Respuesta de ciudad:', response);
+        return response;
+      }),
       catchError((error: any) => {
-        console.error('Error fetching city:', error);
+        console.error('❌ Error fetching city:', error);
         return of(null); 
       })
     );

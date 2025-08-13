@@ -65,12 +65,19 @@ export class ProvinceService {
 findProvinceByName(name: string): Observable<any> {
   const url =`${this.URL}/provinces/${name}`;
   return this.http.get(url,{ headers: this.getAuthHeaders() }).pipe(
-    catchError((error: any) => {
-      console.error('Error en la solicitud:', error);
-      return of(null); 
-    })
-  );
-}
+       map(response => { 
+        return null;
+       }),
+       catchError((error: any) => {
+         if (error.status === 404) {
+           return of(error.error?.data ?? true); 
+         } else {
+           console.error('Error en la solicitud:', error);
+           throw error;
+         }
+       })
+     );
+   }
 
   findCitiesByProvince(id: string): Observable<any[]> {
     return this.http.get<any>(`${this.URL}/provinces/cities/${id}`).pipe(

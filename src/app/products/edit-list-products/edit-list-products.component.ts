@@ -3,11 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
 import { Router } from '@angular/router';
 import { SupplierService } from 'src/app/services/supplier.service';
-import { FilterProductsSupplierService } from 'src/app/services/filter-products-supplier.service';
+import { FilterProductsSupplierService } from 'src/app/services/filters/filter-products-supplier.service';
 import { CategoryService } from 'src/app/services/category.service';
-import { FilterProductsCategoryService } from 'src/app/services/filter-products-category.service';
+import { FilterProductsCategoryService } from 'src/app/services/filters/filter-products-category.service';
 import { environment } from '../../../environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-list-products',
@@ -24,6 +25,16 @@ export class EditListProductsComponent {
   // Variables para mantener el estado de los filtros
   selectedSupplierCuit: number | null = null;
   selectedCategoryName: string | null = null;
+  selectedStatus: boolean | null = null;
+
+  getImageUrl(imageUrl: string): string {
+    // Si la imagen ya es una URL completa (Cloudinary), la retornamos tal como está
+    if (imageUrl && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      return imageUrl;
+    }
+    // Si no, concatenamos con la apiUrl para imágenes locales
+    return this.apiUrl + imageUrl;
+  }
 
   constructor(
     private productService: ProductService,
@@ -66,7 +77,6 @@ export class EditListProductsComponent {
           this.productService.delete(id).subscribe({
             next: () => {
               this.utils.showAlert('success', 'La acción ha sido confirmada');
-              this.products = this.products.filter(product => product.id !== id);
             },
             error: err => {
               console.error(err);
@@ -81,61 +91,71 @@ export class EditListProductsComponent {
     product.editName = product.name;
     product.editPrice = product.price;
     product.editStock = product.stock;
+    product.editMinimumStock = product.minimumStock;
     product.editDescription = product.description;
     product.editing = true;
   }
 
-  save(product: any): void {
-    const { editName, editPrice, editStock, editDescription } = product;
+save(product: any): void {
+  const { editName, editPrice, editStock, editMinimumStock, editDescription } = product;
 
-    if (!this.utils.areValidFields([editName, editPrice, editStock, editDescription])) {
-      this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
-      return;
-    }
-
-    const hasChanged = this.utils.hasObjectChanged(
-      { name: product.name, price: product.price, stock: product.stock, description: product.description },
-      { name: editName, price: editPrice, stock: editStock, description: editDescription }
-    );
-
-    if (!hasChanged) {
-      this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en el producto.');
-      product.editing = false;
-      return;
-    }
-
-    product.editName = this.utils.capitalize(editName);
-
-    this.productService.findProductByName(product.editName).subscribe({
-      next: (existingProduct: any) => {
-        const nameChanged = product.name !== product.editName;
-        if (existingProduct === null || !nameChanged) {
-          // Aplicar cambios al objeto original
-          product.name = product.editName;
-          product.price = editPrice;
-          product.stock = editStock;
-          product.description = editDescription;
-
-          this.productService.update(product).subscribe({
-            next: () => {
-              this.utils.showAlert('success', 'Producto actualizado con éxito');
-              product.editing = false;
-            },
-            error: (err: any) => {
-              console.error(err);
-              this.utils.showAlert('error', 'Registro fallido', err.message);
-            }
-          });
-        } else {
-          this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
-        }
-      },
-      error: (err: any) => {
-        console.error(err);
-        this.utils.showAlert('error', 'Error', 'Error en la verificación del nombre.');
-      }
-    });
+  if (!this.utils.areValidFields([editName, editPrice, editStock, editMinimumStock, editDescription])) {
+    this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
+    return;
   }
+
+  const hasChanged = this.utils.hasObjectChanged(
+    { name: product.name, price: product.price, stock: product.stock, minimumStock: product.minimumStock, description: product.description },
+    { name: editName, price: editPrice, stock: editStock, minimumStock: editMinimumStock, description: editDescription }
+  );
+
+  if (!hasChanged) {
+    this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en el producto.');
+    product.editing = false;
+    return;
+  }
+
+  product.editName = this.utils.capitalize(editName);
+
+  this.productService.findProductByName(product.editName).subscribe({
+    next: (existingProduct: any) => {
+      const nameChanged = product.name !== product.editName;
+      if (existingProduct === null || !nameChanged) {
+        // Aplicar cambios al objeto original
+        product.name = product.editName;
+        product.price = editPrice;
+        product.stock = editStock;
+        product.minimumStock = editMinimumStock;
+        product.description = editDescription;
+
+        this.productService.update(product).subscribe({
+          next: (res: any) => {
+            if (res.data) {
+              const index = this.products.findIndex(p => p.id === res.data.id);
+              if (index !== -1) {
+                this.products[index] = res.data;
+                this.products = [...this.products]; // Forzar renderizado
+              }
+            }
+            this.utils.showAlert('success', 'Producto actualizado con éxito');
+            product.editing = false;
+          },
+          error: (err: any) => {
+            console.error(err);
+            this.utils.showAlert('error', 'Registro fallido', err.message);
+          }
+        });
+      } else {
+        this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
+      }
+    },
+    error: (err: any) => {
+      console.error(err);
+      this.utils.showAlert('error', 'Error', 'Error en la verificación del nombre.');
+    }
+  });
+}
+
 
   getSuppliers() {
     this.supplierService.findAll().subscribe({
@@ -167,7 +187,6 @@ export class EditListProductsComponent {
 
     // Aplicar filtro de proveedor si está seleccionado
     if (this.selectedSupplierCuit !== null) {
-      // Encontrar el ID del proveedor basado en el CUIT seleccionado
       const selectedSupplier = this.suppliers.find(supplier => supplier.cuit === this.selectedSupplierCuit);
       if (selectedSupplier) {
         filteredProducts = filteredProducts.filter(product => 
@@ -178,13 +197,19 @@ export class EditListProductsComponent {
 
     // Aplicar filtro de categoría si está seleccionado
     if (this.selectedCategoryName !== null && this.selectedCategoryName !== '') {
-      // Encontrar el ID de la categoría basado en el nombre seleccionado
       const selectedCategory = this.categories.find(category => category.name === this.selectedCategoryName);
       if (selectedCategory) {
         filteredProducts = filteredProducts.filter(product => 
           product.category === selectedCategory.id
         );
       }
+    }
+
+    // Aplicar filtro de estado si está seleccionado
+    if (this.selectedStatus !== null) {
+      filteredProducts = filteredProducts.filter(product => 
+        product.isActive === this.selectedStatus
+      );
     }
 
     this.products = filteredProducts;
@@ -217,4 +242,69 @@ export class EditListProductsComponent {
     }
     this.applyFilters();
   }
+
+  onStatusChange(event: any) {
+    const selectedStatus = event.target.value;
+    if (selectedStatus === "") {
+      this.selectedStatus = null;
+    } else {
+      this.selectedStatus = selectedStatus === "true";
+    }
+    this.applyFilters();
+  }
+
+  showLowStockAlert(product: any): void {
+  this.supplierService.findOne(product.supplier).subscribe({
+    next: (data: any) => {
+      if (!data || !data.data) {
+        this.utils.showAlert('error', 'Error', 'No se encontró el proveedor.');
+        return;
+      }
+
+      const supplier = data.data;
+
+      this.utils.showConfirm(
+        `Tienes poco stock del producto "${product.name}".`,
+        `¿Quieres enviar un mail a tu proveedor ${supplier.businessName} a ${supplier.email} solicitando nuevo stock?`
+      ).then((result) => {
+        if (result.isConfirmed) {
+          this.supplierService.requestRestockEmail(product.id, supplier.id).subscribe({
+            next: (res: any) => {
+              if (res.data) {
+                // Reemplazar en la lista el producto que cambió
+                const index = this.products.findIndex(p => p.id === res.data.id);
+                if (index !== -1) {
+                  this.products[index] = res.data;
+                  this.products = [...this.products]; // forzar renderizado
+                }
+              }
+              this.utils.showAlert('success', 'Éxito', 'Correo enviado al proveedor correctamente');
+            },
+            error: () => {
+              this.utils.showAlert('error', 'Error', 'No se pudo enviar el correo');
+            }
+          });
+        }
+      });
+    },
+    error: () => {
+      this.utils.showAlert('error', 'Error', 'No se pudo obtener el proveedor');
+    }
+  });
+}
+
+reactivate(product: any) {
+  console.log('Reactivating product:', product.id);
+  this.productService.reactivateProduct(product.id).subscribe({
+    next: () => {
+      this.utils.showAlert('success', 'Producto reactivado', `El producto ${product.name} ha sido reactivado.`);
+      product.isActive = true;  // Actualiza el estado en UI
+    },
+    error: (err) => {
+      this.utils.showAlert('error', 'Error', 'No se pudo reactivar el producto.');
+      console.error(err);
+    }
+  });
+}
+
 }

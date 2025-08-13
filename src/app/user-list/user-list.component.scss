@@ -1,3 +1,83 @@
+.users-container {
+  background: linear-gradient(45deg, rgba(231, 198, 51, 0.05), rgba(255, 255, 255, 0.1));
+  padding: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+}
+
+.navbar {
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(10px);
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(231, 198, 51, 0.1);
+
+  .navbar-nav {
+    display: flex;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+  
+    .form-group {
+      margin: 1rem;
+      display: flex;
+      flex-direction: column;
+      min-height: 120px; 
+      justify-content: flex-start; 
+    }
+  }
+
+  .form-group {
+    margin: 1rem;
+    display: flex;
+    flex-direction: column;
+
+    h2 {
+      color: #333;
+      margin-bottom: 1rem;
+      position: relative;
+
+      &::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(45deg, #e7c633, #ffd700);
+        margin: 0.5rem 0;
+        transition: width 0.3s ease;
+      }
+
+      &:hover::after {
+        width: 100px;
+      }
+    }
+
+    label {
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #333;
+    }
+
+    select.form-control {
+      border: 2px solid #eee;
+      border-radius: 8px;
+      padding: 0.8rem;
+      min-width: 200px;
+
+      &:focus {
+        outline: none;
+        border-color: #e7c633;
+        box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
+      }
+    }
+  }
+}
+
 .row {
   padding: 2rem;
   display: flex;
@@ -92,5 +172,28 @@ a {
   .col-xs-12.col-sm-6.col-md-4.col-lg-4 {
     flex: 0 0 100%;
     max-width: 100%;
+  }
+}
+
+.card-user {
+  position: relative;
+}
+
+.delete-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  color: #f76666;
+  z-index: 10; // por si necesitás que quede encima de algo
+  background: transparent;
+  border: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(1px);
   }
 }

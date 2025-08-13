@@ -1,25 +1,46 @@
 <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
   <div class="card-body">
-    <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data" ngNativeValidate>
+    <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data">
         
       <div class="form-group">
         <label for="name">Nombre</label>
-        <input type="text" class="form-control" id="name" ngModel name="name" required>
+        <input type="text" class="form-control" id="name" name="name" ngModel required #nameInput="ngModel"[ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }"/>
+        <div *ngIf="nameInput.invalid && nameInput.touched" class="text-danger">
+          <small *ngIf="nameInput.errors?.['required']">El nombre es obligatorio.</small>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="description">Descripción</label>
-        <textarea class="form-control" id="description" ngModel name="description" required></textarea>
+        <textarea class="form-control" id="description" ngModel name="description" required #descriptionInput="ngModel" [ngClass]="{ 'is-invalid': descriptionInput.invalid && descriptionInput.touched }">
+        </textarea>
+        <div *ngIf="descriptionInput.invalid && descriptionInput.touched" class="text-danger">
+          <small *ngIf="descriptionInput.errors?.['required']">La descripción es obligatoria.</small>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="stock">Stock</label>
-        <input type="number" class="form-control" id="stock"  ngModel name="stock" required>
+        <input type="number" class="form-control" id="stock"  ngModel name="stock" required #stockInput="ngModel"[ngClass]="{ 'is-invalid': stockInput.invalid && stockInput.touched }"/>
+        <div *ngIf="stockInput.invalid && stockInput.touched" class="text-danger">
+          <small *ngIf="stockInput.errors?.['required']">El stock es obligatorio.</small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="minimumStock">Stock minimo</label>
+        <input type="number" class="form-control" id="minimumStock"  ngModel name="minimumStock" required #minimumStockInput="ngModel"[ngClass]="{ 'is-invalid': minimumStockInput.invalid && minimumStockInput.touched }"/>
+        <div *ngIf="minimumStockInput.invalid && minimumStockInput.touched" class="text-danger">
+          <small *ngIf="minimumStockInput.errors?.['required']">El stock mínimo es obligatorio, debe ser menor al stock ingresado.</small>
+        </div>
       </div>
 
       <div class="form-group">
         <label for="precio">Precio</label>
-        <input type="text" class="form-control" id="price"  ngModel name="price" required>
+        <input type="text" class="form-control" id="price"  ngModel name="price" required #priceInput="ngModel"[ngClass]="{ 'is-invalid': priceInput.invalid && priceInput.touched }"/>
+        <div *ngIf="priceInput.invalid && priceInput.touched" class="text-danger">
+          <small *ngIf="priceInput.errors?.['required']">El precio es obligatorio.</small>
+        </div>
       </div>
 
         <div class="form-group">
@@ -33,23 +54,32 @@
 
       <div class="form-group">
         <label for="category">Categoria</label>
-        <select class = "form-control" id = "category" ngModel name = "category" required>
+        <select class = "form-control" id = "category" ngModel name = "category" required #categoryInput="ngModel"
+          [ngClass]="{ 'is-invalid': categoryInput.invalid && categoryInput.touched }">
           <option disabled selected value ="">Seleccione una categoria</option>
           <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
         </select> 
+        <div *ngIf="categoryInput.invalid && categoryInput.touched" class="text-danger">
+          <small>La categoría es obligatoria.</small>
+        </div>
       </div>
+
 
       <div class="form-group">
         <label for="supplier">Proveedor</label>
-        <select class="form-control" id="supplier" ngModel name="supplier" required>
+        <select class="form-control" id="supplier" ngModel name="supplier" required #supplierInput="ngModel"
+          [ngClass]="{ 'is-invalid': supplierInput.invalid && supplierInput.touched }">
           <option disabled selected value="">Seleccione un proveedor</option>
           <option *ngFor="let supplier of suppliers" [value]="supplier.id">{{supplier.cuit + " " + supplier.businessName}}</option>
         </select>
+        <div *ngIf="supplierInput.invalid && supplierInput.touched" class="text-danger">
+          <small>El proveedor es obligatorio.</small>
+        </div>
       </div>
     </form>
   </div> 
 </div>
   
 <div class="d-flex justify-content-center">
-  <button type="submit" class="btn btn-warning mx-2" form="addForm" id="Accept">Guardar</button>
+  <button type="submit" class="btn btn-warning mx-2" form="addForm" id="Accept"[disabled]="addForm.invalid">Guardar</button>
 </div>

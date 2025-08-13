@@ -145,6 +145,7 @@ export class OrderListComponent implements OnInit {
         status: order.editStatus,
         updatedDate: new Date()
       };
+      console.log('Actualizando orden:', updatedOrder);
 
       this.orderService.update(updatedOrder).subscribe(
         () => {

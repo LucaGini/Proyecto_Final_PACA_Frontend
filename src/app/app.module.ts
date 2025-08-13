@@ -47,6 +47,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 
 import { TokenInterceptorService } from './services/token-interceptor.service';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 import { SharedModule } from './shared/shared.module';
 
@@ -94,6 +95,8 @@ import { SharedModule } from './shared/shared.module';
     CommonModule,
     AdminModule,
     SharedModule,
+    RecaptchaModule,
+    RecaptchaFormsModule
   ],
   exports: [],
   providers: [

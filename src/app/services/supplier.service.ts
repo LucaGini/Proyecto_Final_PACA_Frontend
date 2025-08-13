@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, of, throwError, BehaviorSubject } from 'rxjs'; 
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap,map} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -31,6 +31,16 @@ export class SupplierService {
       'Authorization': token ? `Bearer ${token}` : ''
     });
   }
+    findOne(id: string): Observable<any> {
+    const url =`${this.URL}/suppliers/by-id/${id}`;
+    return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
+      catchError((error: any) => {
+        console.error('Error en la solicitud:', error);
+        return of(null); 
+      })
+    );
+  }
+  
 
   add(supplierData: any): Observable<any> {
     return this.http.post<any>(this.URL + '/suppliers', supplierData,{ headers: this.getAuthHeaders() })
@@ -38,7 +48,8 @@ export class SupplierService {
   }
 
   findAll(): Observable<any[]> {
-    return this.http.get<any[]>(this.URL + '/suppliers');
+    return this.http.get<any[]>(this.URL + '/suppliers')
+    //.pipe(tap(() => this.loadSuppliers()));
   }
 
   delete(supplierId: any) {
@@ -59,14 +70,32 @@ export class SupplierService {
   findSupplierByCuit(cuit: number): Observable<any> {
     const url =`${this.URL}/suppliers/${cuit}`;
     return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
-      catchError((error: any) => {
-        console.error('Error en la solicitud findOne:', error); // si no lo encuentra tira el 404 
-        return of(null);  // se le asigna el valor para despues compara en el .ts 
-      })
-    );
-  }
+         map(response => { 
+           return null;
+          }),
+          catchError((error: any) => {
+            if (error.status === 404) {
+              return of(error.error?.data ?? true); 
+            } else {
+              console.error('Error en la solicitud:', error);
+              throw error;
+            }
+          })
+        );
+      }
   
   findProductsBySupplier(cuit: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.URL}/suppliers/${cuit}/products`, { headers: this.getAuthHeaders() });
   }  
+
+  requestRestockEmail(productId: string, supplierId: string) {
+  const url = `${this.URL}/suppliers/restock/${supplierId}`;
+  return this.http.post(url, { productId }, { headers: this.getAuthHeaders() }).pipe(
+    tap(response => {
+    }),
+    catchError(error => {
+      return throwError(() => error);
+    })
+  );
+}
 }

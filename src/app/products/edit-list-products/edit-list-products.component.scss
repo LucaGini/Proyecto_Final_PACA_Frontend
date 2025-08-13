@@ -17,23 +17,22 @@
   .nav-item {
     display: flex;
     flex-direction: column;
-    
-    // Todos los form-group deben tener el mismo comportamiento base
+  
     .form-group {
       margin: 1rem;
       display: flex;
       flex-direction: column;
-      min-height: 120px; // Altura mínima consistente
-      justify-content: flex-end; // Alinear todo hacia abajo
+      min-height: 120px; 
+      justify-content: flex-end; 
     }
 
-    // Solo el primer elemento tiene el título
     &:first-child .form-group {
-      justify-content: flex-start; // El primer elemento se alinea arriba por el título
+      justify-content: flex-start; 
     }
-
-    // El segundo elemento se alinea al final (abajo)
     &:nth-child(2) .form-group {
+      justify-content: flex-end;
+    }
+    &:nth-child(3) .form-group {
       justify-content: flex-end;
     }
   }
@@ -177,4 +176,14 @@
       animation-delay: #{$i * 0.1}s;
     }
   }
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
+}
+
+button:disabled, button[disabled] {
+  background: #ccc !important;
+  color: #777 !important;
 }
