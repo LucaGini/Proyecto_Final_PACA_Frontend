@@ -115,6 +115,7 @@
       style="background-color: white"
       id="shopping_cart"
       *ngIf="!isAdmin"
+      [matBadge]="cartCount" matBadgeColor="warn" matBadgePosition="above after"
     >
       <mat-icon style="color: #e7c633">shopping_cart</mat-icon>
     </button>

@@ -80,6 +80,8 @@ export class CartComponent implements OnInit {
       next: () => {
         item.quantity = newQuantity;
         this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+         this.cartService.updateLocalStorage();
+         this.cartService.notifyItemsChanged();
       },
       error: () => {
         this.utils.showAlert('error', 'Lo sentimos', `No hay stock suficiente para el producto ${item.name}`);

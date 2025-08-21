@@ -2,11 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { FormsModule } from '@angular/forms';
-import {
-  HTTP_INTERCEPTORS,
-  HttpClientModule,
-  HttpClient,
-} from '@angular/common/http'; // CUIDADO CON EL HTTPCLIENT no lo veo en los exports o imports
+import {HTTP_INTERCEPTORS, HttpClientModule, HttpClient,} from '@angular/common/http'; // CUIDADO CON EL HTTPCLIENT no lo veo en los exports o imports
 import { CommonModule } from '@angular/common';
 
 //component
@@ -32,6 +28,7 @@ import { OrderListComponent } from './order-list/order-list.component';
 import { SurchargelistComponent } from './surchargelist/surchargelist.component';
 import { OrdersHistoryComponent } from './orders-history/orders-history.component';
 import { AboutUsComponent } from './about-us/about-us.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 //Angular Manual
 import { MatToolbarModule } from '@angular/material/toolbar'; //navbar
@@ -44,11 +41,11 @@ import { ReactiveFormsModule } from '@angular/forms'; // quizá haya que borrarl
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatBadgeModule } from '@angular/material/badge'; // para el contador del carrito
 
+//Otros
 import { TokenInterceptorService } from './services/token-interceptor.service';
-import { NotFoundComponent } from './not-found/not-found.component';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
-
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -73,6 +70,7 @@ import { SharedModule } from './shared/shared.module';
     OrderListComponent,
     OrdersHistoryComponent,
     NotFoundComponent,
+    
   ],
 
   imports: [
@@ -96,7 +94,8 @@ import { SharedModule } from './shared/shared.module';
     AdminModule,
     SharedModule,
     RecaptchaModule,
-    RecaptchaFormsModule
+    RecaptchaFormsModule,
+    MatBadgeModule
   ],
   exports: [],
   providers: [

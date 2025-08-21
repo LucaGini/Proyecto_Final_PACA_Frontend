@@ -147,3 +147,10 @@
   }
   /////
 }
+
+::ng-deep .mat-badge-content { // este es el círculo del contador del carrito, lo dejaría aca porque no lo usamos en otro lugar, por fa no cambien los valores
+  background-color:#b38558!important;     
+  top: -3px !important;   
+  right: -6px !important;          
+     
+}
