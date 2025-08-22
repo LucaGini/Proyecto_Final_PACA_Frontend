@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderService } from '../services/order.service';
+import { OrderService } from '../../services/order.service';
 import { Router } from '@angular/router';
-import { ProductService } from '../services/product.service';
-import { CityService } from '../services/city.service';
-import { UtilsService } from '../services/utils.service';
+import { ProductService } from '../../services/product.service';
+import { CityService } from '../../services/city.service';
+import { UtilsService } from '../../services/utils.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
