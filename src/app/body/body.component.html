@@ -1,5 +1,15 @@
 <app-carousel *ngIf="!isSearching"></app-carousel>
-<div class="products-container"style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
+
+<!-- Mensaje cuando no hay productos -->
+<div *ngIf="products.length === 0" class="no-products-message">
+  <mat-icon>inventory_2_off</mat-icon>
+  <h3>No se encontraron productos</h3>
+  <p *ngIf="isSearching">Intenta con otros términos de búsqueda.</p>
+  <p *ngIf="!isSearching">No hay productos disponibles en este momento.</p>
+</div>
+
+<!-- Contenedor de productos cuando hay productos disponibles -->
+<div *ngIf="products.length > 0" class="products-container"style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
   <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3 py-5 mb-3"  style="flex: 0 0 calc(33.33% - 15px);"*ngFor="let product of products" id="product">
       <a [routerLink]="['/product', product.id]" class="no-underline">
         <div class="card">

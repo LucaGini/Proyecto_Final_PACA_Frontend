@@ -15,6 +15,7 @@ export class EditListCitiesComponent {
 
   cities: any[] = [];
   provinces: any[] = [];
+  selectedProvinceId: string = '';
 
   constructor(
     private cityService: CityService,
@@ -160,6 +161,8 @@ export class EditListCitiesComponent {
 
   onProvinceChange(event: any) {
     const selectedProvince = event.target.value;
+    this.selectedProvinceId = selectedProvince === "" ? '' : selectedProvince;
+    
     if (selectedProvince === "") {
       this.cityService.findAll().subscribe((data: any) => {
         this.cities = data.data;
@@ -167,6 +170,23 @@ export class EditListCitiesComponent {
     } else {
       this.onProvinceButtonClick(selectedProvince);
     }
+  }
+
+  // Método para verificar si hay filtros activos
+  hasActiveFilters(): boolean {
+    return this.selectedProvinceId !== '' && this.selectedProvinceId !== null;
+  }
+
+  // Método para limpiar todos los filtros
+  clearAllFilters(): void {
+    // Limpiar la propiedad del componente
+    // Con [(ngModel)] el DOM se actualiza automáticamente
+    this.selectedProvinceId = '';
+    
+    // Recargar todas las ciudades
+    this.cityService.findAll().subscribe((data: any) => {
+      this.cities = data.data;
+    });
   }
 
   onPostCodeInput(event: Event) {

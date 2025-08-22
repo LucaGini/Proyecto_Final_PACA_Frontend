@@ -156,14 +156,12 @@ onSearch(event: Event) {
             searchInput.value = ''; // Limpiar el input después de la búsqueda
           })
         } else {
-          Swal.fire('No se encuentran productos que cumplan con la búsqueda', '', 'info');
-          // Fetch all products and emit the event
-          this.productService.findActive().subscribe((allProductsResponse: any) => {
-            this.navbarEventService.emitSearchResults(allProductsResponse.data);
-            // Navigate to the products page without query params
-            this.router.navigate(['/products']).then(() => {
-              searchInput.value = ''; // Limpiar el input
-            });
+          // No se encontraron productos, mostrar array vacío para que aparezca el mensaje visual
+          this.navbarEventService.emitSearchResults([]);
+          // Navigate to the products page with the search query to maintain search state
+          this.router.navigate(['/products'], { queryParams: { q: query } }).then(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            searchInput.value = ''; // Limpiar el input
           });
         }
       },

@@ -112,6 +112,27 @@ export class OrderListComponent implements OnInit {
     this.filteredOrders = filtered;
   }
 
+  // Método para verificar si hay filtros activos
+  hasActiveFilters(): boolean {
+    return this.selectedStatus !== '' || 
+           this.selectedCity !== '' || 
+           this.startDate !== '' || 
+           this.endDate !== '';
+  }
+
+  // Método para limpiar todos los filtros
+  clearAllFilters(): void {
+    // Limpiar las propiedades del componente
+    // Con [(ngModel)] el DOM se actualiza automáticamente
+    this.selectedStatus = '';
+    this.selectedCity = '';
+    this.startDate = '';
+    this.endDate = '';
+    
+    // Reaplicar filtros (mostrará todas las órdenes)
+    this.applyFilters();
+  }
+
   loadCities() {
     this.cityService.findAll().subscribe({
       next: (data: any) => {
