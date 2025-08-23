@@ -31,6 +31,7 @@
   }
 }
 
+/* Botón Añadir */
 #Añadir {
   background: linear-gradient(45deg, #e7c633, #ffd700);
   color: white;
@@ -41,18 +42,31 @@
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(231, 198, 51, 0.2);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
-    background: linear-gradient(45deg, #ffd700, #e7c633);
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
 }
 
+#Añadir:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
+  background: linear-gradient(45deg, #ffd700, #e7c633);
+}
+
+#Añadir:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* 👉 Estado deshabilitado del botón */
+#Añadir:disabled,
+#Añadir[disabled] {
+  background: #ccc !important;
+  color: #777 !important;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+  background-image: none !important;
+  border: none;
+}
+
+/* Títulos */
 h1,
 h2,
 h3 {
@@ -78,6 +92,7 @@ h3 {
   }
 }
 
+/* Descripción */
 .product-description {
   color: #666;
   line-height: 1.6;
@@ -85,6 +100,7 @@ h3 {
   font-size: 1.1rem;
 }
 
+/* Precio */
 .price {
   font-size: 1.8rem;
   font-weight: 600;
@@ -93,6 +109,7 @@ h3 {
   text-shadow: 0 2px 4px rgba(231, 198, 51, 0.2);
 }
 
+/* Control de cantidad */
 .quantity-control {
   display: flex;
   align-items: center;
@@ -115,6 +132,7 @@ h3 {
   }
 }
 
+/* Responsive */
 @media (max-width: 768px) {
   .card-img-top {
     height: 220px;
@@ -127,13 +145,15 @@ h3 {
   }
 }
 
-/* cuando no hay stock, la imagen va en B&N */
+/* --- ESTILOS PARA AGOTADO --- */
+
+/* Imagen en blanco y negro */
 .product-detail.out-of-stock .card-img-top {
   filter: grayscale(100%) brightness(0.95);
   opacity: 0.7;
 }
 
-/* contenedor de la imagen para centrar y permitir overlay */
+/* Contenedor de la imagen */
 .image-wrapper {
   position: relative;
   display: flex;
@@ -142,7 +162,7 @@ h3 {
   padding: 0.5rem 0;
 }
 
-/* texto AGOTADO sobre la imagen */
+/* Texto "AGOTADO" */
 .overlay-text {
   position: absolute;
   top: 50%; left: 50%;
