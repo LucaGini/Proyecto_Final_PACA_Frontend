@@ -23,9 +23,9 @@ export class EditListProductsComponent {
   apiUrl = environment.apiUrl;
   
   // Variables para mantener el estado de los filtros
-  selectedSupplierCuit: number | null = null;
-  selectedCategoryName: string | null = null;
-  selectedStatus: boolean | null = null;
+  selectedSupplierCuit: number | string = '';
+  selectedCategoryName: string = '';
+  selectedStatus: boolean | string = '';
 
   getImageUrl(imageUrl: string): string {
     // Si la imagen ya es una URL completa (Cloudinary), la retornamos tal como está
@@ -186,7 +186,7 @@ save(product: any): void {
     let filteredProducts = [...this.allProducts];
 
     // Aplicar filtro de proveedor si está seleccionado
-    if (this.selectedSupplierCuit !== null) {
+    if (this.selectedSupplierCuit !== '' && this.selectedSupplierCuit !== null) {
       const selectedSupplier = this.suppliers.find(supplier => supplier.cuit === this.selectedSupplierCuit);
       if (selectedSupplier) {
         filteredProducts = filteredProducts.filter(product => 
@@ -196,7 +196,7 @@ save(product: any): void {
     }
 
     // Aplicar filtro de categoría si está seleccionado
-    if (this.selectedCategoryName !== null && this.selectedCategoryName !== '') {
+    if (this.selectedCategoryName !== '' && this.selectedCategoryName !== null) {
       const selectedCategory = this.categories.find(category => category.name === this.selectedCategoryName);
       if (selectedCategory) {
         filteredProducts = filteredProducts.filter(product => 
@@ -206,13 +206,32 @@ save(product: any): void {
     }
 
     // Aplicar filtro de estado si está seleccionado
-    if (this.selectedStatus !== null) {
+    if (this.selectedStatus !== '' && this.selectedStatus !== null) {
       filteredProducts = filteredProducts.filter(product => 
         product.isActive === this.selectedStatus
       );
     }
 
     this.products = filteredProducts;
+  }
+
+  // Método para verificar si hay filtros activos
+  hasActiveFilters(): boolean {
+    return this.selectedSupplierCuit !== '' && this.selectedSupplierCuit !== null || 
+           (this.selectedCategoryName !== '' && this.selectedCategoryName !== null) || 
+           this.selectedStatus !== '' && this.selectedStatus !== null;
+  }
+
+  // Método para limpiar todos los filtros
+  clearAllFilters(): void {
+    // Limpiar las propiedades del componente
+    // Con [(ngModel)] el DOM se actualiza automáticamente
+    this.selectedSupplierCuit = '';
+    this.selectedCategoryName = '';
+    this.selectedStatus = '';
+    
+    // Reaplicar filtros (mostrará todos los productos)
+    this.applyFilters();
   }
 
   onSupplierButtonClick(cuit: number) {
@@ -226,7 +245,7 @@ save(product: any): void {
   onSupplierChange(event: any) {
     const selectedCuit = event.target.value;
     if (selectedCuit === "") {
-      this.selectedSupplierCuit = null;
+      this.selectedSupplierCuit = '';
     } else {
       this.selectedSupplierCuit = parseInt(selectedCuit);
     }
@@ -236,7 +255,7 @@ save(product: any): void {
   onCategoryChange(event: any) {
     const selectedCategory = event.target.value;
     if (selectedCategory === "") {
-      this.selectedCategoryName = null;
+      this.selectedCategoryName = '';
     } else {
       this.selectedCategoryName = selectedCategory;
     }
@@ -246,7 +265,7 @@ save(product: any): void {
   onStatusChange(event: any) {
     const selectedStatus = event.target.value;
     if (selectedStatus === "") {
-      this.selectedStatus = null;
+      this.selectedStatus = '';
     } else {
       this.selectedStatus = selectedStatus === "true";
     }

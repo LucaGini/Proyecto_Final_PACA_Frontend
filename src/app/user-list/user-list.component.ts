@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 export class UserListComponent {
 
   users: any[] = [];
-  selectedUserStatus: string | null = null;
+  selectedUserStatus: string = '';
   apiUrl = environment.apiUrl;
 
 
@@ -36,7 +36,7 @@ export class UserListComponent {
     const value = event.target.value;
 
     if (value === '') {
-      this.selectedUserStatus = null;
+      this.selectedUserStatus = '';
     } else if (value === 'active') {
       this.selectedUserStatus = 'active';
     } else if (value === 'inactive') {
@@ -58,6 +58,21 @@ export class UserListComponent {
     this.userService.getUsers(isActive, searchTerm).subscribe((data: any) => {
       this.users = data.data || data;
     });
+  }
+
+  // Método para verificar si hay filtros activos
+  hasActiveFilters(): boolean {
+    return this.selectedUserStatus !== '' && this.selectedUserStatus !== null;
+  }
+
+  // Método para limpiar todos los filtros
+  clearAllFilters(): void {
+    // Limpiar la propiedad del componente
+    // Con [(ngModel)] el DOM se actualiza automáticamente
+    this.selectedUserStatus = '';
+    
+    // Recargar todos los usuarios
+    this.loadUsers();
   }
 
 private handleError(message: string): void {
