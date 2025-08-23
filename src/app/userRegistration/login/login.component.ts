@@ -50,55 +50,65 @@ export class LoginComponent {
     }
   }
 
-  login() {
-    if (!this.captchaToken) {
-      this.utils.showAlert('error', 'Error', 'Por favor completa el captcha.');
+login() {
+  if (!this.captchaToken) {
+    this.utils.showAlert('error', 'Error', 'Por favor completa el captcha.');
+    return;
+  }
+
+  if (this.loginForm.valid) {
+    const email = this.email.value?.toLowerCase() || '';
+    const password = this.password.value || '';
+
+    if (!this.utils.validateEmail(email)) {
+      this.utils.showAlert('error', 'Email inválido', 'Por favor ingrese un email válido.');
       return;
     }
 
-    if (this.loginForm.valid) {
-      const email = this.email.value?.toLowerCase() || '';
-      const password = this.password.value || '';
+    this.authService
+      .sendRequestToLogin(email, password, this.captchaToken!)
+      .subscribe({
+        next: (data) => {
+          this.authService.saveToken(data.accessToken);
+          this.isPasswordIncorrect = false;
+          this.loginError = '';
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+          this.isPasswordIncorrect = true;
 
-      if (!this.utils.validateEmail(email)) {
-        this.utils.showAlert(
-          'error',
-          'Email inválido',
-          'Por favor ingrese un email válido.'
-        );
-        return;
-      }
+          const msg = error?.error?.message || error?.message || 'Usuario no encontrado';
 
-      this.authService
-        .sendRequestToLogin(email, password, this.captchaToken!)
-        .subscribe({
-          next: (data) => {
-            this.authService.saveToken(data.accessToken);
-            this.isPasswordIncorrect = false;
-            this.loginError = '';
-            this.router.navigate(['/']);
-          },
-          error: (error) => {
-            this.isPasswordIncorrect = true;
-            this.loginError = error?.message || 'Contraseña incorrecta';
-            this.utils.showAlert('error', 'Error', 'Usuario no encontrado.');
+          if (msg === 'Usuario desactivado') {
+            this.loginError = 'Usuario dado de baja';
+            this.utils.showAlert('error', 'Error', 'Usuario dado de baja');
+          } else if (msg === 'Credenciales inválidas') {
+            this.loginError = 'Contraseña incorrecta';
+            this.utils.showAlert('error', 'Error', 'La contraseña es incorrecta');
+            } else if (msg === 'Invalid user') {
+            this.loginError = 'Usuario no encontrado';
+            this.utils.showAlert('error', 'Error', 'Usuario no registrado');
+          } else {
+            this.loginError = msg;
+            this.utils.showAlert('error', 'Error', msg);
+          }
 
-            if (this.captchaRef) {
-              this.captchaRef.reset();
-            }
-            this.captchaToken = null;
-          },
-        });
-    } else {
-      this.utils.markAllControlsAsTouched(this.loginForm.controls);
-      this.utils.showAlert(
-        'error',
-        'Campos incompletos',
-        'Por favor completá todos los campos requeridos.'
-      );
-    }
+          // Reset captcha
+          if (this.captchaRef) {
+            this.captchaRef.reset();
+          }
+          this.captchaToken = null;
+        },
+      });
+  } else {
+    this.utils.markAllControlsAsTouched(this.loginForm.controls);
+    this.utils.showAlert(
+      'error',
+      'Campos incompletos',
+      'Por favor completá todos los campos requeridos.'
+    );
   }
-
+}
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
   }
