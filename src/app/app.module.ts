@@ -24,9 +24,9 @@ import { LoginComponent } from './userRegistration/login/login.component';
 import { UserInformationComponent } from './user-information/user-information.component';
 import { NewPasswordComponent } from './userRegistration/new-password/new-password.component';
 import { CollectionComponent } from './collections/collection.component';
-import { OrderListComponent } from './order-list/order-list.component';
+import { OrderListComponent } from './orders/order-list/order-list.component';
 import { SurchargelistComponent } from './surchargelist/surchargelist.component';
-import { OrdersHistoryComponent } from './orders-history/orders-history.component';
+import { OrdersHistoryComponent } from './orders/orders-history/orders-history.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
@@ -45,8 +45,10 @@ import { MatBadgeModule } from '@angular/material/badge'; // para el contador de
 
 //Otros
 import { TokenInterceptorService } from './services/token-interceptor.service';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 import { SharedModule } from './shared/shared.module';
+import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,7 @@ import { SharedModule } from './shared/shared.module';
     OrderListComponent,
     OrdersHistoryComponent,
     NotFoundComponent,
+    LoadingSpinnerComponent,
     
   ],
 
@@ -104,6 +107,11 @@ import { SharedModule } from './shared/shared.module';
       useClass: TokenInterceptorService,
       multi: true,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent],
 })
