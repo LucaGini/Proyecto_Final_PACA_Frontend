@@ -10,11 +10,7 @@
           <div class="form-group">
             <div class="filter-header">
               <h2 style="font-family: 'Quicksand', sans-serif; ">Filtros</h2>
-              <button *ngIf="hasActiveFilters()" 
-                      type="button" 
-                      class="clear-filters-btn" 
-                      (click)="clearAllFilters()"
-                      matTooltip="Limpiar todos los filtros">
+              <button *ngIf="hasActiveFilters()" type="button" class="clear-filters-btn" (click)="clearAllFilters()" matTooltip="Limpiar todos los filtros">
                 <mat-icon>filter_list_off</mat-icon>
               </button>
             </div>
@@ -64,8 +60,7 @@
       <div *ngIf="city.editing">
         <div class="form-group">
         <label for="postCode">Código postal:</label>
-        <input type="text" class="form-control" id="postCode" [(ngModel)]="city.editPostCode" 
-               (input)="onPostCodeInput($event)" 
+        <input type="text" class="form-control" id="postCode" [(ngModel)]="city.editPostCode" (input)="onPostCodeInput($event)" 
                pattern="[A-Za-z0-9]{8,10}"
                style="text-transform: uppercase;" name="postCode" required minlength="8" maxlength="10"
                #editPostCodeInput="ngModel"

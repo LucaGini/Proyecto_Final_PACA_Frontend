@@ -40,43 +40,6 @@
       }
     }
 
-    .filter-header {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 0.5rem;
-
-      h2 {
-        margin-bottom: 0;
-      }
-    }
-
-    .clear-filters-btn {
-      background: transparent;
-      border: none;
-      padding: 0.5rem;
-      border-radius: 50%;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0.7;
-
-      &:hover {
-        background: rgba(166, 124, 82, 0.1);
-        opacity: 1;
-        transform: scale(1.1);
-      }
-
-      mat-icon {
-        color: #A67C52;
-        font-size: 1.2rem;
-        width: 1.2rem;
-        height: 1.2rem;
-      }
-    }
-
     label {
       margin-bottom: 0.5rem;
       font-weight: 500;

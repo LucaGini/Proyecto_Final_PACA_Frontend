@@ -84,4 +84,46 @@ h1, h2, h3, h4, h5, h6, p, span, a {
   padding: 0;
 }
 
+/* Global Filter Styles */
+.filter-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+
+  h2 {
+    margin-bottom: 0;
+    line-height: 1.2;
+  }
+}
+
+.clear-filters-btn {
+  background: transparent;
+  border: none;
+  padding: 0.2rem;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  background-color: #b38558;
+  height: 2rem;
+  width: 2rem;
+  transform: translateY(-16px);
+
+  &:hover {
+    background: rgba(166, 124, 82, 0.1);
+    opacity: 1;
+  }
+
+  mat-icon {
+    color: white;
+    font-size: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+}
+
 
