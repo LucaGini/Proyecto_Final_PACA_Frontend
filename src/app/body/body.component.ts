@@ -36,24 +36,20 @@ export class BodyComponent implements OnInit {
       const searchTerm = queryParams['q'];
 
       if (searchTerm) {
-        this.isSearching = true;  
+        this.isSearching = true;
         this.productService.searchProducts(searchTerm).subscribe((response: any) => {
           if (response.message === 'found products') {
             this.products = response.data;
+          } else {
+            this.products = []; // Vaciar products cuando no hay resultados
           }
         });
       } else {
-        this.isSearching = false; 
+        this.isSearching = false;
         this.productService.findActive().subscribe((data: any) => {
           this.products = data.data;
         });
       }
-    });
-
-    this.navBarEventService.categoryButtonClick$.subscribe(async (name: string) => {
-      await this.categoryService.findActiveProductsByCategory(name).subscribe((data: any) => {
-        this.products = data.data;
-      });
     });
 
     this.navBarEventService.searchResults$.subscribe((results: any[]) => {

@@ -2,11 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { FormsModule } from '@angular/forms';
-import {
-  HTTP_INTERCEPTORS,
-  HttpClientModule,
-  HttpClient,
-} from '@angular/common/http'; // CUIDADO CON EL HTTPCLIENT no lo veo en los exports o imports
+import {HTTP_INTERCEPTORS, HttpClientModule, HttpClient,} from '@angular/common/http'; // CUIDADO CON EL HTTPCLIENT no lo veo en los exports o imports
 import { CommonModule } from '@angular/common';
 
 //component
@@ -28,10 +24,11 @@ import { LoginComponent } from './userRegistration/login/login.component';
 import { UserInformationComponent } from './user-information/user-information.component';
 import { NewPasswordComponent } from './userRegistration/new-password/new-password.component';
 import { CollectionComponent } from './collections/collection.component';
-import { OrderListComponent } from './order-list/order-list.component';
+import { OrderListComponent } from './orders/order-list/order-list.component';
 import { SurchargelistComponent } from './surchargelist/surchargelist.component';
-import { OrdersHistoryComponent } from './orders-history/orders-history.component';
+import { OrdersHistoryComponent } from './orders/orders-history/orders-history.component';
 import { AboutUsComponent } from './about-us/about-us.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 //Angular Manual
 import { MatToolbarModule } from '@angular/material/toolbar'; //navbar
@@ -44,12 +41,14 @@ import { ReactiveFormsModule } from '@angular/forms'; // quizá haya que borrarl
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatBadgeModule } from '@angular/material/badge'; // para el contador del carrito
 
+//Otros
 import { TokenInterceptorService } from './services/token-interceptor.service';
-import { NotFoundComponent } from './not-found/not-found.component';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
-
 import { SharedModule } from './shared/shared.module';
+import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +72,8 @@ import { SharedModule } from './shared/shared.module';
     OrderListComponent,
     OrdersHistoryComponent,
     NotFoundComponent,
+    LoadingSpinnerComponent,
+    
   ],
 
   imports: [
@@ -96,7 +97,8 @@ import { SharedModule } from './shared/shared.module';
     AdminModule,
     SharedModule,
     RecaptchaModule,
-    RecaptchaFormsModule
+    RecaptchaFormsModule,
+    MatBadgeModule
   ],
   exports: [],
   providers: [
@@ -105,6 +107,11 @@ import { SharedModule } from './shared/shared.module';
       useClass: TokenInterceptorService,
       multi: true,
     },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent],
 })

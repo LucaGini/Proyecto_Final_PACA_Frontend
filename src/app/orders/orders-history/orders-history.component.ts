@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderService } from '../services/order.service';
-import { ProductService } from '../services/product.service';
+import { OrderService } from '../../services/order.service';
+import { ProductService } from '../../services/product.service';
 import Swal from 'sweetalert2';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UtilsService } from '../services/utils.service';
+import { UtilsService } from '../../services/utils.service';
 
 interface OrderItem {
   product: {

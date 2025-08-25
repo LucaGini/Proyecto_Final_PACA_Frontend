@@ -15,13 +15,13 @@ import { UserRegistrationComponent } from './userRegistration/user-registration/
 import { UserInformationComponent } from './user-information/user-information.component';
 import { CollectionComponent } from './collections/collection.component';
 import { NewPasswordComponent } from './userRegistration/new-password/new-password.component';
-import { OrderListComponent } from './order-list/order-list.component';
+import { OrderListComponent } from './orders/order-list/order-list.component';
 import { EditListProductsComponent } from './products/edit-list-products/edit-list-products.component';
 import { EditListProvincesComponent } from './provinces/edit-list-provinces/edit-list-provinces.component';
 import { EditListCategoriesComponent } from './categories/edit-list-categories/edit-list-categories.component';
 import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cities.component';
 import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
-import { OrdersHistoryComponent } from './orders-history/orders-history.component';
+import { OrdersHistoryComponent } from './orders/orders-history/orders-history.component';
 import { AuthGuard } from './guards/auth.guard';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { NotFoundComponent } from './not-found/not-found.component';

@@ -13,6 +13,7 @@ import { environment } from '../../environments/environment';
 export class CollectionComponent implements OnInit {
     urlPath: string = ''
     products: any[] = [];
+    categoryName: string = '';
     apiUrl = environment.apiUrl;
 
     getImageUrl(imageUrl: string): string {
@@ -48,8 +49,14 @@ export class CollectionComponent implements OnInit {
     }
 
     getProductsByCategory (name: string) {
+        this.categoryName = name; // Guardar el nombre de la categoría
         this.categoryService.findActiveProductsByCategory(name).subscribe((data:any) => {
-            this.products = data.data;
+            // Verificar si hay productos en la categoría
+            if (data && data.data && data.data.length > 0) {
+                this.products = data.data;
+            } else {
+                this.products = []; // Vaciar products cuando no hay productos en la categoría
+            }
         });
     }
 }  

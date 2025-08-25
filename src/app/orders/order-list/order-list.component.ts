@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { OrderService } from '../services/order.service';
+import { OrderService } from '../../services/order.service';
 import { Router } from '@angular/router';
-import { ProductService } from '../services/product.service';
-import { CityService } from '../services/city.service';
-import { UtilsService } from '../services/utils.service';
+import { ProductService } from '../../services/product.service';
+import { CityService } from '../../services/city.service';
+import { UtilsService } from '../../services/utils.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -110,6 +110,27 @@ export class OrderListComponent implements OnInit {
     }
 
     this.filteredOrders = filtered;
+  }
+
+  // Método para verificar si hay filtros activos
+  hasActiveFilters(): boolean {
+    return this.selectedStatus !== '' || 
+           this.selectedCity !== '' || 
+           this.startDate !== '' || 
+           this.endDate !== '';
+  }
+
+  // Método para limpiar todos los filtros
+  clearAllFilters(): void {
+    // Limpiar las propiedades del componente
+    // Con [(ngModel)] el DOM se actualiza automáticamente
+    this.selectedStatus = '';
+    this.selectedCity = '';
+    this.startDate = '';
+    this.endDate = '';
+    
+    // Reaplicar filtros (mostrará todas las órdenes)
+    this.applyFilters();
   }
 
   loadCities() {

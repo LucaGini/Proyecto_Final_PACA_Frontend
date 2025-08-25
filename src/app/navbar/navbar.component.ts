@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavBarEventService } from '../services/nav-bar-event.service';
-import { CarouselComponent } from 'ngx-bootstrap/carousel';
 import { CartService } from '../services/cart.service';
 import { LoginService } from '../services/login.service';
 import { AuthService } from '../services/auth.service';
 import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.service';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
+
+
+
 
 @Component({
   selector: 'app-navbar',
@@ -21,6 +24,9 @@ export class NavbarComponent implements OnInit {
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
 
+  cartCount: number = 0;
+  private cartSub!: Subscription;
+
   constructor(
     private router: Router,
     private navbarEventService: NavBarEventService,
@@ -28,7 +34,6 @@ export class NavbarComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService,
     private authService: AuthService,
-    private loginService: LoginService
   ) {}
 
   ngOnInit() {
@@ -44,7 +49,17 @@ export class NavbarComponent implements OnInit {
     this.authService.isAdmin$().subscribe((status) => {
       this.isAdmin = status;
     });
+
+    this.cartCount = this.cartService.getItems().reduce(
+      (acc, item) => acc + item.quantity, 
+      0
+    );
+    this.cartSub = this.cartService.itemsChanged$.subscribe(items => {
+      this.cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
+    });
   }
+
+  
   logout(): void {
     this.authService.logout();
   }
@@ -60,6 +75,13 @@ export class NavbarComponent implements OnInit {
     console.error('Error fetching categories:', error);
   });
   }
+  
+  ngOnDestroy(): void {
+    if (this.cartSub) {
+      this.cartSub.unsubscribe();
+    }
+  }
+
 
   Home() {
     this.router.navigate(['about-us']);
@@ -134,14 +156,12 @@ onSearch(event: Event) {
             searchInput.value = ''; // Limpiar el input después de la búsqueda
           })
         } else {
-          Swal.fire('No se encuentran productos que cumplan con la búsqueda', '', 'info');
-          // Fetch all products and emit the event
-          this.productService.findActive().subscribe((allProductsResponse: any) => {
-            this.navbarEventService.emitSearchResults(allProductsResponse.data);
-            // Navigate to the products page without query params
-            this.router.navigate(['/products']).then(() => {
-              searchInput.value = ''; // Limpiar el input
-            });
+          // No se encontraron productos, mostrar array vacío para que aparezca el mensaje visual
+          this.navbarEventService.emitSearchResults([]);
+          // Navigate to the products page with the search query to maintain search state
+          this.router.navigate(['/products'], { queryParams: { q: query } }).then(() => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            searchInput.value = ''; // Limpiar el input
           });
         }
       },

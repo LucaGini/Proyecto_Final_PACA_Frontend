@@ -1,17 +1,32 @@
 <div class="products-container">
-  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 py-5 mb-3" *ngFor="let product of products" id="product">
-      <div class="card">
-        <img class="card-img-top" [src]="getImageUrl(product.image)"  alt="{{ product.name }}">
-          <div class="card-body">
-            <h1 class="card-title truncate">{{ product.name }}</h1>
-            <h3 class="card-text truncate">{{ product.description }}</h3>
-            <h2 class="card-text">Precio: {{ product.price }}</h2>
-              <div class="button-container right-align">
-                <a [routerLink]="['/product', product.id]" class="btn btn-warning" id="Product">
-                  Ver producto
-                </a>
-              </div>
-          </div>
+  <!-- Mensaje cuando no hay productos en la categoría -->
+  <div *ngIf="products.length === 0" class="no-products-message">
+    <mat-icon>inventory_2_off</mat-icon>
+    <h3>No hay productos en esta categoría</h3>
+    <p>La categoría "{{categoryName}}" no tiene productos disponibles en este momento.</p>
+  </div>
+
+  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 py-5 mb-3" *ngFor="let product of products"  id="product">
+    <div class="card product-card" [ngClass]="{ 'out-of-stock': product.stock === 0 }">
+
+      <!-- Imagen con overlay -->
+      <div class="image-wrapper">
+        <img class="card-img-top" [src]="getImageUrl(product.image)" alt="{{ product.name }}">
+        <div *ngIf="product.stock === 0" class="overlay-text">AGOTADO</div>
       </div>
+
+      <!-- Contenido -->
+      <div class="card-body">
+        <h1 class="card-title truncate">{{ product.name }}</h1>
+        <h3 class="card-text truncate">{{ product.description }}</h3>
+        <h2 class="card-text">Precio: {{ product.price }}</h2>
+        <div class="button-container right-align">
+          <a [routerLink]="['/product', product.id]" class="btn btn-warning" id="Product">
+            Ver producto
+          </a>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>
