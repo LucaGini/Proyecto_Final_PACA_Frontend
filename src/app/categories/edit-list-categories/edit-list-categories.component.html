@@ -6,7 +6,7 @@
           <label for="name">Nombre:</label>
           <input type="text" class="form-control" id="name" name="editName" [(ngModel)]="category.editName" required #editNameInput="ngModel"
             [ngClass]="{ 'is-invalid': editNameInput.invalid && editNameInput.touched }"/>
-          <div *ngIf="editNameInput.invalid && editNameInput.touched" class="text-danger">
+          <div *ngIf="editNameInput.invalid && editNameInput.touched" class="error-container text-danger">
             <small>El nombre es obligatorio.</small>
           </div>
         </div>
@@ -22,7 +22,7 @@
           <textarea class="form-control" id="description" name="editDescription" [(ngModel)]="category.editDescription" required #editDescriptionInput="ngModel"
             [ngClass]="{ 'is-invalid': editDescriptionInput.invalid && editDescriptionInput.touched }"
           ></textarea>
-          <div *ngIf="editDescriptionInput.invalid && editDescriptionInput.touched" class="text-danger">
+          <div *ngIf="editDescriptionInput.invalid && editDescriptionInput.touched" class="error-container text-danger">
             <small>La descripción es obligatoria.</small>
           </div>
         </div>

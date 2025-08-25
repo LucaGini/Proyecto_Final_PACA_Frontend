@@ -1,64 +1,8 @@
-.form-group {
-    margin-bottom: 1rem;
 
-    label {
-        font-weight: 400;
-        color: #444;
-        margin-bottom: 0.5rem;
-        display: block;
-        font-size: 0.95rem;
-    }
-
-    input{
-        width: 100%;
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-
-        &:focus {
-            outline: none;
-            border-color: #e7c633;
-            box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
-        }
-    }
-    select {
-        width: 100%;
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-
-        &:focus {
-            outline: none;
-            border-color: #e7c633;
-            box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
-        }
-    }
+.pattern-error {
+  font-size: 0.7rem;
 }
 
-.input-group {
-    position: relative;
-    margin-bottom: 1.5rem;
-
-    .input-group-text {
-        position: absolute;
-        right: 1rem;
-
-
-        background: transparent;
-        border: none;
-        cursor: pointer;
-
-        i {
-            font-size: 1.1rem;
-            color: #666;
-            transition: color 0.3s ease;
-
-            &:hover {
-                color: #e7c633;
-            }
-        }
-    }
-}
 
 .ng-invalid:not(form).ng-touched {
     border-color: #dc3545 !important;
