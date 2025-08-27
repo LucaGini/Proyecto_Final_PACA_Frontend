@@ -1,11 +1,11 @@
 .btn-link {
-  color: #e7c633;
+  color: #567518;
   font-size: 0.9rem;
   text-decoration: none;
   transition: all 0.3s ease;
 
   &:hover {
-    color: #ffd700;
+    color: #6b9910;
     text-decoration: underline;
   }
 
@@ -18,34 +18,4 @@
   }
 }
 
-.input-group {
-  position: relative;
-  width: 100%;
-  margin-bottom: 0.5rem;
-}
-
-.input-group .form-control {
-  padding-right: 3rem;
-  box-sizing: border-box;
-}
-
-.input-group-text {
-  position: absolute;
-  top: 50%;
-  right: 10px; /* separación del borde */
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-  font-size: 1.1rem;
-  z-index: 10;
-}
-
-.input-group-text:hover {
-  color: #e7c633;
-}
 
