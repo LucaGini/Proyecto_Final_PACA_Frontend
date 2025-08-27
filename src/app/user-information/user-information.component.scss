@@ -1,3 +1,9 @@
+.pattern-error {
+  font-size: 0.7rem;
+}
+
+small{font-size: 0.8rem;}
+
 .user-information-container {
   max-width: 800px;
   margin: 2rem auto;
@@ -26,11 +32,17 @@
   }
 
   .user-info-preview {
-    background: linear-gradient(145deg, #ffffff, #f9f9f9);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(231, 198, 51, 0.1);
+    max-width: 800px;
+    margin: 2rem auto;
     padding: 2.5rem;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    animation: fadeIn 0.5s ease-out;
+    &:hover {
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
 
     h2 {
       position: relative;
@@ -55,28 +67,10 @@
       gap: 1rem;
       margin-top: 2rem;
       justify-content: flex-start;
-
     }
 
     h2 {
-      color: #333;
-      font-family: 'Quicksand', sans-serif;
-      font-size: 2rem;
-      text-align: center;
-      margin-bottom: 2.5rem;
-      position: relative;
-
-      &:after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 50px;
-        height: 3px;
-        background: #e7c633;
-        border-radius: 2px;
-      }
+      margin-bottom: 1.5rem;
     }
 
     .info-card {
@@ -114,52 +108,13 @@
   background: white;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 
-  h2 {
-    font-size: 2rem;
-    background: linear-gradient(45deg, #e7c633, #ffd700);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-    margin-bottom: 2.5rem;
-  }
+  .text-info {
+    color: #666;
+    display: block;
 
-  .form-group {
-    margin-bottom: 2rem;
-
-    label {
-      display: block;
-      margin-bottom: 0.8rem;
-      font-weight: 500;
-      color: #444;
-      font-size: 0.95rem;
-    }
-
-    input,
-    select {
-      width: 100%;
-      padding: 1rem;
-      border: 2px solid #eee;
-      border-radius: 8px;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-
-      &:focus {
-        outline: none;
-        border-color: #e7c633;
-        box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
-      }
-    }
-
-    .text-info {
-      color: #666;
-      font-size: 0.9rem;
-      margin-top: 0.5rem;
-      display: block;
-
-      i {
-        color: #e7c633;
-        margin-right: 0.5rem;
-      }
+    i {
+      color: #e7c633;
+      margin-right: 0.5rem;
     }
   }
 
@@ -241,8 +196,6 @@
   animation: fadeIn 0.5s ease-out;
 }
 
-
-
-.form-control{
+.form-control {
   color: grey;
 }
