@@ -1,145 +1,155 @@
 <div class="user-information-container">
-    <div class="user-info-preview" *ngIf="!isEditMode && userData">
-        <h2>Información de Usuario</h2>
-        <div class="info-card">
-            <div class="info-item">
-                <label>Email:</label>
-                <p>{{userData.email}}</p>
-            </div>
-            <div class="info-item">
-                <label>Nombre:</label>
-                <p>{{userData.firstName}}</p>
-            </div>
-            <div class="info-item">
-                <label>Apellido:</label>
-                <p>{{userData.lastName}}</p>
-            </div>
-            <div class="info-item">
-                <label>Teléfono:</label>
-                <p>{{userData.phone}}</p>
-            </div>
-            <div class="info-item">
-                <label>Calle:</label>
-                <p>{{userData.street}}</p>
-            </div>
+  <div class="user-info-preview" *ngIf="!isEditMode && userData">
+    <h2>Información de Usuario</h2>
 
-            <div class="info-item">
-                <label>Número:</label>
-                <p>{{userData.streetNumber}}</p>
-            </div>
-
-            <div class="info-item">
-                <label>Ciudad:</label>
-                <p>{{userData.city}}</p>
-            </div>
-
-            <div class="action-buttons">
-                <button class="btn btn-edit" (click)="edit()">
-                    <i class="fas fa-edit"></i> Editar Datos
-                </button>
-                <button class="btn btn-danger"(click)="delete()">
-                    <i class="fas fa-trash"></i> Dar de baja
-                </button>
-            </div>
+    <div class="row">
+      <!-- Nombre -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Nombre</label>
+          <p class="form-control">{{ userData.firstName }}</p>
         </div>
+      </div>
+
+      <!-- Apellido -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Apellido</label>
+          <p class="form-control">{{ userData.lastName }}</p>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Email</label>
+          <p class="form-control">{{ userData.email }}</p>
+        </div>
+      </div>
+
+      <!-- Teléfono -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Teléfono</label>
+          <p class="form-control">{{ userData.phone }}</p>
+        </div>
+      </div>
+
+      <!-- Calle -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Calle</label>
+          <p class="form-control">{{ userData.street }}</p>
+        </div>
+      </div>
+
+      <!-- Número -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Número</label>
+          <p class="form-control">{{ userData.streetNumber }}</p>
+        </div>
+      </div>
+
+      <!-- Ciudad -->
+      <div class="col-md-6">
+        <div class="form-group">
+          <label>Ciudad</label>
+          <p class="form-control">{{ userData.city }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="action-buttons mt-3 d-flex gap-2">
+      <button class="gral-button btn-edit" (click)="edit()"><i class="fas fa-edit"></i> Editar Datos</button>
+      <button class="gral-button btn-danger" (click)="delete()"><i class="fas fa-trash"></i> Dar de baja</button>
     </div>
 
     <!-- Loading state when no user data -->
     <div class="loading-container" *ngIf="!userData && !isEditMode">
-        <div class="loading-spinner">
-            <i class="fas fa-spinner fa-spin"></i>
-            <p>Cargando información del usuario...</p>
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Cargando información del usuario...</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="user-information-form" *ngIf="isEditMode && userData">
+    <h2>Editar datos</h2>
+    <form [formGroup]="userForm" (ngSubmit)="save()">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" formControlName="email" required />
+        <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="text-danger">
+          <small *ngIf="userForm.get('email')?.errors?.['required']"> El email es obligatorio. </small>
+          <small *ngIf="userForm.get('email')?.errors?.['email']"> El email debe tener un formato válido. </small>
         </div>
-    </div>
+        <small class="text-info">
+          <i class="fas fa-info-circle"></i>
+          Al cambiar su email, será redirigido al inicio de sesión
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="password">Nueva Contraseña (opcional):</label>
+        <div class="input-group">
+          <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" class="form-control" placeholder="Dejar vacío para mantener la actual" />
+          <span class="input-group-text" (click)="togglePasswordVisibility()">
+            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          </span>
+        </div>
+        <small class="form-text text-muted"> La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial ($!%*?&). </small>
+        <div
+          *ngIf="userForm.get('password')?.errors?.['pattern'] &&
+                                userForm.get('password')?.touched"
+          class="text-danger"
+        >
+          La contraseña debe cumplir con todos los requisitos mencionados
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" formControlName="firstName" required />
+      </div>
+      <div class="form-group">
+        <label for="surname">Apellido:</label>
+        <input type="text" id="surname" formControlName="lastName" required />
+      </div>
+      <div class="form-group">
+        <label for="phone">Teléfono:</label>
+        <input type="tel" id="phone" formControlName="phone" required />
+      </div>
+      <div class="form-group">
+        <label for="street">Calle:</label>
+        <input type="text" id="street" formControlName="street" required />
+      </div>
+      <div class="form-group">
+        <label for="streetNumber">Número:</label>
+        <input type="number" id="streetNumber" formControlName="streetNumber" required />
+      </div>
+      <div class="form-group">
+        <label for="province">Provincia:</label>
+        <select id="province" formControlName="province" (change)="onProvinceChange($event)" required>
+          <option value="">Seleccionar provincia</option>
+          <option *ngFor="let province of provinces" [value]="province.id">
+            {{ province.name }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="city">Ciudad:</label>
+        <select id="city" formControlName="city" required>
+          <option value="">Seleccionar ciudad</option>
+          <option *ngFor="let city of cities" [value]="city.id">
+            {{ city.name }}
+          </option>
+        </select>
+      </div>
 
-
-    <div class="user-information-form" *ngIf="isEditMode && userData">
-        <h2>Editar datos</h2>
-        <form [formGroup]="userForm" (ngSubmit)="save()">
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" formControlName="email" required>
-                <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="text-danger">
-                    <small *ngIf="userForm.get('email')?.errors?.['required']">
-                        El email es obligatorio.
-                    </small>
-                    <small *ngIf="userForm.get('email')?.errors?.['email']">
-                        El email debe tener un formato válido.
-                    </small>
-                </div>
-                <small class="text-info">
-                    <i class="fas fa-info-circle"></i>
-                    Al cambiar su email, será redirigido al inicio de sesión
-                </small>
-            </div>
-            <div class="form-group">
-                <label for="password">Nueva Contraseña (opcional):</label>
-                <div class="input-group">
-                    <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" class="form-control"
-                        placeholder="Dejar vacío para mantener la actual">
-                    <span class="input-group-text" (click)="togglePasswordVisibility()">
-                        <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-                    </span>
-                </div>
-                <small class="form-text text-muted">
-                    La contraseña debe tener al menos 8 caracteres, una mayúscula,
-                    un número y un carácter especial ($!%*?&).
-                </small>
-                <div *ngIf="userForm.get('password')?.errors?.['pattern'] && 
-                                userForm.get('password')?.touched" class="text-danger">
-                    La contraseña debe cumplir con todos los requisitos mencionados
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="name">Nombre:</label>
-                <input type="text" id="name" formControlName="firstName" required>
-            </div>
-            <div class="form-group">
-                <label for="surname">Apellido:</label>
-                <input type="text" id="surname" formControlName="lastName" required>
-            </div>
-            <div class="form-group">
-                <label for="phone">Teléfono:</label>
-                <input type="tel" id="phone" formControlName="phone" required>
-            </div>
-            <div class="form-group">
-                <label for="street">Calle:</label>
-                <input type="text" id="street" formControlName="street" required>
-            </div>
-            <div class="form-group">
-                <label for="streetNumber">Número:</label>
-                <input type="number" id="streetNumber" formControlName="streetNumber" required>
-            </div>
-            <div class="form-group">
-                <label for="province">Provincia:</label>
-                <select id="province" formControlName="province" (change)="onProvinceChange($event)" required>
-                    <option value="">Seleccionar provincia</option>
-                    <option *ngFor="let province of provinces" [value]="province.id">
-                        {{province.name}}
-                    </option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="city">Ciudad:</label>
-                <select id="city" formControlName="city" required>
-                    <option value="">Seleccionar ciudad</option>
-                    <option *ngFor="let city of cities" [value]="city.id">
-                        {{city.name}}
-                    </option>
-                </select>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn btn-save" [disabled]="!userForm.valid">
-                    Guardar cambios
-                </button>
-                <button type="button" class="btn btn-danger" (click)="cancelEdit()">
-                    Cancelar
-                </button>
-            </div>
-        </form>
-    </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-save" [disabled]="!userForm.valid">Guardar cambios</button>
+        <button type="button" class="btn btn-danger" (click)="cancelEdit()">Cancelar</button>
+      </div>
+    </form>
+  </div>
 </div>
-
-
-  

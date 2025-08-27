@@ -44,6 +44,6 @@
   <div class="d-flex flex-column align-items-center">
     <re-captcha #captchaRef (resolved)="onCaptchaResolved($event)" siteKey="6Ld1vp0rAAAAAC7PNqnpJlclDZENU7DVWV-djyAq"> </re-captcha>
 
-    <button type="submit" class="gral-button" id="logIn" [disabled]="loginForm.invalid || !captchaToken">Iniciar Sesión</button>
+    <button type="submit" class="gral-button mt-3" id="logIn" [disabled]="loginForm.invalid || !captchaToken">Iniciar Sesión</button>
   </div>
 </form>

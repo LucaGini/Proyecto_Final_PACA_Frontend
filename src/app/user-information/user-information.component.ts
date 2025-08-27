@@ -6,7 +6,7 @@ import { UserService } from '../services/user.service';
 import { ProvinceService } from '../services/province.service';
 import { CityService } from '../services/city.service';
 import { User } from '../services/userInterface';
-import { UtilsService } from '../services/utils.service'; 
+import { UtilsService } from '../services/utils.service';
 
 @Component({
   selector: 'app-user-information',
@@ -28,7 +28,7 @@ export class UserInformationComponent implements OnInit {
     private cityService: CityService,
     private router: Router,
     private fb: FormBuilder,
-    private utils: UtilsService 
+    private utils: UtilsService
   ) {}
 
   ngOnInit(): void {

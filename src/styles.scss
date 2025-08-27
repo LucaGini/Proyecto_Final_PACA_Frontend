@@ -1,14 +1,13 @@
 /* Importing Datepicker SCSS file */
-@import "bootstrap/scss/bootstrap";
+@import 'bootstrap/scss/bootstrap';
 
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&family=Raleway&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&family=Raleway&display=swap');
 
 // Global variables
 :root {
   --text-color: #3e3e3e;
   --background-color: #f9f9f9;
-  --secondary-bg: #f4f4f4;
   --border-color: #6b8e23;
 
   --input-border: 2px solid #6a8e2367;
@@ -40,7 +39,7 @@ body {
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 app-root {
@@ -71,7 +70,7 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
 }
 
 .material-symbols-outlined {
-  font-family: "Material Symbols Outlined" !important;
+  font-family: 'Material Symbols Outlined' !important;
 }
 
 .modal-content {
@@ -83,7 +82,7 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
 }
 
 .modal-dialog .modal-title {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin: 0;
   font-weight: 600;
   font-size: 1.3rem;
@@ -141,7 +140,7 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
 }
 
 .error-msg {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 
   position: absolute;
   color: #dc3545;
@@ -225,7 +224,7 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
   letter-spacing: 0.5px;
   width: auto;
   min-width: 200px;
-  margin: 2rem auto;
+
   display: block;
   transition: all 0.3s ease;
   box-shadow: 0 2px 5px #b38558;
@@ -248,6 +247,28 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
+  }
+
+  &.btn-edit {
+    background: linear-gradient(45deg, #e7c633, #ffd700);
+    border: none;
+
+    &:hover {
+      box-shadow: 0 5px 15px rgba(231, 198, 51);
+    }
+  }
+
+  &.btn-danger {
+    background: #dc3545;
+    border: none;
+
+    &:hover {
+      box-shadow: 0 5px 15px rgba(220, 53, 69);
+    }
+  }
+
+  i {
+    margin-right: 0.5rem;
   }
 }
 
