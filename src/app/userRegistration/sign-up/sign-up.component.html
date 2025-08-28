@@ -167,6 +167,7 @@
         />
         <small *ngIf="streetNumberInput.invalid && streetNumberInput.touched" class="error-msg">
           <span *ngIf="streetNumberInput.errors?.['required']">El número de calle es requerido.</span>
+          <span *ngIf="streetNumberInput.errors?.['min']">El número de calle debe ser positivo.</span>
         </small>
       </div>
     </div>

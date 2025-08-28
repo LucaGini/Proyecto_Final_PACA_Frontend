@@ -1,121 +1,121 @@
-<div class="user-information-container">
-  <div class="user-info-preview" *ngIf="!isEditMode && userData">
-    <h2>Información de Usuario</h2>
+<div class="form-container" *ngIf="!isEditMode && userData">
+  <h2>Información de Usuario</h2>
 
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Nombre</label>
-          <p class="form-control">{{ userData.firstName }}</p>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Apellido</label>
-          <p class="form-control">{{ userData.lastName }}</p>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Email</label>
-          <p class="form-control">{{ userData.email }}</p>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Teléfono</label>
-          <p class="form-control">{{ userData.phone }}</p>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Calle</label>
-          <p class="form-control">{{ userData.street }}</p>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Número</label>
-          <p class="form-control">{{ userData.streetNumber }}</p>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="form-group">
-          <label>Ciudad</label>
-          <p class="form-control">{{ userData.city }}</p>
-        </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Nombre</label>
+        <p class="form-control read-only">{{ userData.firstName }}</p>
       </div>
     </div>
 
-    <div class="action-buttons mt-3 d-flex gap-2">
-      <button class="gral-button btn-edit" (click)="edit()"><i class="fas fa-edit"></i> Editar Datos</button>
-      <button class="gral-button btn-danger" (click)="delete()"><i class="fas fa-trash"></i> Dar de baja</button>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Apellido</label>
+        <p class="form-control read-only">{{ userData.lastName }}</p>
+      </div>
     </div>
 
-    <div class="loading-container" *ngIf="!userData && !isEditMode">
-      <div class="loading-spinner">
-        <i class="fas fa-spinner fa-spin"></i>
-        <p>Cargando información del usuario...</p>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Email</label>
+        <p class="form-control read-only">{{ userData.email }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Teléfono</label>
+        <p class="form-control read-only">{{ userData.phone }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Calle</label>
+        <p class="form-control read-only">{{ userData.street }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Número</label>
+        <p class="form-control read-only">{{ userData.streetNumber }}</p>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label>Ciudad</label>
+        <p class="form-control read-only">{{ userData.city }}</p>
       </div>
     </div>
   </div>
 
-  <div class="" *ngIf="isEditMode && userData">
-    <form autocomplete="off" #userForm="ngForm" (ngSubmit)="saveTemplate(userForm)">
-      <h2>Editar datos</h2>
+  <div class="action-buttons mt-3 d-flex gap-2">
+    <button class="gral-button btn-edit" (click)="edit()"><i class="fas fa-edit"></i> Editar Datos</button>
+    <button class="gral-button btn-danger" (click)="delete()"><i class="fas fa-trash"></i> Dar de baja</button>
+  </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="firstName">Nombre</label>
-            <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="userData.firstName" required #firstNameInput="ngModel" [ngClass]="{ 'is-invalid': firstNameInput.invalid && firstNameInput.touched }" />
-            <small *ngIf="firstNameInput.invalid && firstNameInput.touched" class="error-msg"> El nombre es requerido. </small>
-          </div>
-        </div>
+  <div class="loading-container" *ngIf="!userData && !isEditMode">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Cargando información del usuario...</p>
+    </div>
+  </div>
+</div>
 
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="lastName">Apellido</label>
-            <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="userData.lastName" required #lastNameInput="ngModel" [ngClass]="{ 'is-invalid': lastNameInput.invalid && lastNameInput.touched }" />
-            <small *ngIf="lastNameInput.invalid && lastNameInput.touched" class="error-msg"> El apellido es requerido. </small>
-          </div>
-        </div>
-      </div>
+<div class="" *ngIf="isEditMode && userData">
+  <form autocomplete="off" #userForm="ngForm" (ngSubmit)="saveTemplate(userForm)">
+    <h2>Editar datos</h2>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="userData.email" required email #emailInput="ngModel" [ngClass]="{ 'is-invalid': emailInput.invalid && emailInput.touched }" />
-            <small *ngIf="emailInput.invalid && emailInput.touched" class="error-msg">
-              <span *ngIf="emailInput.errors?.['required']">El email es obligatorio.</span>
-              <span *ngIf="emailInput.errors?.['email']">El email debe tener un formato válido.</span>
-            </small>
-            <small class="text-info">
-              <i class="fas fa-info-circle"></i>
-              Al cambiarlo, será redirigido al inicio de sesión
-            </small>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="phone">Teléfono</label>
-            <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="userData.phone" required #phoneInput="ngModel" [ngClass]="{ 'is-invalid': phoneInput.invalid && phoneInput.touched }" />
-            <small *ngIf="phoneInput.invalid && phoneInput.touched" class="error-msg">El teléfono es requerido.</small>
-          </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="firstName">Nombre</label>
+          <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="userData.firstName" required #firstNameInput="ngModel" [ngClass]="{ 'is-invalid': firstNameInput.invalid && firstNameInput.touched }" />
+          <small *ngIf="firstNameInput.invalid && firstNameInput.touched" class="error-msg"> El nombre es requerido. </small>
         </div>
       </div>
 
-      <div class="form-group">
-        <label for="password">Nueva Contraseña (opcional)</label>
-        <div class="input-group">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="lastName">Apellido</label>
+          <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="userData.lastName" required #lastNameInput="ngModel" [ngClass]="{ 'is-invalid': lastNameInput.invalid && lastNameInput.touched }" />
+          <small *ngIf="lastNameInput.invalid && lastNameInput.touched" class="error-msg"> El apellido es requerido. </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" [(ngModel)]="userData.email" required email #emailInput="ngModel" [ngClass]="{ 'is-invalid': emailInput.invalid && emailInput.touched }" />
+          <small *ngIf="emailInput.invalid && emailInput.touched" class="error-msg">
+            <span *ngIf="emailInput.errors?.['required']">El email es obligatorio.</span>
+            <span *ngIf="emailInput.errors?.['email']">El email debe tener un formato válido.</span>
+          </small>
+          <small class="info-msg" *ngIf="!emailInput.invalid">
+            <i class="fas fa-info-circle"></i>
+            Al cambiarlo, será redirigido al inicio de sesión
+          </small>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="phone">Teléfono</label>
+          <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="userData.phone" required #phoneInput="ngModel" [ngClass]="{ 'is-invalid': phoneInput.invalid && phoneInput.touched }" />
+          <small *ngIf="phoneInput.invalid && phoneInput.touched" class="error-msg">El teléfono es requerido.</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Nueva Contraseña (opcional)</label>
+      <div class="input-group flex-column">
+        <div class="d-flex align-items-center">
           <input
             autocomplete="new-password"
             [type]="showPassword ? 'text' : 'password'"
@@ -132,62 +132,70 @@
             <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
           </span>
         </div>
-        <small *ngIf="passwordInput.invalid && passwordInput.touched" class="error-msg">
-          <span *ngIf="passwordInput.errors?.['pattern']" class="pattern-error"> La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, un número y un carácter especial. </span>
-        </small>
       </div>
+      <small *ngIf="passwordInput.invalid && passwordInput.touched" class="error-msg">
+        <span *ngIf="passwordInput.errors?.['pattern']" class="pattern-error"> La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, un número y un carácter especial. </span>
+      </small>
+    </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="street">Calle</label>
-            <input type="text" class="form-control" id="street" name="street" [(ngModel)]="userData.street" required #streetInput="ngModel" [ngClass]="{ 'is-invalid': streetInput.invalid && streetInput.touched }" />
-            <small *ngIf="streetInput.invalid && streetInput.touched" class="error-msg">
-              <span *ngIf="streetInput.errors?.['required']">La calle es requerida.</span>
-            </small>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="streetNumber">Número</label>
-            <input type="number" class="form-control" id="streetNumber" name="streetNumber" [(ngModel)]="userData.streetNumber" required #streetNumberInput="ngModel" [ngClass]="{ 'is-invalid': streetNumberInput.invalid && streetNumberInput.touched }" />
-            <small *ngIf="streetNumberInput.invalid && streetNumberInput.touched" class="error-msg">
-              <span *ngIf="streetNumberInput.errors?.['required']">El número de calle es requerido.</span>
-            </small>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="province">Provincia</label>
-            <select id="province" name="province" class="form-control"  [(ngModel)]="userData.province" (change)="onProvinceChange($event)" required>
-              <option value="">Seleccionar provincia</option>
-              <option *ngFor="let province of provinces" [value]="province.id">
-                {{ province.name }}
-              </option>
-
-            </select>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-group">
-            <label for="city">Ciudad</label>
-            <select id="city" name="city" class="form-control" [(ngModel)]="userData.city" required>
-              <option value="">Seleccionar ciudad</option>
-              <option *ngFor="let city of cities" [value]="city.id">
-                {{ city.name }}
-              </option>
-            </select>
-          </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="street">Calle</label>
+          <input type="text" class="form-control" id="street" name="street" [(ngModel)]="userData.street" required #streetInput="ngModel" [ngClass]="{ 'is-invalid': streetInput.invalid && streetInput.touched }" />
+          <small *ngIf="streetInput.invalid && streetInput.touched" class="error-msg">
+            <span *ngIf="streetInput.errors?.['required']">La calle es requerida.</span>
+          </small>
         </div>
       </div>
 
-      <div class="form-actions mt-3 d-flex gap-2">
-        <button type="submit" class="gral-button btn-save" [disabled]="userForm.invalid">Guardar cambios</button>
-        <button type="button" class="gral-button btn-danger" (click)="cancelEdit()">Cancelar</button>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="streetNumber">Número</label>
+          <input type="number" class="form-control" id="streetNumber" min="1" name="streetNumber" [(ngModel)]="userData.streetNumber" required #streetNumberInput="ngModel" [ngClass]="{ 'is-invalid': streetNumberInput.invalid && streetNumberInput.touched }" />
+          <small *ngIf="streetNumberInput.invalid && streetNumberInput.touched" class="error-msg">
+            <span *ngIf="streetNumberInput.errors?.['required']">El número de calle es requerido.</span>
+            <span *ngIf="streetNumberInput.errors?.['min']">El número de calle debe ser positivo.</span>
+          </small>
+        </div>
       </div>
-    </form>
-  </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="province">Provincia</label>
+          <select id="province" name="province" class="form-control" [(ngModel)]="userData.province" (change)="onProvinceChange($event)" required #provinceInput="ngModel" [ngClass]="{ 'is-invalid': provinceInput.invalid && provinceInput.touched }">
+            <option value="">Seleccionar provincia</option>
+            <option *ngFor="let province of provinces" [value]="province.id">
+              {{ province.name }}
+            </option>
+          </select>
+
+          <small *ngIf="provinceInput.invalid && provinceInput.touched" class="error-msg">
+            <span *ngIf="provinceInput.errors?.['required']">La provincia es requerida.</span>
+          </small>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="city">Ciudad</label>
+          <select id="city" name="city" class="form-control" [(ngModel)]="userData.city" required #cityInput="ngModel" [ngClass]="{ 'is-invalid': cityInput.invalid && cityInput.touched }">
+            <option value="">Seleccionar ciudad</option>
+            <option *ngFor="let city of cities" [value]="city.id">
+              {{ city.name }}
+            </option>
+          </select>
+
+          <small *ngIf="cityInput.invalid && cityInput.touched" class="error-msg">
+            <span *ngIf="cityInput.errors?.['required']">La ciudad es requerida.</span>
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions mt-3 d-flex gap-2">
+      <button type="submit" class="gral-button btn-save" [disabled]="userForm.invalid">Guardar cambios</button>
+      <button type="button" class="gral-button btn-danger" (click)="cancelEdit()">Cancelar</button>
+    </div>
+  </form>
 </div>

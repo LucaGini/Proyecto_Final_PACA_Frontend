@@ -4,6 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&family=Raleway&display=swap');
 
+@import 'animations';
 // Global variables
 :root {
   --text-color: #3e3e3e;
@@ -40,6 +41,7 @@ body {
   background-color: var(--background-color);
   color: var(--text-color);
   font-family: 'Poppins', sans-serif;
+  overflow-y: scroll;
 }
 
 app-root {
@@ -50,7 +52,8 @@ app-root {
   margin-top: 65px;
 }
 
-form {
+form,
+.form-container {
   max-width: 800px;
   margin: 2rem auto;
   padding: 2.5rem;
@@ -66,7 +69,7 @@ form {
 
   h2 {
     position: relative;
-      margin-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
 
     &::after {
       content: '';
@@ -160,10 +163,16 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
 }
 
 .error-msg {
-  font-family: 'Poppins', sans-serif;
-
   position: absolute;
   color: #dc3545;
+  bottom: -23px;
+  left: 0;
+  font-size: 0.8rem;
+}
+
+.info-msg {
+  position: absolute;
+  color: #0dcaf0;
   bottom: -23px;
   left: 0;
   font-size: 0.8rem;
@@ -196,6 +205,12 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
       border: var(--input-border);
       box-shadow: var(--input-shadow);
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    &.read-only {
+      color: gray;
+      background-color: #f3f3f38f;
+      cursor: not-allowed;
     }
   }
 
@@ -289,18 +304,5 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
 
   i {
     margin-right: 0.5rem;
-  }
-}
-
-//Custom animations
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
