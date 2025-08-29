@@ -5,30 +5,44 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&family=Raleway&display=swap');
 
 @import 'animations';
+@import 'browsers';
 // Global variables
 :root {
   --text-color: #3e3e3e;
   --background-color: #f9f9f9;
   --border-color: #6b8e23;
 
+  --error-color: #c94c4c;
+  --info-color: #0dcaf0;
+
   --input-border: 2px solid #6a8e2367;
   --input-shadow: 0 0 8px rgba(107, 142, 35, 0.3);
-}
-
-//Quita el color del navegador en el autocompletado, más no cuando se le hace click por primera vez
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0px 1000px white inset;
-  -webkit-text-fill-color: #000;
-  transition: background-color 5000s ease-in-out 0s;
 }
 
 // Global styles
 html,
 body {
   height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding-top: 65px;
+}
+
+.page-wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1; // ocupa todo el espacio disponible
 }
 
 * {
@@ -42,14 +56,6 @@ body {
   color: var(--text-color);
   font-family: 'Poppins', sans-serif;
   overflow-y: scroll;
-}
-
-app-root {
-  // para que el contenedor de la aplicación, es decir lo que sea q esté en el body crezca dinamincamente
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1; //
-  margin-top: 65px;
 }
 
 form,
@@ -164,7 +170,7 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
 
 .error-msg {
   position: absolute;
-  color: #dc3545;
+  color: var(--error-color);
   bottom: -23px;
   left: 0;
   font-size: 0.8rem;
@@ -172,7 +178,7 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
 
 .info-msg {
   position: absolute;
-  color: #0dcaf0;
+  color: var(--info-color);
   bottom: -23px;
   left: 0;
   font-size: 0.8rem;
