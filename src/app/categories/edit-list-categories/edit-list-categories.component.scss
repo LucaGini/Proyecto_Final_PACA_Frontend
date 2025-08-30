@@ -17,6 +17,7 @@
 }
 
 .form-group {
+  position: relative;
     margin-bottom: 1.5rem;
 
     label {
@@ -66,6 +67,16 @@
         }
     }
 }
+
+.error-container {
+  position: absolute;
+  bottom: -20px; /* ajusta según altura del input */
+  left: 0;
+  font-size: 0.85rem;
+}
+
+
+
 
 .card-text {
     margin: 0.5rem 0;

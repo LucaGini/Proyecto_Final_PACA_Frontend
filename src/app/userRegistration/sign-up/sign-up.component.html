@@ -1,233 +1,222 @@
-<form
-  #signUpForm="ngForm"
-  (ngSubmit)="signUp(signUpForm)"
-  enctype="multipart/form-data"
->
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <div class="form-group">
-      <label for="firstName">Nombre</label>
-      <input
-        type="text"
-        class="form-control"
-        id="firstName"
-        ngModel
-        name="firstName"
-        required
-        #firstNameInput="ngModel"
-      />
-      <form-error
-        [visible]="!!(firstNameInput.invalid && firstNameInput.touched)"
-      >
-        <small *ngIf="firstNameInput.errors?.['required']"
-          >El nombre es requerido.</small
-        >
-      </form-error>
+<form #signUpForm="ngForm" (ngSubmit)="signUp(signUpForm)" enctype="multipart/form-data">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="firstName">Nombre</label>
+        <input
+          type="text"
+          class="form-control"
+          id="firstName"
+          ngModel
+          name="firstName"
+          required
+          #firstNameInput="ngModel"
+          [ngClass]="{
+            'is-invalid': firstNameInput.invalid && firstNameInput.touched
+          }"
+        />
+        <small *ngIf="firstNameInput.invalid && firstNameInput.touched" class="error-msg"> El nombre es requerido. </small>
+      </div>
     </div>
-  </div>
 
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <div class="form-group">
-      <label for="lastName">Apellido</label>
-      <input
-        type="text"
-        class="form-control"
-        id="lastName"
-        ngModel
-        name="lastName"
-        required
-        #lastNameInput="ngModel"
-      />
-      <form-error
-        [visible]="!!(lastNameInput.invalid && lastNameInput.touched)"
-      >
-        <small *ngIf="lastNameInput.errors?.['required']"
-          >El apellido es requerido.</small
-        >
-      </form-error>
-    </div>
-  </div>
-
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <div class="form-group">
-      <label for="phone">Teléfono</label>
-      <input
-        type="number"
-        class="form-control"
-        id="phone"
-        ngModel
-        name="phone"
-        required
-        #phoneInput="ngModel"
-      />
-      <form-error [visible]="!!(phoneInput.invalid && phoneInput.touched)">
-        <small *ngIf="phoneInput.errors?.['required']"
-          >El teléfono es requerido.</small
-        >
-      </form-error>
-    </div>
-  </div>
-
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <div class="form-group">
-      <label for="email">Mail</label>
-      <input
-        type="email"
-        class="form-control"
-        id="email"
-        ngModel
-        name="email"
-        required
-        email
-        #emailInput="ngModel"
-      />
-      <form-error [visible]="!!(emailInput.invalid && emailInput.touched)">
-        <small *ngIf="emailInput.errors?.['required']"
-          >El email es obligatorio.</small
-        >
-        <small *ngIf="emailInput.errors?.['email']"
-          >El email debe tener un formato válido.</small
-        >
-      </form-error>
-    </div>
-  </div>
-
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <div class="form-group">
-      <label for="password" class="form-label">Contraseña</label>
-      <div class="input-group flex-column">
-        <div class="d-flex align-items-center">
-          <input
-            [type]="showPassword ? 'text' : 'password'"
-            class="form-control"
-            id="password"
-            ngModel
-            name="password"
-            required
-            pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*._-])[A-Za-z\d!@#$%^&*._-]{8,}$"
-            #passwordInput="ngModel"
-          />
-          <span
-            class="input-group-text"
-            (click)="togglePasswordVisibility()"
-            style="cursor: pointer"
-          >
-            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-          </span>
-        </div>
-        <form-error
-          [visible]="!!(passwordInput.invalid && passwordInput.touched)"
-        >
-          <small *ngIf="passwordInput.errors?.['required']"
-            >La contraseña es requerida.</small
-          >
-          <small *ngIf="passwordInput.errors?.['pattern']">
-            La contraseña debe tener al menos 8 caracteres, incluyendo una
-            mayúscula, un número y un carácter especial.
-          </small>
-        </form-error>
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="lastName">Apellido</label>
+        <input
+          type="text"
+          class="form-control"
+          id="lastName"
+          ngModel
+          name="lastName"
+          required
+          #lastNameInput="ngModel"
+          [ngClass]="{
+            'is-invalid': lastNameInput.invalid && lastNameInput.touched
+          }"
+        />
+        <small *ngIf="lastNameInput.invalid && lastNameInput.touched" class="error-msg"> El apellido es requerido. </small>
       </div>
     </div>
   </div>
 
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <div class="form-group">
-      <label for="street">Calle</label>
-      <input
-        type="text"
-        class="form-control"
-        id="street"
-        ngModel
-        name="street"
-        required
-        #streetInput="ngModel"
-      />
-      <form-error [visible]="!!(streetInput.invalid && streetInput.touched)">
-        <small *ngIf="streetInput.errors?.['required']"
-          >La calle es requerida.</small
-        >
-      </form-error>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="phone">Teléfono</label>
+        <input
+          type="number"
+          class="form-control"
+          id="phone"
+          ngModel
+          name="phone"
+          required
+          #phoneInput="ngModel"
+          [ngClass]="{
+            'is-invalid': phoneInput.invalid && phoneInput.touched
+          }"
+        />
 
+        <small *ngIf="phoneInput.invalid && phoneInput.touched" class="error-msg">El teléfono es requerido.</small>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="email">Mail</label>
+        <input autocomplete="new-email" type="email" class="form-control" id="email" ngModel name="email" required email #emailInput="ngModel" [ngClass]="{ 'is-invalid': emailInput.invalid && emailInput.touched }" />
+        <small *ngIf="emailInput.invalid && emailInput.touched" class="error-msg">
+          <span *ngIf="emailInput.errors?.['required']">El email es obligatorio.</span>
+          <span *ngIf="emailInput.errors?.['email']">El email debe tener un formato válido.</span>
+        </small>
+      </div>
     </div>
   </div>
 
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <div class="form-group">
-      <label for="streetNumber">Número</label>
-      <input
-        type="number"
-        class="form-control"
-        id="streetNumber"
-        ngModel
-        name="streetNumber"
-        required
-        #streetNumberInput="ngModel"
-      />
-      <form-error
-        [visible]="!!(streetNumberInput.invalid && streetNumberInput.touched)"
-      >
-        <small *ngIf="streetNumberInput.errors?.['required']"
-          >El número de calle es requerido.</small
-        >
-      </form-error>
-
+  <div class="form-group">
+    <label for="password" class="form-label">Contraseña</label>
+    <div class="input-group flex-column">
+      <div class="d-flex align-items-center">
+        <input
+          autocomplete="new-password"
+          [type]="showPassword ? 'text' : 'password'"
+          class="form-control"
+          id="password"
+          ngModel
+          name="password"
+          required
+          pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*._-])[A-Za-z\d!@#$%^&*._-]{8,}$"
+          #passwordInput="ngModel"
+          [ngClass]="{
+            'is-invalid': passwordInput.invalid && passwordInput.touched
+          }"
+        />
+        <span class="input-group-text" (click)="togglePasswordVisibility()" style="cursor: pointer">
+          <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+        </span>
+      </div>
+      <small *ngIf="passwordInput.invalid && passwordInput.touched" class="error-msg">
+        <span *ngIf="passwordInput.errors?.['required']">La contraseña es requerida.</span>
+        <span *ngIf="passwordInput.errors?.['pattern']" class="pattern-error"> La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, un número y un carácter especial. </span>
+      </small>
     </div>
   </div>
 
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <div class="form-group">
-      <label for="province">Provincia</label>
-      <select
-        class="form-control"
-        id="province"
-        name="province"
-        [(ngModel)]="selectedProvince"
-        (change)="getCities()"
-        required
-        #provinceInput="ngModel"
-      >
-        <option disabled selected value="">Seleccione una provincia</option>
-        <option *ngFor="let province of provinces" [value]="province.id">
-          {{ province.name }}
-        </option>
-      </select>
-      <form-error
-        [visible]="!!(provinceInput.invalid && provinceInput.touched)"
-      >
-        <small *ngIf="provinceInput.errors?.['required']"
-          >La provincia es requerida.</small
-        >
-      </form-error>
+  <div class="form-group">
+    <label for="password2">Verificar contraseña</label>
+    <div class="input-group flex-column">
+      <div class="d-flex align-items-center">
+        <input
+          [type]="showConfirmPassword ? 'text' : 'password'"
+          class="form-control"
+          id="password2"
+          name="password2"
+          ngModel
+          required
+          #password2Input="ngModel"
+          [ngClass]="{
+            'is-invalid': password2Input.invalid && password2Input.touched
+          }"
+        />
+        <span class="input-group-text" (click)="toggleConfirmPasswordVisibility()" style="cursor: pointer">
+          <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+        </span>
+      </div>
+      <small *ngIf="password2Input.invalid && password2Input.touched" class="error-msg">
+        <span *ngIf="password2Input.errors?.['required']">La verificación de contraseña es requerida.</span>
+      </small>
     </div>
   </div>
 
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <div class="form-group">
-      <label for="city">Ciudad</label>
-      <select
-        class="form-control"
-        id="city"
-        name="city"
-        ngModel
-        required
-        #cityInput="ngModel"
-      >
-        <option disabled selected value="">
-          Seleccione una ciudad de la provincia
-        </option>
-        <option *ngFor="let city of cities" [value]="city.id">
-          {{ city.name }}
-        </option>
-      </select>
-      <form-error [visible]="!!(cityInput.invalid && cityInput.touched)">
-        <small *ngIf="cityInput.errors?.['required']"
-          >La ciudad es requerida.</small
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="street">Calle</label>
+        <input
+          type="text"
+          class="form-control"
+          id="street"
+          ngModel
+          name="street"
+          required
+          #streetInput="ngModel"
+          [ngClass]="{
+            'is-invalid': streetInput.invalid && streetInput.touched
+          }"
+        />
+        <small *ngIf="streetInput.invalid && streetInput.touched" class="error-msg">
+          <span *ngIf="streetInput.errors?.['required']">La calle es requerida.</span>
+        </small>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="streetNumber">Número</label>
+        <input
+          type="number"
+          class="form-control"
+          id="streetNumber"
+          ngModel
+          name="streetNumber"
+          min="1"
+          required
+          #streetNumberInput="ngModel"
+          [ngClass]="{
+            'is-invalid': streetNumberInput.invalid && streetNumberInput.touched
+          }"
+        />
+        <small *ngIf="streetNumberInput.invalid && streetNumberInput.touched" class="error-msg">
+          <span *ngIf="streetNumberInput.errors?.['required']">El número de calle es requerido.</span>
+          <span *ngIf="streetNumberInput.errors?.['min']">El número de calle debe ser positivo.</span>
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="province">Provincia</label>
+        <select
+          class="form-control"
+          id="province"
+          name="province"
+          [(ngModel)]="selectedProvince"
+          (change)="getCities()"
+          required
+          #provinceInput="ngModel"
+          [ngClass]="{
+            'is-invalid': provinceInput.invalid && provinceInput.touched
+          }"
         >
-      </form-error>
+          <option disabled selected value="">Seleccione una provincia</option>
+          <option *ngFor="let province of provinces" [value]="province.id">
+            {{ province.name }}
+          </option>
+        </select>
+        <small *ngIf="provinceInput.invalid && provinceInput.touched" class="error-msg">
+          <span *ngIf="provinceInput.errors?.['required']">La provincia es requerida.</span>
+        </small>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-group">
+        <label for="city">Ciudad</label>
+        <select class="form-control" id="city" name="city" ngModel required #cityInput="ngModel" [ngClass]="{ 'is-invalid': cityInput.invalid && cityInput.touched }">
+          <option disabled selected value="">Seleccione una ciudad de la provincia</option>
+          <option *ngFor="let city of cities" [value]="city.id">
+            {{ city.name }}
+          </option>
+        </select>
+        <small *ngIf="cityInput.invalid && cityInput.touched" class="error-msg">
+          <span *ngIf="cityInput.errors?.['required']">La ciudad es requerida.</span>
+        </small>
+      </div>
     </div>
   </div>
 
   <div class="d-flex justify-content-center">
-    <button type="submit" class="btn btn-warning" id="Accept">Aceptar</button>
-
+    <button type="submit" class="gral-button" id="Accept" [disabled]="signUpForm.invalid">Aceptar</button>
   </div>
 </form>

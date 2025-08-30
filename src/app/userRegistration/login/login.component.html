@@ -1,86 +1,49 @@
-<form [formGroup]="loginForm">
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <label for="exampleInputEmail1" class="form-label">Email</label>
-    <input
-      formControlName="email"
-      type="email"
-      class="form-control"
-      [ngClass]="{
-        'is-invalid': email.invalid && (email.dirty || email.touched)
-      }"
-      id="exampleInputEmail1"
-      aria-describedby="emailHelp"
-    />
-    <div
-      *ngIf="email.invalid && (email.dirty || email.touched)"
-      class="text-danger"
-    >
-      <small *ngIf="email.errors?.['required']"> El email es requerido. </small>
-      <small *ngIf="email.errors?.['email']">
-        El email debe tener un formato válido.
+<form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+  <div class="col-md-6 mx-auto">
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" class="form-control" id="email" name="email" [(ngModel)]="email" required email #emailInput="ngModel" [ngClass]="{ 'is-invalid': emailInput.invalid && emailInput.touched }" />
+      <small *ngIf="emailInput.invalid && emailInput.touched" class="error-msg">
+        <span *ngIf="emailInput.errors?.['required']">El email es requerido.</span>
+        <span *ngIf="emailInput.errors?.['email']">El email debe tener un formato válido.</span>
       </small>
     </div>
   </div>
 
-  <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
-    <label for="exampleInputPassword1" class="form-label">Contraseña</label>
-    <div class="input-group">
-      <input
-        [type]="showPassword ? 'text' : 'password'"
-        formControlName="password"
-        class="form-control"
-        [ngClass]="{
-          'is-invalid':
-            (password.invalid && (password.dirty || password.touched)) ||
-            isPasswordIncorrect
-        }"
-        id="exampleInputPassword1"
-      />
-      <span
-        class="input-group-text"
-        (click)="togglePasswordVisibility()"
-        style="cursor: pointer"
-      >
-        <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-      </span>
+  <div class="col-md-6 mx-auto">
+    <div class="form-group mb-4">
+      <label for="password">Contraseña</label>
+      <div class="input-group flex-column">
+        <div class="d-flex align-items-center">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            class="form-control"
+            id="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+            #passwordInput="ngModel"
+            [ngClass]="{
+              'is-invalid': (passwordInput.invalid && passwordInput.touched) || isPasswordIncorrect
+            }"
+          />
+          <span class="input-group-text" (click)="togglePasswordVisibility()" style="cursor: pointer">
+            <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+          </span>
+        </div>
+        <small *ngIf="passwordInput.invalid && passwordInput.touched" class="error-msg">
+          <span *ngIf="passwordInput.errors?.['required']">La contraseña es requerida.</span>
+        </small>
+      </div>
     </div>
-    <div
-      *ngIf="password.invalid && (password.dirty || password.touched)"
-      class="text-danger"
-      id="password-error"
-    >
-      <small *ngIf="password.errors?.['required']">
-        La contraseña es requerida.
-      </small>
-    </div>
-
-    <small *ngIf="isPasswordIncorrect" class="text-danger" id="password-error">
-      El mail o la contraseña es incorrecto.
-    </small>
-
-    <div>
-      <a href="/reset-password" class="btn-link font-small"
-        >¿Olvidaste tu contraseña?</a
-      >
+    <div class="mb-4">
+      <a href="/reset-password" class="btn-link font-small">¿Olvidaste tu contraseña?</a>
     </div>
   </div>
 
   <div class="d-flex flex-column align-items-center">
-    <re-captcha
-      #captchaRef
-      (resolved)="onCaptchaResolved($event)"
-      siteKey="6Ld1vp0rAAAAAC7PNqnpJlclDZENU7DVWV-djyAq"
-    >
-    </re-captcha>
+    <re-captcha #captchaRef (resolved)="onCaptchaResolved($event)" siteKey="6Ld1vp0rAAAAAC7PNqnpJlclDZENU7DVWV-djyAq"> </re-captcha>
 
-    <button
-      type="submit"
-      (click)="login()"
-      [disabled]="loginForm.invalid || !captchaToken"
-      class="btn btn-warning"
-      id="logIn"
-    >
-      Iniciar Sesión
-    </button>
+    <button type="submit" class="gral-button mt-3" id="logIn" [disabled]="loginForm.invalid || !captchaToken">Iniciar Sesión</button>
   </div>
 </form>

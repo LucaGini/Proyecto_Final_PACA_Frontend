@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { CityService } from '../../services/city.service';
@@ -9,14 +9,15 @@ import { UtilsService } from '../../services/utils.service';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.scss']
+  styleUrls: ['./sign-up.component.scss'],
 })
 export class SignUpComponent {
   cities: any[] = [];
   provinces: any[] = [];
-  selectedProvince: string = '';	
+  selectedProvince: string = '';
   password: string = '';
   showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
 
   constructor(
     private router: Router,
@@ -38,24 +39,30 @@ export class SignUpComponent {
       error: (error) => {
         console.error('Error fetching provinces', error);
         this.provinces = [];
-      }
+      },
     });
   }
 
   getCities() {
     if (this.selectedProvince) {
-      this.provinceService.findCitiesByProvince(this.selectedProvince).subscribe({
-        next: (data: any[]) => {
-          this.cities = Array.isArray(data) ? data : [];
-        },
-        error: (err) => {
-          console.error('Error fetching cities', err);
-          this.cities = [];
-        }
-      });
+      this.provinceService
+        .findCitiesByProvince(this.selectedProvince)
+        .subscribe({
+          next: (data: any[]) => {
+            this.cities = Array.isArray(data) ? data : [];
+          },
+          error: (err) => {
+            console.error('Error fetching cities', err);
+            this.cities = [];
+          },
+        });
     } else {
       this.cities = [];
     }
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   signUp(signUpForm: NgForm) {
@@ -68,28 +75,51 @@ export class SignUpComponent {
       newUser.lastName,
       newUser.phone,
       newUser.streetNumber,
-      newUser.city
+      newUser.city,
     ];
 
     if (!this.utils.areValidFields(camposRequeridos)) {
-      this.utils.showAlert('error', 'Error al registrarse', 'Debe completar todos los campos obligatorios (*).');
+      this.utils.showAlert(
+        'error',
+        'Error al registrarse',
+        'Debe completar todos los campos obligatorios (*).'
+      );
       return;
     }
 
     if (!this.utils.validateEmail(newUser.email)) {
-      this.utils.showAlert('error', 'Email inválido', 'Ingrese un email válido.');
+      this.utils.showAlert(
+        'error',
+        'Email inválido',
+        'Ingrese un email válido.'
+      );
       return;
     }
 
     if (!this.utils.validatePassword(newUser.password)) {
-      this.utils.showAlert( 'error', 'Contraseña inválida', 
+      this.utils.showAlert(
+        'error',
+        'Contraseña inválida',
         'La contraseña debe tener al menos 8 caracteres, incluyendo una mayúscula, un número y un carácter especial.'
       );
       return;
     }
 
     if (!this.utils.validatePhone(newUser.phone)) {
-      this.utils.showAlert('error', 'Telefono inválido', 'Por favor ingrese un telefono válido');
+      this.utils.showAlert(
+        'error',
+        'Telefono inválido',
+        'Por favor ingrese un telefono válido'
+      );
+      return;
+    }
+
+    if (newUser.password !== newUser.password2) {
+      this.utils.showAlert(
+        'error',
+        'Error en la verificación',
+        'Las contraseñas no coinciden.'
+      );
       return;
     }
 
@@ -97,30 +127,37 @@ export class SignUpComponent {
     newUser.firstName = this.utils.capitalize(newUser.firstName ?? '');
     newUser.lastName = this.utils.capitalize(newUser.lastName ?? '');
 
-    this.userService.findUserByEmail(newUser.email)
-      .subscribe({
-        next: (existingUser: any) => {
-          if (existingUser === null) {
-            newUser.privilege = "cliente";
-            this.userService.signUp(newUser).subscribe({
-              next: () => {
-                this.utils.showAlert('success', 'Usuario registrado con éxito!!', '');
-                this.router.navigate(['/UserRegistration/login']);
-              },
-              error: (err: any) => {
-                console.log(err);
-                this.utils.showAlert('error', 'Registro fallido', err.message);
-              }
-            });
-          } else {
-            this.utils.showAlert('error', 'Error', 'El email ya está registrado');
-          }
-        },
-        error: (err: any) => {
-          console.log(err);
-          this.utils.showAlert('error', 'Error', 'Error en la verificación del mail.');
+    this.userService.findUserByEmail(newUser.email).subscribe({
+      next: (existingUser: any) => {
+        if (existingUser === null) {
+          newUser.privilege = 'cliente';
+          this.userService.signUp(newUser).subscribe({
+            next: () => {
+              this.utils.showAlert(
+                'success',
+                'Usuario registrado con éxito!!',
+                ''
+              );
+              this.router.navigate(['/UserRegistration/login']);
+            },
+            error: (err: any) => {
+              console.log(err);
+              this.utils.showAlert('error', 'Registro fallido', err.message);
+            },
+          });
+        } else {
+          this.utils.showAlert('error', 'Error', 'El email ya está registrado');
         }
-      });
+      },
+      error: (err: any) => {
+        console.log(err);
+        this.utils.showAlert(
+          'error',
+          'Error',
+          'Error en la verificación del mail.'
+        );
+      },
+    });
   }
 
   togglePasswordVisibility(): void {

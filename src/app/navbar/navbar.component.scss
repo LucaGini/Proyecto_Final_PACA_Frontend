@@ -22,6 +22,8 @@
 /* Barra de navegación */
 .navBar {
   position: fixed;
+  border-bottom: 1px solid #ccc;
+
   top: 0;
   left: 0;
   width: 100vw;
@@ -88,11 +90,12 @@
   margin-left: auto;
   margin-right: 25px;
   background-color: transparent;
-    box-shadow: none;
+  box-shadow: none;
   width: 100%;
   height: 65px;
   margin: 0px;
   padding: 0px;
+  animation: none;
 }
 
 #search-input {
@@ -148,9 +151,9 @@
   /////
 }
 
-::ng-deep .mat-badge-content { // este es el círculo del contador del carrito, lo dejaría aca porque no lo usamos en otro lugar, por fa no cambien los valores
-  background-color:#b38558!important;     
-  top: -3px !important;   
-  right: -6px !important;          
-     
+::ng-deep .mat-badge-content {
+  // este es el círculo del contador del carrito, lo dejaría aca porque no lo usamos en otro lugar, por fa no cambien los valores
+  background-color: #b38558 !important;
+  top: -3px !important;
+  right: -6px !important;
 }

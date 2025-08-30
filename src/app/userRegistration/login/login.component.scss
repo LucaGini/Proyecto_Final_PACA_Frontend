@@ -1,68 +1,11 @@
-
-
-.form-group {
-  margin-bottom: 0.5rem;
-
-  label {
-    font-weight: 400;
-    color: #444;
-    margin-bottom: 0.5rem;
-    display: block;
-    font-size: 0.95rem;
-  }
-
-  input {
-    width: 100%;
-    padding: 1rem;
-    border: 2px solid;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-
-    &:focus {
-      outline: none;
-      border-color: #e7c633;
-      box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
-    }
-  }
-}
-
-#logIn {
-  background: linear-gradient(45deg, #e7c633, #ffd700);
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  font-weight: 550;
-  font-size: 18;
-  letter-spacing: 0.5px;
-  width: auto;
-  min-width: 200px;
-  margin: 2rem auto;
-  display: block;
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(231, 198, 51, 0.3);
-  }
-
-  &:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-}
-
 .btn-link {
-  color: #e7c633;
+  color: #567518;
   font-size: 0.9rem;
   text-decoration: none;
   transition: all 0.3s ease;
 
   &:hover {
-    color: #ffd700;
+    color: #6b9910;
     text-decoration: underline;
   }
 
@@ -75,51 +18,4 @@
   }
 }
 
-.input-group {
-  position: relative;
-  width: 100%;
-  margin-bottom: 1.5rem;
-}
 
-.input-group .form-control {
-  width: 100%;
-  padding-right: 5rem;
-  box-sizing: border-box;
-}
-
-.input-group-text {
-  position: absolute;
-  right: 10px;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #666;
-  font-size: 1.1rem;
-  z-index: 10;
-}
-
-.input-group-text:hover {
-  color: #e7c633;
-}
-
-.ng-valid:not(form).ng-touched {
-  border-color: #42a942;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2342a942'%3E%3Cpath d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E") no-repeat calc(100% - 45px) 50%/20px auto;
-
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
