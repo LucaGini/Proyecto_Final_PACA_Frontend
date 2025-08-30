@@ -1,0 +1,682 @@
+@import '@angular/material/theming';
+
+// Variables de color basadas en el diseño de PACA
+$primary-color: #A67C52;
+$primary-light: #C4A173;
+$primary-dark: #8B6A41;
+$accent-color: #7CB342;
+$background-light: #F9F9F9;
+$text-color: #3E3E3E;
+$border-color: #E0E0E0;
+$error-color: #F44336;
+$success-color: #4CAF50;
+
+// Mixins
+@mixin shadow-elevation($level) {
+  @if $level ==1 {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  @else if $level ==2 {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  @else if $level ==3 {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  @else if $level ==4 {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+  }
+}
+
+@mixin smooth-transition($properties: all, $duration: 0.3s) {
+  transition: $properties $duration ease;
+}
+
+// Widget principal
+.chatbot-widget {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  font-family: 'Poppins', 'Roboto', sans-serif;
+
+  @media (max-width: 768px) {
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
+// Botón flotante
+.chat-toggle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $primary-color, $primary-dark);
+  color: white;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  @include shadow-elevation(3);
+  @include smooth-transition();
+
+  &:hover {
+    transform: scale(1.05) translateY(-2px);
+    @include shadow-elevation(4);
+    background: linear-gradient(135deg, $primary-light, $primary-color);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.error {
+    background: linear-gradient(135deg, $error-color, darken($error-color, 10%));
+    animation: pulse-error 2s infinite;
+  }
+
+  mat-icon {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    @include smooth-transition();
+  }
+
+  // Indicador de error
+  .error-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 12px;
+    height: 12px;
+    background: white;
+    border-radius: 50%;
+    animation: blink 1s infinite;
+  }
+}
+
+// Ventana del chat
+.chat-window {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 420px;
+  height: 500px;
+  max-height: calc(100vh - 100px);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  @include shadow-elevation(4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(224, 224, 224, 0.3);
+  animation: slideUpBounce 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  @media (max-width: 768px) {
+    width: calc(100vw - 32px);
+    height: calc(100vh - 140px);
+    bottom: 80px;
+    right: 16px;
+    left: 16px;
+    border-radius: 12px;
+  }
+}
+
+// Header del chat
+.chat-header {
+  background: linear-gradient(135deg, $primary-color, $primary-light);
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @include shadow-elevation(1);
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    mat-icon {
+      font-size: 24px;
+      color: white;
+    }
+  }
+
+  .header-info {
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .status {
+      margin: 4px 0 0 0;
+      font-size: 12px;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: $error-color;
+        @include smooth-transition();
+
+        &.online {
+          background: $success-color;
+          animation: pulse-online 2s infinite;
+        }
+      }
+    }
+  }
+
+  .clear-button {
+    color: rgba(255, 255, 255, 0.8);
+    @include smooth-transition();
+
+    &:hover {
+      color: white;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    mat-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+// Contenedor de mensajes
+.chat-messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: $background-light;
+  scroll-behavior: smooth;
+
+  &.has-error {
+    background: lighten($error-color, 45%);
+  }
+
+  // Scrollbar personalizado
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($primary-color, 0.3);
+    border-radius: 2px;
+
+    &:hover {
+      background: rgba($primary-color, 0.5);
+    }
+  }
+}
+
+// Wrapper de mensajes
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  animation: fadeInUp 0.3s ease;
+
+  &.user-message {
+    align-items: flex-end;
+
+    .message {
+      background: $primary-color;
+      color: white;
+      margin-left: 15%;
+      border-bottom-right-radius: 4px;
+    }
+  }
+
+  &.bot-message {
+    align-items: flex-start;
+
+    .message {
+      background: white;
+      color: $text-color;
+      margin-right: 15%;
+      border-bottom-left-radius: 4px;
+      @include shadow-elevation(1);
+    }
+  }
+}
+
+// Mensajes individuales
+.message {
+  padding: 12px 16px;
+  border-radius: 18px;
+  max-width: 85%;
+  word-wrap: break-word;
+  line-height: 1.5;
+  position: relative;
+  @include smooth-transition();
+  backdrop-filter: blur(5px);
+
+  .message-content {
+    margin-bottom: 4px;
+
+    // Estilos para enlaces y texto formateado
+    ::ng-deep {
+      a {
+        color: inherit;
+        text-decoration: underline;
+      }
+
+      strong {
+        font-weight: 600;
+      }
+
+      em {
+        font-style: italic;
+      }
+
+      p {
+        margin: 0 0 8px 0;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  .message-time {
+    font-size: 10px;
+    opacity: 0.7;
+    display: block;
+    text-align: right;
+  }
+
+  &:hover {
+    transform: translateY(-1px);
+    @include shadow-elevation(2);
+  }
+}
+
+// Indicador de escritura
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px;
+  align-items: center;
+  background: rgba(166, 124, 82, 0.1);
+  border-radius: 18px;
+  border: 1px solid rgba(166, 124, 82, 0.2);
+
+  &::before {
+    content: '💭';
+    margin-right: 8px;
+    font-size: 14px;
+  }
+
+  span {
+    width: 8px;
+    height: 8px;
+    background: $primary-color;
+    border-radius: 50%;
+    animation: typing 1.4s infinite ease-in-out;
+
+    &:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0s;
+    }
+  }
+}
+
+// Mensaje de error
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: lighten($error-color, 40%);
+  color: darken($error-color, 20%);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  border-left: 4px solid $error-color;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Preguntas sugeridas
+.suggested-questions {
+  padding: 8px 16px;
+  border-top: 1px solid $border-color;
+  background: rgba(255, 255, 255, 0.8);
+  flex-shrink: 0; // Evita que se comprima demasiado
+  backdrop-filter: blur(5px);
+
+  .suggestions-title {
+    font-size: 11px;
+    color: lighten($text-color, 20%);
+    margin: 0 0 6px 0;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .suggestions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .suggestion-button {
+    background: rgba(249, 249, 249, 0.9);
+    border: 1px solid rgba(224, 224, 224, 0.5);
+    border-radius: 6px;
+    padding: 6px 4px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 10px;
+    color: $text-color;
+    line-height: 1.2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    @include smooth-transition();
+    backdrop-filter: blur(2px);
+
+    .suggestion-icon {
+      font-size: 14px;
+      width: 14px;
+      height: 14px;
+      color: $primary-color;
+    }
+
+    span {
+      font-weight: 500;
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(166, 124, 82, 0.1);
+      border-color: $primary-color;
+      transform: translateY(-1px);
+      @include shadow-elevation(1);
+
+      .suggestion-icon {
+        color: $primary-dark;
+        transform: scale(1.05);
+      }
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+// Input de chat
+.chat-input {
+  padding: 16px 20px;
+  border-top: 1px solid $border-color;
+  background: white;
+
+  .input-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .input-field {
+    flex: 1;
+
+    ::ng-deep {
+      .mat-form-field-wrapper {
+        padding-bottom: 0;
+      }
+
+      .mat-form-field-outline {
+        color: $border-color;
+      }
+
+      .mat-form-field-outline-thick {
+        color: $primary-color;
+      }
+
+      .mat-input-element {
+        color: $text-color;
+        font-size: 14px;
+
+        &::placeholder {
+          color: lighten($text-color, 30%);
+        }
+      }
+
+      .mat-hint {
+        color: lighten($text-color, 20%);
+        font-size: 11px;
+      }
+    }
+
+    .char-counter {
+      color: if($text-color, orange, $primary-color);
+    }
+  }
+
+  .send-button {
+    background: $primary-color;
+    color: white;
+    width: 40px;
+    height: 40px;
+    @include smooth-transition();
+
+    &:disabled {
+      background: lighten($text-color, 40%);
+      color: lighten($text-color, 20%);
+    }
+
+    &:not(:disabled):hover {
+      background: $primary-dark;
+      transform: scale(1.05);
+    }
+
+    .loading-icon {
+      animation: spin 1s linear infinite;
+    }
+
+    mat-icon {
+      font-size: 20px;
+    }
+  }
+}
+
+// Footer del chat
+.chat-footer {
+  padding: 8px 20px;
+  background: $background-light;
+  border-top: 1px solid $border-color;
+  text-align: center;
+
+  small {
+    color: lighten($text-color, 20%);
+    font-size: 11px;
+  }
+}
+
+// Animaciones
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes typing {
+
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+
+  30% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-error {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes blink {
+
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Nueva animación de entrada del chat
+@keyframes slideUpBounce {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.8);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-10px) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Animación de pulso para el estado online
+@keyframes pulse-online {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2);
+  }
+}
+
+// Responsive design
+@media (max-width: 480px) {
+  .chat-window {
+    .chat-messages {
+      padding: 16px;
+      gap: 12px;
+    }
+
+    .message {
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+
+    .chat-input {
+      padding: 12px 16px;
+
+      .send-button {
+        width: 36px;
+        height: 36px;
+
+        mat-icon {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  .message-wrapper {
+    &.user-message .message {
+      margin-left: 10%;
+    }
+
+    &.bot-message .message {
+      margin-right: 10%;
+    }
+  }
+}
+
+// Modo de alto contraste
+@media (prefers-contrast: high) {
+  .chat-window {
+    border: 2px solid $text-color;
+  }
+
+  .message {
+    border: 1px solid $border-color;
+  }
+
+  .chat-toggle {
+    border: 2px solid white;
+  }
+}
+
+// Modo de movimiento reducido
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

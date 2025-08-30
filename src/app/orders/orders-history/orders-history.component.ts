@@ -130,6 +130,26 @@ loadOrders() {
 
     this.filteredOrders = filtered;
   }
+
+  // Método para verificar si hay filtros activos
+  hasActiveFilters(): boolean {
+    return this.selectedStatus !== '' || 
+           this.startDate !== '' || 
+           this.endDate !== '';
+  }
+
+  // Método para limpiar todos los filtros
+  clearAllFilters(): void {
+    // Limpiar las propiedades del componente
+    // Con [(ngModel)] el DOM se actualiza automáticamente
+    this.selectedStatus = '';
+    this.startDate = '';
+    this.endDate = '';
+    
+    // Reaplicar filtros (mostrará todas las órdenes)
+    this.applyFilters();
+  }
+
   cancelOrder(order: Order) {
     this.utils.showConfirm('¿Estás seguro?', 'Esta acción cancelará la orden y no se podrá revertir.')
     .then((result) => {

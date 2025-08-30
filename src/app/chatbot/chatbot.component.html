@@ -1,0 +1,107 @@
+<!-- Widget flotante del chatbot -->
+<div class="chatbot-widget" [class.open]="isOpen">
+  <!-- Botón para abrir/cerrar -->
+  <button class="chat-toggle" (click)="toggleChat()" [attr.aria-label]="isOpen ? 'Cerrar chat' : 'Abrir chat de ayuda'"
+    [class.error]="hasError">
+    <mat-icon>{{ isOpen ? 'close' : 'chat' }}</mat-icon>
+
+    <!-- Indicator de error -->
+    <div class="error-indicator" *ngIf="hasError" title="Error de conexión"></div>
+  </button>
+
+  <!-- Ventana del chat -->
+  <div class="chat-window" *ngIf="isOpen" [@slideUp]>
+
+    <!-- Header del chat -->
+    <div class="chat-header">
+      <div class="header-content">
+        <div class="avatar">
+          <mat-icon>eco</mat-icon>
+        </div>
+        <div class="header-info">
+          <h3>Asistente PACA</h3>
+          <p class="status">
+            <span class="status-dot" [class.online]="!hasError"></span>
+            {{ hasError ? 'Error de conexión' : 'En línea' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Botón para limpiar chat -->
+      <button mat-icon-button (click)="clearChat()" title="Limpiar conversación" class="clear-button">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
+
+    <!-- Contenedor de mensajes -->
+    <div class="chat-messages" #messagesContainer [class.has-error]="hasError">
+
+      <!-- Mensajes de la conversación -->
+      <div *ngFor="let message of messages; trackBy: trackByMessageId"
+        [class]="message.isUser ? 'user-message' : 'bot-message'" class="message-wrapper">
+
+        <div class="message">
+          <div class="message-content" [innerHTML]="formatMessageContent(message.text)">
+          </div>
+          <small class="message-time">
+            {{ formatTime(message.timestamp) }}
+          </small>
+        </div>
+      </div>
+
+      <!-- Indicador de escritura -->
+      <div *ngIf="isLoading" class="bot-message message-wrapper">
+        <div class="message">
+          <div class="typing-indicator">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje de error -->
+      <div *ngIf="hasError" class="error-message">
+        <mat-icon>error_outline</mat-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+    </div>
+
+    <!-- Preguntas sugeridas (solo cuando no hay mensajes de usuario) -->
+    <div class="suggested-questions" *ngIf="messages.length === 1 && !isLoading">
+      <p class="suggestions-title">💡 Preguntas frecuentes:</p>
+      <div class="suggestions-grid">
+        <button *ngFor="let question of getSuggestedQuestions(); let i = index" class="suggestion-button"
+          (click)="sendSuggestedQuestion(question.text)" [disabled]="isLoading">
+          <mat-icon class="suggestion-icon">{{ question.icon }}</mat-icon>
+          <span>{{ question.text }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Input de mensaje -->
+    <div class="chat-input">
+      <div class="input-container">
+        <mat-form-field appearance="outline" class="input-field">
+          <input matInput #messageInput [(ngModel)]="userInput" placeholder="Escribe tu pregunta sobre PACA..."
+            (keypress)="onKeyPress($event)" [disabled]="isLoading" maxlength="500" autocomplete="off">
+
+          <!-- Contador de caracteres -->
+          <mat-hint *ngIf="userInput.length > 400" class="char-counter">
+            {{ userInput.length }}/500
+          </mat-hint>
+        </mat-form-field>
+
+        <!-- Botón de envío -->
+        <button mat-fab mini color="primary" (click)="sendMessage()" [disabled]="!userInput.trim() || isLoading"
+          class="send-button" title="Enviar mensaje">
+          <mat-icon *ngIf="!isLoading">send</mat-icon>
+          <mat-icon *ngIf="isLoading" class="loading-icon">hourglass_empty</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- Footer con información -->
+    <div class="chat-footer">
+      <small>Asistente virtual de PACA - Productos Agroecológicos</small>
+    </div>
+  </div>
+</div>

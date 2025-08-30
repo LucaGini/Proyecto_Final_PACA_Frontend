@@ -29,6 +29,8 @@ import { SurchargelistComponent } from './surchargelist/surchargelist.component'
 import { OrdersHistoryComponent } from './orders/orders-history/orders-history.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ChatbotComponent } from './chatbot/chatbot.component';
+
 
 //Angular Manual
 import { MatToolbarModule } from '@angular/material/toolbar'; //navbar
@@ -73,7 +75,7 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
     OrdersHistoryComponent,
     NotFoundComponent,
     LoadingSpinnerComponent,
-    
+    ChatbotComponent,
   ],
 
   imports: [
