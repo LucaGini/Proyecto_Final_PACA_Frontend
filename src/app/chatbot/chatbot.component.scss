@@ -41,6 +41,7 @@ $success-color: #4CAF50;
   right: 20px;
   z-index: 1000;
   font-family: 'Poppins', 'Roboto', sans-serif;
+  font-size: 14px;
 
   @media (max-width: 768px) {
     bottom: 16px;
@@ -56,9 +57,9 @@ $success-color: #4CAF50;
   background: linear-gradient(135deg, $primary-color, $primary-dark);
   color: white;
   border: none;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
+  display: flex;              
+  align-items: center;        
+  justify-content: center;    
   @include shadow-elevation(3);
   @include smooth-transition();
 
@@ -81,6 +82,8 @@ $success-color: #4CAF50;
     font-size: 28px;
     width: 28px;
     height: 28px;
+    top: 5px !important;
+    right: 5px !important;
     @include smooth-transition();
   }
 
@@ -413,9 +416,9 @@ $success-color: #4CAF50;
     backdrop-filter: blur(2px);
 
     .suggestion-icon {
-      font-size: 14px;
-      width: 14px;
-      height: 14px;
+      font-size: 10px;
+      width: 10px;
+      height: 10px;
       color: $primary-color;
     }
 
@@ -473,7 +476,7 @@ $success-color: #4CAF50;
       .mat-input-element {
         color: $text-color;
         font-size: 14px;
-
+        
         &::placeholder {
           color: lighten($text-color, 30%);
         }
@@ -494,7 +497,7 @@ $success-color: #4CAF50;
     background: $primary-color;
     color: white;
     width: 40px;
-    height: 40px;
+    height: 40px;  
     @include smooth-transition();
 
     &:disabled {
