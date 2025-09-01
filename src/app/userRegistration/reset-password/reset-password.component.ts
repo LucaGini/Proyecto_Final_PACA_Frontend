@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from "@angular/router";
 import { AuthService } from '../../services/auth.service';
-import { FormBuilder, Validators } from '@angular/forms';
-import { LoginService } from 'src/app/services/login.service';
 import { UserService } from 'src/app/services/user.service';
-import { UtilsService } from 'src/app/services/utils.service'; 
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -12,26 +10,16 @@ import { UtilsService } from 'src/app/services/utils.service';
   styleUrls: ['./reset-password.component.scss']
 })
 export class ResetPasswordComponent {
-  resetForm = this.formbuilder.group({
-    email: ['', [Validators.required, Validators.email]]
-  });
-
   constructor(
     private router: Router,
     private authService: AuthService,
-    private formbuilder: FormBuilder,
-    private loginService: LoginService,
     private userService: UserService,
-    private utils: UtilsService 
+    private utils: UtilsService
   ) {}
 
-  get email() {
-    return this.resetForm.controls.email;
-  }
-
-  VerifyEmail() {
-    if (this.resetForm.valid) {
-      const email = this.email.value?.toLowerCase();
+  verifyEmail(form: any) {
+    if (form.valid) {
+      const email = form.value.email?.toLowerCase();
 
       if (!this.utils.validateEmail(email || '')) {
         this.utils.showAlert('error', 'Email inválido', 'Ingrese un email válido.');
@@ -61,7 +49,7 @@ export class ResetPasswordComponent {
         }
       });
     } else {
-      this.utils.markAllControlsAsTouched(this.resetForm.controls); 
+      Object.values(form.controls).forEach((control: any) => control.markAsTouched());
       this.utils.showAlert('error', 'Campo incompleto', 'Por favor ingrese un email válido.');
     }
   }
