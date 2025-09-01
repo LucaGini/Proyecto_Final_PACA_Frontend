@@ -1,8 +1,7 @@
 <!-- Widget flotante del chatbot -->
 <div class="chatbot-widget" [class.open]="isOpen">
   <!-- Botón para abrir/cerrar -->
-  <button class="chat-toggle" (click)="toggleChat()" [attr.aria-label]="isOpen ? 'Cerrar chat' : 'Abrir chat de ayuda'"
-    [class.error]="hasError">
+  <button class="chat-toggle" (click)="toggleChat()" [attr.aria-label]="isOpen ? 'Cerrar chat' : 'Abrir chat de ayuda'" [class.error]="hasError">
     <mat-icon>{{ isOpen ? 'close' : 'chat' }}</mat-icon>
 
     <!-- Indicator de error -->
@@ -11,7 +10,6 @@
 
   <!-- Ventana del chat -->
   <div class="chat-window" *ngIf="isOpen" [@slideUp]>
-
     <!-- Header del chat -->
     <div class="chat-header">
       <div class="header-content">
@@ -35,14 +33,10 @@
 
     <!-- Contenedor de mensajes -->
     <div class="chat-messages" #messagesContainer [class.has-error]="hasError">
-
       <!-- Mensajes de la conversación -->
-      <div *ngFor="let message of messages; trackBy: trackByMessageId"
-        [class]="message.isUser ? 'user-message' : 'bot-message'" class="message-wrapper">
-
+      <div *ngFor="let message of messages; trackBy: trackByMessageId" [class]="message.isUser ? 'user-message' : 'bot-message'" class="message-wrapper">
         <div class="message">
-          <div class="message-content" [innerHTML]="formatMessageContent(message.text)">
-          </div>
+          <div class="message-content" [innerHTML]="formatMessageContent(message.text)"></div>
           <small class="message-time">
             {{ formatTime(message.timestamp) }}
           </small>
@@ -52,9 +46,7 @@
       <!-- Indicador de escritura -->
       <div *ngIf="isLoading" class="bot-message message-wrapper">
         <div class="message">
-          <div class="typing-indicator">
-            <span></span><span></span><span></span>
-          </div>
+          <div class="typing-indicator"><span></span><span></span><span></span></div>
         </div>
       </div>
 
@@ -69,8 +61,7 @@
     <div class="suggested-questions" *ngIf="messages.length === 1 && !isLoading">
       <p class="suggestions-title">💡 Preguntas frecuentes:</p>
       <div class="suggestions-grid">
-        <button *ngFor="let question of getSuggestedQuestions(); let i = index" class="suggestion-button"
-          (click)="sendSuggestedQuestion(question.text)" [disabled]="isLoading">
+        <button *ngFor="let question of getSuggestedQuestions(); let i = index" class="suggestion-button" (click)="sendSuggestedQuestion(question.text)" [disabled]="isLoading">
           <mat-icon class="suggestion-icon">{{ question.icon }}</mat-icon>
           <span>{{ question.text }}</span>
         </button>
@@ -80,19 +71,15 @@
     <!-- Input de mensaje -->
     <div class="chat-input">
       <div class="input-container">
-        <mat-form-field appearance="outline" class="input-field">
-          <input matInput #messageInput [(ngModel)]="userInput" placeholder="Escribe tu pregunta sobre PACA..."
-            (keypress)="onKeyPress($event)" [disabled]="isLoading" maxlength="500" autocomplete="off">
+        <div class="input-field-wrapper">
+          <input #messageInput [(ngModel)]="userInput" (keypress)="onKeyPress($event)" [disabled]="isLoading" maxlength="500" placeholder="Escribe tu pregunta sobre PACA..." autocomplete="off" class="chat-input-field" />
 
           <!-- Contador de caracteres -->
-          <mat-hint *ngIf="userInput.length > 400" class="char-counter">
-            {{ userInput.length }}/500
-          </mat-hint>
-        </mat-form-field>
+          <span class="char-counter" *ngIf="userInput.length > 400"> {{ userInput.length }}/500 </span>
+        </div>
 
         <!-- Botón de envío -->
-        <button mat-fab mini color="primary" (click)="sendMessage()" [disabled]="!userInput.trim() || isLoading"
-          class="send-button" title="Enviar mensaje">
+        <button (click)="sendMessage()" [disabled]="!userInput.trim() || isLoading" class="send-button" title="Enviar mensaje">
           <mat-icon *ngIf="!isLoading">send</mat-icon>
           <mat-icon *ngIf="isLoading" class="loading-icon">hourglass_empty</mat-icon>
         </button>
