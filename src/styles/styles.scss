@@ -98,6 +98,16 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
   font-family: 'Poppins', sans-serif;
 }
 
+a {
+  text-decoration: none ;
+  color: inherit;
+
+  &:hover {
+    text-decoration: none ;
+    color: inherit;
+  }
+}
+
 .material-symbols-outlined {
   font-family: 'Material Symbols Outlined' !important;
 }
