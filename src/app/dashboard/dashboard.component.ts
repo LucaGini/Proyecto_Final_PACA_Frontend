@@ -1,6 +1,12 @@
-import { Component, OnInit, signal, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+
+
+
+import { Component, OnInit, signal, ChangeDetectionStrategy, ChangeDetectorRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { MatExpansionPanel } from '@angular/material/expansion';
 import { ChartData, ChartOptions } from 'chart.js';
 import { DashboardService, ProvinceSales, TopProduct, TopCustomer } from '../services/dashboard.service';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,13 +14,146 @@ import { DashboardService, ProvinceSales, TopProduct, TopCustomer } from '../ser
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements OnInit {
+
+export class DashboardComponent implements OnInit, AfterViewInit {
+  @ViewChildren(MatExpansionPanel) panels!: QueryList<MatExpansionPanel>;
+
+  ngAfterViewInit(): void {
+    // No-op, pero necesario para que panels esté disponible
+  }
   readonly panelOpenState = signal(false);
+
+  // Devuelve true si al menos una gráfica tiene datos
+  hasAnyChartData(): boolean {
+    const hasData = (chart: any) => chart && chart.datasets && chart.datasets.some((ds: any) => Array.isArray(ds.data) && ds.data.some((v: any) => v !== 0 && v !== null && v !== undefined));
+    return (
+      hasData(this.topProductsChartData) ||
+      hasData(this.worstProductsChartData) ||
+      hasData(this.salesChartData) ||
+      hasData(this.citiesChartData) ||
+      hasData(this.categoriesChartData) ||
+      hasData(this.productsByCategoryChartData) ||
+      hasData(this.topCustomersChartData) ||
+      hasData(this.worstCustomersChartData) ||
+      hasData(this.orderStatusChartData)
+    );
+  }
+
+  // Devuelve la fecha de hoy en formato YYYY-MM-DD para limitar las fechas
+  getToday(): string {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  }
+
+  // Descarga PDF de todas las gráficas
+  async downloadPDF() {
+    // Expandir todos los panels y guardar su estado original
+    const originalStates = this.panels ? this.panels.map(panel => panel.expanded) : [];
+    if (this.panels) this.panels.forEach(panel => panel.open());
+
+    setTimeout(async () => {
+      const chartCards = Array.from(document.querySelectorAll('.chart-card')) as HTMLElement[];
+      if (!chartCards.length) {
+        alert('No se encontraron gráficas para exportar.');
+        return;
+      }
+      // Validar que al menos una gráfica tenga datos (canvas no vacío)
+      let hasData = false;
+      for (const card of chartCards) {
+        const canvasEl = card.querySelector('canvas');
+        if (canvasEl) {
+          // Verifica si el canvas tiene algún pixel distinto de blanco (muy simple, pero efectivo para la mayoría de los casos)
+          const ctx = (canvasEl as HTMLCanvasElement).getContext('2d');
+          if (ctx) {
+            const pixels = ctx.getImageData(0, 0, (canvasEl as HTMLCanvasElement).width, (canvasEl as HTMLCanvasElement).height).data;
+            // Si hay algún pixel no blanco, consideramos que hay datos
+            for (let i = 0; i < pixels.length; i += 4) {
+              if (!(pixels[i] === 255 && pixels[i+1] === 255 && pixels[i+2] === 255 && pixels[i+3] === 255)) {
+                hasData = true;
+                break;
+              }
+            }
+          }
+        }
+        if (hasData) break;
+      }
+      if (!hasData) {
+        alert('No hay datos para exportar. Por favor, ajusta los filtros para mostrar al menos una gráfica con información.');
+        // Restaurar el estado original de los panels
+        if (this.panels) this.panels.forEach((panel, idx) => {
+          if (!originalStates[idx]) panel.close();
+        });
+        return;
+      }
+      // ...proceso normal de exportación...
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      let y = 40;
+      let pageNum = 1;
+      for (let i = 0; i < chartCards.length; i++) {
+        const card = chartCards[i];
+        // Capturar la gráfica (sin el título duplicado)
+        const h3 = card.querySelector('h3');
+        let originalDisplay = '';
+        if (h3) {
+          originalDisplay = h3.style.display;
+          h3.style.display = 'none';
+        }
+        // Aumentar la escala para mayor nitidez
+        const scale = 3;
+        const canvas = await html2canvas(card, { scale, useCORS: true });
+        if (h3) h3.style.display = originalDisplay;
+        const imgData = canvas.toDataURL('image/png');
+        // Calcular tamaño óptimo para máxima nitidez y mantener proporción
+        let imgWidth = pageWidth - 80;
+        let imgHeight = canvas.height * (imgWidth / canvas.width);
+        // Si la imagen es más ancha que la página, ajusta
+        if (imgHeight > pageHeight - 80) {
+          imgHeight = pageHeight - 80;
+          imgWidth = canvas.width * (imgHeight / canvas.height);
+        }
+        if (y + imgHeight > pageHeight - 40) {
+          // Pie de página con número
+          pdf.setFontSize(10);
+          pdf.text(`Página ${pageNum}`, pageWidth - 80, pageHeight - 20);
+          pdf.addPage();
+          pageNum++;
+          y = 40;
+        }
+        pdf.addImage(imgData, 'PNG', 40, y, imgWidth, imgHeight);
+        y += imgHeight + 30;
+      }
+      // Pie de página en la última página
+      pdf.setFontSize(10);
+      pdf.text(`Página ${pageNum}`, pageWidth - 80, pageHeight - 20);
+
+      // Nombre de archivo inteligente
+      let fileName = 'Dashboard_BI_PACA_';
+      const today = new Date();
+      const pad = (n: number) => n.toString().padStart(2, '0');
+      const formatDate = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+      if (this.startDate && this.endDate) {
+        fileName += `${this.startDate}_${this.endDate}`;
+      } else {
+        fileName += formatDate(today);
+      }
+      fileName += '.pdf';
+      pdf.save(fileName);
+      // Restaurar el estado original de los panels
+      if (this.panels) this.panels.forEach((panel, idx) => {
+        if (!originalStates[idx]) panel.close();
+      });
+    }, 400); // Espera a que los panels se expandan visualmente
+  }
 
   startDate: string = '';
   endDate: string = '';
   selectedProvince: string = '';
   selectedCategory: string = '';
+  hasActiveFilters(): boolean {
+    return !!(this.startDate || this.endDate || this.selectedProvince || this.selectedCategory);
+  }
 
   ///VETAS///
 
@@ -74,18 +213,23 @@ export class DashboardComponent implements OnInit {
     this.loadCharts();
   }
 
+
   onDateChange() {
-    if (this.startDate && this.endDate) {
-      this.loadCharts();
-      
-      if (this.selectedProvince) {
-        this.loadSalesByCity(this.selectedProvince);
-      }
-      
-      if (this.selectedCategory) {
-        this.loadProductsByCategory(this.selectedCategory);
-      }
+    this.loadCharts();
+    if (this.selectedProvince) {
+      this.loadSalesByCity(this.selectedProvince);
     }
+    if (this.selectedCategory) {
+      this.loadProductsByCategory(this.selectedCategory);
+    }
+  }
+
+  clearAllFilters() {
+    this.startDate = '';
+    this.endDate = '';
+    this.selectedProvince = '';
+    this.selectedCategory = '';
+    this.loadCharts();
   }
 
   onProvinceClick(event: any) {
