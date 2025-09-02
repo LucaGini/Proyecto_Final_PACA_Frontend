@@ -1,0 +1,52 @@
+<div *ngIf="weeklyRoutes" class="vrp-container">
+  <!-- Encabezado con total de órdenes y botón de exportar -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
+    <button (click)="exportPDF()" class="gral-button mt-3">Exportar PDF</button>
+  </div>
+
+  <!-- Cards por provincia -->
+  <div *ngFor="let province of getProvinces(); let i = index" class="card shadow-sm" [style.--animation-order]="i">
+    <div class="card-header">
+      <h4>{{ province | titlecase }}</h4>
+    </div>
+    <div class="card-body p-0">
+      <ul class="list-group list-group-flush">
+        <li *ngFor="let route of weeklyRoutes.routesByProvince[province]" class="list-group-item route-item">
+          <span class="order-number fw-bold">#{{ route.orderNumber }}</span>
+          <span class="client ms-3">{{ route.firstName }} {{ route.lastName }}</span>
+          <span class="total ms-3 text-success fw-semibold">$ {{ route.total | number:'1.0-0' }}</span>
+          <div class="address text-muted mt-1">{{ route.address }}</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Órdenes no geolocalizadas -->
+  <div *ngIf="weeklyRoutes.notGeolocated.length > 0" class="card shadow-sm">
+    <div class="card-header not-geolocated">
+      Órdenes no geolocalizadas
+    </div>
+    <div class="card-body p-0">
+      <ul class="list-group list-group-flush">
+        <li *ngFor="let route of weeklyRoutes.notGeolocated" class="list-group-item route-item">
+          <span class="order-number fw-bold">#{{ route.orderNumber }}</span>
+          <span class="client ms-3">{{ route.firstName }} {{ route.lastName }}</span>
+          <span class="total ms-3 text-success fw-semibold">$ {{ route.total | number:'1.0-0' }}</span>
+          <div class="address text-muted mt-1">{{ route.address }}</div>
+          <div class="reason text-danger mt-1">Motivo: {{ route.reason }}</div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Mapa de rutas -->
+  <div id="map" class="map-container"></div>
+</div>
+
+<!-- LO TIENE QUE HACER LUCA-->
+<div *ngIf="!weeklyRoutes" class="no-orders-message">
+  <mat-icon>info</mat-icon>
+  <h3>Sin rutas cargadas</h3>
+  <p>Por favor, genera rutas para poder verlas aquí.</p>
+</div>
