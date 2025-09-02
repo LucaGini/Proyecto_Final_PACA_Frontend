@@ -44,10 +44,17 @@
       </div>
     </div>
 
+    <div class="col-md-6" *ngIf="currentProvinceInfo">
+      <div class="form-group">
+        <label>Provincia</label>
+        <p class="form-control read-only">{{ currentProvinceInfo?.name || 'Cargando...' }}</p>
+      </div>
+    </div>
+
     <div class="col-md-6">
       <div class="form-group">
         <label>Ciudad</label>
-        <p class="form-control read-only">{{ userData.city }}</p>
+        <p class="form-control read-only">{{ currentCityInfo?.name || 'Cargando...' }}</p>
       </div>
     </div>
   </div>
