@@ -50,6 +50,7 @@ import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 import { SharedModule } from './shared/shared.module';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
+
 @NgModule({
   declarations: [
     AboutUsComponent,

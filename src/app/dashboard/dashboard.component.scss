@@ -1,0 +1,76 @@
+.doughnut-container {
+  max-width: 400px;   
+  max-height: 400px;  
+  margin: 0 auto;     
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+mat-accordion {
+  .mat-expansion-panel {
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    overflow: hidden;
+
+    .mat-expansion-panel-header {
+      background: #f7f9fc;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+.chart-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+  max-width: 550px;   
+  max-height: 550px;  
+  margin: 0 auto;   
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+    color: #333;
+  }
+
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+
+.doughnut-container .chart-card {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.doughnut-container canvas {
+  max-width: 300px;
+  max-height: 300px;
+  margin: 0 auto;
+}
+
+
+.line-container .chart-card {
+  max-width: 700px;   
+  max-height: 700px;  
+  margin: 0 auto;
+}
+
+.row.g-3.mb-4 {
+  margin-bottom: 2rem !important;
+}

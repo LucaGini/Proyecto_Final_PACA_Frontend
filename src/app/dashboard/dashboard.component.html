@@ -1,0 +1,183 @@
+<mat-accordion multi="true">
+  <div class="nav-item">
+    <div class="form-group">
+      <label for="dateRange">Rango de Fechas:</label>
+      <div class="input-group">
+        <input type="date" class="form-control" id="startDate" (change)="onDateChange()" [(ngModel)]="startDate">
+        <span class="input-group-text">hasta</span>
+        <input type="date" class="form-control" id="endDate" (change)="onDateChange()" [(ngModel)]="endDate">
+      </div>
+    </div>
+  </div>
+
+  <!-- VENTAS -->
+  <mat-expansion-panel expanded>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Estadísticas de Ventas </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h3>Top 5 Productos más vendidos</h3>
+          <canvas baseChart
+                  [data]="topProductsChartData"
+                  [options]="topProductsChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h3>Top 5 Peores Productos</h3>
+          <canvas baseChart
+                  [data]="worstProductsChartData"
+                  [options]="worstProductsChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-12">
+        <div class="chart-card line-container">
+          <h3>Evolución de Ganancias</h3>
+          <canvas baseChart
+                  [data]="revenueChartData"
+                  [options]="revenueChartOptions"
+                  [type]="'line'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6" *ngIf="!citiesChartData.labels?.length">
+        <div class="chart-card">
+          <h3>Ventas por Provincia</h3>
+          <canvas baseChart
+                  [data]="salesChartData"
+                  [options]="salesChartOptions"
+                  [type]="'bar'"
+                  (chartClick)="onProvinceClick($event)">
+          </canvas>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6" *ngIf="!productsByCategoryChartData.labels?.length">
+        <div class="chart-card">
+          <h3>Ventas por Categoría</h3>
+          <canvas baseChart
+                  [data]="categoriesChartData"
+                  [options]="categoriesChartOptions"
+                  [type]="'bar'"
+                  (chartClick)="onCategoryClick($event)">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4" *ngIf="citiesChartData.labels?.length">
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h3>Ventas por Provincia</h3>
+          <canvas baseChart
+                  [data]="salesChartData"
+                  [options]="salesChartOptions"
+                  [type]="'bar'"
+                  (chartClick)="onProvinceClick($event)">
+          </canvas>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h3>Ventas por Ciudad en {{ selectedProvince }}</h3>
+          <canvas baseChart
+                  [data]="citiesChartData"
+                  [options]="citiesChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-4" *ngIf="productsByCategoryChartData.labels?.length">
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h3>Ventas por Categoría</h3>
+          <canvas baseChart
+                  [data]="categoriesChartData"
+                  [options]="categoriesChartOptions"
+                  [type]="'bar'"
+                  (chartClick)="onCategoryClick($event)">
+          </canvas>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h3>Productos en {{ selectedCategory }}</h3>
+          <canvas baseChart
+                  [data]="productsByCategoryChartData"
+                  [options]="productsByCategoryChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- ORDENES -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Estadísticas de Órdenes </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="row g-3 mb-4 justify-content-center">
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="chart-card doughnut-container mx-auto">
+          <h3 class="text-center">Órdenes por Estado</h3>
+          <canvas baseChart
+                  [data]="orderStatusChartData"
+                  [options]="orderStatusChartOptions"
+                  [type]="'doughnut'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- CLIENTES -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Estadísticas Clientes </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div class="row g-3 mb-4">
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h3>Top 5 Clientes</h3>
+          <canvas baseChart
+                  [data]="topCustomersChartData"
+                  [options]="topCustomersChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <div class="chart-card">
+          <h3>Peores clientes (más cancelaciones)</h3>
+          <canvas baseChart
+                  [data]="worstCustomersChartData"
+                  [options]="worstCustomersChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
