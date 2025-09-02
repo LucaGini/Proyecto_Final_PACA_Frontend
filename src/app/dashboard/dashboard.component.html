@@ -1,14 +1,32 @@
-<mat-accordion multi="true">
-  <div class="nav-item">
-    <div class="form-group">
-      <label for="dateRange">Rango de Fechas:</label>
-      <div class="input-group">
-        <input type="date" class="form-control" id="startDate" (change)="onDateChange()" [(ngModel)]="startDate">
-        <span class="input-group-text">hasta</span>
-        <input type="date" class="form-control" id="endDate" (change)="onDateChange()" [(ngModel)]="endDate">
+<div class="dashboard-download-btn-wrapper">
+  <button class="dashboard-download-btn" (click)="downloadPDF()" [disabled]="!hasAnyChartData()" [ngClass]="{'disabled-btn': !hasAnyChartData()}" [title]="!hasAnyChartData() ? 'No hay datos para exportar' : 'Descargar dashboard en PDF'">
+    <mat-icon>download</mat-icon>
+    Descargar PDF
+  </button>
+</div>
+
+<!-- Filtros fuera del PDF -->
+<div class="nav-item">
+  <div class="form-group filter-header">
+    <div >
+      <div>
+        <label for="dateRange">Rango de Fechas:</label>
+        <div class="input-group">
+          <input type="date" class="form-control" id="startDate" (change)="onDateChange()" [(ngModel)]="startDate" [max]="getToday()">
+          <span class="input-group-text">hasta</span>
+          <input type="date" class="form-control" id="endDate" (change)="onDateChange()" [(ngModel)]="endDate" [max]="getToday()">
+        </div>
       </div>
+      <button *ngIf="hasActiveFilters()" type="button" class="clear-filters-btn" (click)="clearAllFilters()" matTooltip="Limpiar todos los filtros">
+        <mat-icon>filter_list_off</mat-icon>
+      </button>
     </div>
   </div>
+</div>
+
+<!-- Contenedor SOLO para PDF: solo gráficas y secciones -->
+<div id="dashboard-pdf-content">
+<mat-accordion multi="true">
 
   <!-- VENTAS -->
   <mat-expansion-panel expanded>
@@ -153,7 +171,7 @@
   <!-- CLIENTES -->
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title> Estadísticas Clientes </mat-panel-title>
+      <mat-panel-title> Estadísticas de Clientes </mat-panel-title>
     </mat-expansion-panel-header>
 
     <div class="row g-3 mb-4">
@@ -181,3 +199,4 @@
     </div>
   </mat-expansion-panel>
 </mat-accordion>
+</div>

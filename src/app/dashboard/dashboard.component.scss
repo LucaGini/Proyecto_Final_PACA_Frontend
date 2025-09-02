@@ -1,3 +1,48 @@
+
+.dashboard-download-btn-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.dashboard-download-btn {
+  background: #ca8a4a;
+  color: #fff;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 5px #b38558;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 0 5px 15px #b38558;
+    transform: scale(1.05);
+    background: #b38558;
+  }
+
+  mat-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+  }
+  &.disabled-btn,
+  &:disabled {
+    background: #ccc !important;
+    color: #777 !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+    filter: blur(0.5px) grayscale(0.3);
+    transform: none !important;
+  }
+}
 .doughnut-container {
   max-width: 400px;   
   max-height: 400px;  
