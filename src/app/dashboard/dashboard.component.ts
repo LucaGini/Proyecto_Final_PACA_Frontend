@@ -320,17 +320,30 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     // Ganancias en el tiempo
     this.dashboardService.getRevenueOverTime(start, end).subscribe(res => {
+      const labels = res.data.map((x: any) => {
+        const d = new Date(x.date + 'T00:00:00');
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+      });
+
+      const data = res.data.map((x: any) => x.totalRevenue);
+
       this.revenueChartData = {
-        labels: res.data.map((x: any) => new Date(x.date).toLocaleDateString()),
+        labels,
         datasets: [{
           label: 'Ingresos',
-          data: res.data.map((x: any) => x.revenue),
+          data,
           borderColor:'#b38558',
           tension: 0.2
         }]
       };
+
       this.cdr.markForCheck();
     });
+
+
 
 
     // Top productos
@@ -391,15 +404,27 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     // Órdenes por estado
     this.dashboardService.getOrderStatusSummary(start, end).subscribe(res => {
+      const summary = { completed: 0, pending: 0, cancelled: 0 };
+
+      res.data.forEach((item: any) => {
+        if (item.status === 'completed') summary.completed = item.total;
+        if (item.status === 'pending') summary.pending = item.total;
+        if (item.status === 'cancelled') summary.cancelled = item.total;
+      });
+
       this.orderStatusChartData = {
         labels: ['Completadas', 'Pendientes', 'Canceladas'],
         datasets: [{
-          data: [res.data.completed, res.data.pending, res.data.cancelled],
+          data: [summary.completed, summary.pending, summary.cancelled],
           backgroundColor: ['#6b8e23','#ffd700', '#c94c4c']
         }]
       };
+
       this.cdr.markForCheck();
     });
+
+
+
 
 
   }
