@@ -12,7 +12,7 @@
     </div>
     <div class="card-body p-0">
       <ul class="list-group list-group-flush">
-        <li *ngFor="let route of weeklyRoutes.routesByProvince[province]" class="list-group-item route-item">
+        <li *ngFor="let route of weeklyRoutes.routesByProvince[province].route" class="list-group-item route-item">
           <span class="order-number fw-bold">#{{ route.orderNumber }}</span>
           <span class="client ms-3">{{ route.firstName }} {{ route.lastName }}</span>
           <span class="total ms-3 text-success fw-semibold">$ {{ route.total | number:'1.0-0' }}</span>

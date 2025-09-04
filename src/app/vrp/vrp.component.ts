@@ -2,7 +2,9 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import * as L from 'leaflet';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { VrpService, WeeklyRoutesResponse } from 'src/app/services/vrp.service';
+import { VrpService, WeeklyRoutesResponse, ProvinceRoutes, Route } from 'src/app/services/vrp.service';
+
+
 
 @Component({
   selector: 'app-vrp',
@@ -17,15 +19,15 @@ export class VrpComponent implements OnInit, AfterViewInit {
   constructor(private vrpService: VrpService) {}
 
   ngOnInit() {
-    // si hay datos guardados en localStorage, los carga
+    // Cargar datos guardados en localStorage si existen
     const stored = localStorage.getItem('weeklyRoutes');
     if (stored) {
       this.weeklyRoutes = JSON.parse(stored);
     }
 
-    //siempre intenta traer las rutas desde el backend CON ESTA NO FUNCIONA EL MAPA
+    // Traer rutas desde backend
     this.vrpService.getWeeklyRoutes().subscribe({
-      next: (res) => {
+      next: (res: WeeklyRoutesResponse) => {
         this.weeklyRoutes = res;
         localStorage.setItem('weeklyRoutes', JSON.stringify(res));
         if (this.map) {
@@ -51,6 +53,12 @@ export class VrpComponent implements OnInit, AfterViewInit {
     return this.weeklyRoutes ? Object.keys(this.weeklyRoutes.routesByProvince) : [];
   }
 
+  openGoogleMaps(province: string) {
+    const provinceData: ProvinceRoutes | undefined = this.weeklyRoutes?.routesByProvince[province];
+    if (!provinceData) return;
+    window.open(provinceData.mapsLink, "_blank");
+  }
+
   private initMap() {
     this.map = L.map('map').setView([-34.6037, -58.3816], 6); 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -73,8 +81,11 @@ export class VrpComponent implements OnInit, AfterViewInit {
     let colorIndex = 0;
 
     for (const province of this.getProvinces()) {
-      const routes = this.weeklyRoutes.routesByProvince[province];
-      const latlngs: L.LatLngExpression[] = routes.map(r => [r.lat!, r.lon!]);
+      const provinceData: ProvinceRoutes = this.weeklyRoutes.routesByProvince[province];
+      const { route, mapsLink } = provinceData;
+      if (!route || route.length === 0) continue;
+
+      const latlngs: L.LatLngExpression[] = route.map((r: Route) => [r.lat!, r.lon!]);
 
       const polyline = L.polyline(latlngs, {
         color: colors[colorIndex % colors.length],
@@ -82,14 +93,15 @@ export class VrpComponent implements OnInit, AfterViewInit {
         opacity: 0.8
       }).addTo(this.map);
 
-      routes.forEach((r) => {
+      route.forEach((r: Route) => {
         L.marker([r.lat!, r.lon!], { icon: customIcon })
           .addTo(this.map)
           .bindPopup(
             `<b>Orden: ${r.orderNumber ?? 'Depósito'}</b><br>
              Cliente: ${r.firstName ?? ''} ${r.lastName ?? ''}<br>
              Total: $${r.total?.toLocaleString() ?? '0'}<br>
-             Dirección: ${r.address}`
+             Dirección: ${r.address}<br>
+             <a href="${mapsLink}" target="_blank">Abrir en Google Maps</a>`
           );
       });
 
@@ -109,16 +121,17 @@ export class VrpComponent implements OnInit, AfterViewInit {
 
     let y = 35;
     for (const province of this.getProvinces()) {
+      const { route } = this.weeklyRoutes.routesByProvince[province];
       doc.setFontSize(14);
       doc.text(`Provincia: ${province}`, 14, y);
       y += 5;
 
-      const data = this.weeklyRoutes.routesByProvince[province].map(route => [
-        route.orderNumber ?? 'DEPÓSITO',
-        `${route.firstName ?? ''} ${route.lastName ?? ''}`,
-        `$${route.total?.toLocaleString() ?? '0'}`,
-        route.address,
-        `${route.lat}, ${route.lon}`
+      const data = route.map((r: Route) => [
+        r.orderNumber ?? 'DEPÓSITO',
+        `${r.firstName ?? ''} ${r.lastName ?? ''}`,
+        `$${r.total?.toLocaleString() ?? '0'}`,
+        r.address,
+        `${r.lat}, ${r.lon}`
       ]);
 
       autoTable(doc, {
@@ -136,7 +149,7 @@ export class VrpComponent implements OnInit, AfterViewInit {
       doc.setFontSize(14);
       doc.text('Órdenes no geolocalizadas', 14, y);
 
-      const data = this.weeklyRoutes.notGeolocated.map(order => [
+      const data = this.weeklyRoutes.notGeolocated.map((order: any) => [
         order.orderNumber,
         `${order.firstName ?? ''} ${order.lastName ?? ''}`,
         `$${order.total?.toLocaleString() ?? '0'}`,

@@ -4,32 +4,26 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 export interface Route {
-  orderId?: string;
   orderNumber?: string;
-  address: string;
-  province?: string;
   firstName?: string;
   lastName?: string;
   total?: number;
+  address: string;
   lat?: number;
   lon?: number;
 }
 
-export interface NotGeolocatedOrder {
-  orderId: string;
-  orderNumber: string;
-  reason: string;
-  address: string;
-  firstName?: string;
-  lastName?: string;
-  total?: number;
+export interface ProvinceRoutes {
+  route: Route[];
+  mapsLink: string;
 }
 
 export interface WeeklyRoutesResponse {
   totalOrders: number;
-  routesByProvince: Record<string, Route[]>;
-  notGeolocated: NotGeolocatedOrder[];
+  routesByProvince: Record<string, ProvinceRoutes>;
+  notGeolocated: any[];
 }
+
 
 @Injectable({
   providedIn: 'root'
