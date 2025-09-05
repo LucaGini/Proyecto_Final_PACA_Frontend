@@ -58,9 +58,34 @@ loadProducts() {
   }
   
   update(product: any): Observable<any> {
-    return this.http.put(`${this.URL}/products/${product.id}`, product, { headers: this.getAuthHeaders() })
+    const productId = product instanceof FormData ? product.get('id') : product.id;
+    
+    return this.http.put(`${this.URL}/products/${productId}`, product, { headers: this.getAuthHeaders() })
     .pipe(catchError((error: any) => {
         console.error('Error en la solicitud de actualización:', error);
+        return throwError(error); 
+      })
+    );
+  }
+
+  updateWithImage(product: any, imageFile: File): Observable<any> {
+    const formData = new FormData();
+    
+    // Agregar todos los campos del producto al FormData (igual que en el método add)
+    Object.keys(product).forEach(key => {
+      if (key !== 'id') { // No agregar el ID como campo, se usa en la URL
+        formData.append(key, product[key]);
+      }
+    });
+    
+    // Agregar la imagen
+    formData.append('image', imageFile, imageFile.name);
+    
+    return this.http.put(`${this.URL}/products/${product.id}`, formData, { headers: this.getAuthHeaders() })
+    .pipe(
+      tap(() => this.loadProducts()),
+      catchError((error: any) => {
+        console.error('Error en la solicitud de actualización con imagen:', error);
         return throwError(error); 
       })
     );

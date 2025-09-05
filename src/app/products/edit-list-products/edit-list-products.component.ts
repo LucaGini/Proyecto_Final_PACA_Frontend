@@ -94,6 +94,32 @@ export class EditListProductsComponent {
     product.editMinimumStock = product.minimumStock;
     product.editDescription = product.description;
     product.editing = true;
+    // Agregar propiedades para el manejo de imagen
+    product.selectedImage = null;
+    product.imagePreviewUrl = null;
+    product.hasNewImage = false;
+  }
+
+  onImageSelected(event: Event, product: any) {
+    const inputElement = event.target as HTMLInputElement;
+    if (inputElement.files && inputElement.files[0]) {
+      product.selectedImage = inputElement.files[0];
+      product.hasNewImage = true;
+      const reader = new FileReader();
+      reader.onload = () => {
+        product.imagePreviewUrl = reader.result;
+      };
+      reader.readAsDataURL(product.selectedImage);
+    } else {
+      console.log('No se seleccionó ninguna imagen');
+    }
+  }
+
+  cancelEdit(product: any): void {
+    product.editing = false;
+    product.selectedImage = null;
+    product.imagePreviewUrl = null;
+    product.hasNewImage = false;
   }
 
 save(product: any): void {
@@ -109,7 +135,8 @@ save(product: any): void {
     { name: editName, price: editPrice, stock: editStock, minimumStock: editMinimumStock, description: editDescription }
   );
 
-  if (!hasChanged) {
+  // Verificar si hay cambios o si hay una nueva imagen
+  if (!hasChanged && !product.hasNewImage) {
     this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en el producto.');
     product.editing = false;
     return;
@@ -121,30 +148,62 @@ save(product: any): void {
     next: (existingProduct: any) => {
       const nameChanged = product.name !== product.editName;
       if (existingProduct === null || !nameChanged) {
-        // Aplicar cambios al objeto original
-        product.name = product.editName;
-        product.price = editPrice;
-        product.stock = editStock;
-        product.minimumStock = editMinimumStock;
-        product.description = editDescription;
+        
+        // Crear el objeto con los datos actualizados
+        const updatedProduct = {
+          id: product.id,
+          name: product.editName,
+          price: parseFloat(editPrice),
+          stock: parseInt(editStock),
+          minimumStock: parseInt(editMinimumStock),
+          description: editDescription,
+          isActive: product.isActive,
+          category: product.category,
+          supplier: product.supplier
+        };
 
-        this.productService.update(product).subscribe({
-          next: (res: any) => {
-            if (res.data) {
-              const index = this.products.findIndex(p => p.id === res.data.id);
-              if (index !== -1) {
-                this.products[index] = res.data;
-                this.products = [...this.products]; // Forzar renderizado
+        // Si hay nueva imagen, usar el método updateWithImage, sino usar update normal
+        if (product.hasNewImage && product.selectedImage) {
+          this.productService.updateWithImage(updatedProduct, product.selectedImage).subscribe({
+            next: (res: any) => {
+              if (res.data) {
+                const index = this.products.findIndex(p => p.id === res.data.id);
+                if (index !== -1) {
+                  this.products[index] = res.data;
+                  this.products = [...this.products]; // Forzar renderizado
+                }
               }
+              this.utils.showAlert('success', 'Producto actualizado con éxito');
+              product.editing = false;
+              // Limpiar propiedades de imagen
+              product.selectedImage = null;
+              product.imagePreviewUrl = null;
+              product.hasNewImage = false;
+            },
+            error: (err: any) => {
+              console.error(err);
+              this.utils.showAlert('error', 'Registro fallido', err.message);
             }
-            this.utils.showAlert('success', 'Producto actualizado con éxito');
-            product.editing = false;
-          },
-          error: (err: any) => {
-            console.error(err);
-            this.utils.showAlert('error', 'Registro fallido', err.message);
-          }
-        });
+          });
+        } else {
+          this.productService.update(updatedProduct).subscribe({
+            next: (res: any) => {
+              if (res.data) {
+                const index = this.products.findIndex(p => p.id === res.data.id);
+                if (index !== -1) {
+                  this.products[index] = res.data;
+                  this.products = [...this.products]; // Forzar renderizado
+                }
+              }
+              this.utils.showAlert('success', 'Producto actualizado con éxito');
+              product.editing = false;
+            },
+            error: (err: any) => {
+              console.error(err);
+              this.utils.showAlert('error', 'Registro fallido', err.message);
+            }
+          });
+        }
       } else {
         this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
       }
