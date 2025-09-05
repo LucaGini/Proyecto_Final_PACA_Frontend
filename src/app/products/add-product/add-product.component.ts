@@ -110,6 +110,14 @@ export class AddProductComponent implements OnInit {
       next: () => {
         this.utils.showAlert('success', 'Éxito', 'Producto registrado con éxito');
         addForm.resetForm();
+        // Limpiar los campos de imagen
+        this.selectedImage = null;
+        this.imagePreviewUrl = null;
+        // Limpiar el input de archivo
+        const fileInput = document.getElementById('image') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
         this.router.navigate(['AdminProducts']);
       },
       error: (error: any) => {

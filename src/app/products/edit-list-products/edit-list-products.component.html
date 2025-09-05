@@ -80,7 +80,22 @@
       </div>
 
       <div class="card-body">
-        <img class="card-img-top" [src]="getImageUrl(product.image)" alt="{{ product.name }}">
+        <img class="card-img-top" [src]="getImageUrl(product.image)" alt="{{ product.name }}" *ngIf="!product.editing">
+        
+        <!-- Imagen en modo edición -->
+        <div *ngIf="product.editing">
+          <div class="form-group mb-2">
+            <label for="image">Imagen:</label>
+            <input type="file" class="form-control-file" [id]="'image-' + product.id" 
+              (change)="onImageSelected($event, product)" accept="image/*">
+            <!-- Mostrar nueva imagen si se seleccionó -->
+            <img *ngIf="product.imagePreviewUrl" [src]="product.imagePreviewUrl" alt="Nueva imagen"
+              style="max-width: 200px; margin-top: 10px;" />
+            <!-- Mostrar imagen actual si no hay nueva imagen -->
+            <img *ngIf="!product.imagePreviewUrl" [src]="getImageUrl(product.image)" alt="{{ product.name }}"
+              style="max-width: 200px; margin-top: 10px; opacity: 0.7;" />
+          </div>
+        </div>
 
       <div *ngIf="product.editing">
         <div class="form-group mb-2">
@@ -153,9 +168,12 @@
       </div>
 
       <div *ngIf="product.editing && product.isActive" style="margin-top: 10px;">
-        <button mat-icon-button class="btn" (click)="save(product) " style="color: #e7c633;"
+        <button mat-icon-button class="btn" (click)="save(product)" style="color: #e7c633;"
           [disabled]="!product.editName || !product.editDescription || !product.editPrice || !product.editStock || !product.editMinimumStock">
           <mat-icon>save_alt</mat-icon>
+        </button>
+        <button mat-icon-button class="btn" (click)="cancelEdit(product)" style="color: #f76666; margin-left: 5px;">
+          <mat-icon>cancel</mat-icon>
         </button>
       </div>
 </div>
