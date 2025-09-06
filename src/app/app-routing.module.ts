@@ -25,6 +25,7 @@ import { OrdersHistoryComponent } from './orders/orders-history/orders-history.c
 import { AuthGuard } from './guards/auth.guard';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { VrpComponent } from './vrp/vrp.component';
 
 const routes: Routes = [
 
@@ -41,6 +42,7 @@ const routes: Routes = [
   { path: 'EditListCities', component: EditListCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'EditListSuppliers', component: EditListSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'OrderList', component: OrderListComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  { path: 'vrp', component: VrpComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
 
   //TODOS MENOS ADMINISTRADOR
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador'] }},

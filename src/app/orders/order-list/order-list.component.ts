@@ -25,7 +25,7 @@ export class OrderListComponent implements OnInit {
     private productService: ProductService,
     private cityService: CityService,
     private router: Router,
-    private utils: UtilsService
+    private utils: UtilsService,
   ) {}
 
   ngOnInit() {

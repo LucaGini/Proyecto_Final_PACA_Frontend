@@ -23,6 +23,7 @@ import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cit
 import { AdminSuppliersComponent } from './suppliers/admin-suppliers/admin-suppliers.component';
 import { AddSupplierComponent } from './suppliers/add-supplier/add-supplier.component';
 import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
+import { VrpComponent } from './vrp/vrp.component';
 
 //Angular Manual
 import { MatToolbarModule } from '@angular/material/toolbar'; //navbar
@@ -53,7 +54,9 @@ import {MatTabsModule} from '@angular/material/tabs';
     EditListCitiesComponent,
     AdminSuppliersComponent,
     AddSupplierComponent,
-    EditListSuppliersComponent
+    EditListSuppliersComponent,
+    VrpComponent
+
   ],
   imports: [
     BrowserModule,
