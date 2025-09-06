@@ -1,11 +1,11 @@
 /* Importing Datepicker SCSS file */
-@import 'bootstrap/scss/bootstrap';
+@import "bootstrap/scss/bootstrap";
 
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&family=Raleway&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Lora&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&family=Raleway&display=swap");
 
-@import 'animations';
-@import 'browsers';
+@import "animations";
+@import "browsers";
 // Global variables
 :root {
   --text-color: #3e3e3e;
@@ -54,7 +54,7 @@ app-root {
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   overflow-y: scroll;
 }
 
@@ -78,7 +78,7 @@ form,
     margin-bottom: 1.5rem;
 
     &::after {
-      content: '';
+      content: "";
       display: block;
       width: 50px;
       height: 2px;
@@ -99,7 +99,7 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
 }
 
 .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined' !important;
+  font-family: "Material Symbols Outlined" !important;
 }
 
 .modal-content {
@@ -111,7 +111,7 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
 }
 
 .modal-dialog .modal-title {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   margin: 0;
   font-weight: 600;
   font-size: 1.3rem;
@@ -311,4 +311,13 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
   i {
     margin-right: 0.5rem;
   }
+}
+
+.spinner {
+  border: 6px solid #f4e3c1;
+  border-top: 6px solid #b38558;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 1s linear infinite;
 }
