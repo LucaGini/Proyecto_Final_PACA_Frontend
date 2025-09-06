@@ -71,6 +71,10 @@ export class EditListSuppliersComponent {
     this.cuitControl.setValue(supplier.cuit);
   }
 
+  cancelEdit(supplier: any): void {
+    supplier.editing = false;
+  }
+
   validateCuit(cuit: string): boolean {
     return /^[0-9]{11}$/.test(cuit);
   }

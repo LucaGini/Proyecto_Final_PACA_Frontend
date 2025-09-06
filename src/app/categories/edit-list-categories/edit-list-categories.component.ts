@@ -60,6 +60,10 @@ export class EditListCategoriesComponent {
     category.editing = true;
   }
 
+  cancelEdit(category: any): void {
+    category.editing = false;
+  }
+
  save(category: any): void {
   const original = {
     name: category.name,

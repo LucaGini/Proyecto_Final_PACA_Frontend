@@ -13,6 +13,10 @@
           <mat-icon>save_alt</mat-icon>
         </button>
 
+        <button mat-icon-button class="btn" *ngIf="supplier.editing" (click)="cancelEdit(supplier)" style="color: #f76666; margin-left: 5px;">
+          <mat-icon>cancel</mat-icon>
+        </button>
+
         <button mat-icon-button class="btn" *ngIf="!supplier.editing" (click)="delete(supplier)" style="color: #f76666;">
           <mat-icon>delete</mat-icon>
         </button>
