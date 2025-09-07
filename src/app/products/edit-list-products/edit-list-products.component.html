@@ -82,84 +82,81 @@
             <label for="image">Imagen:</label>
             <input type="file" class="form-control-file" [id]="'image-' + product.id"
               (change)="onImageSelected($event, product)" accept="image/*">
-            <!-- Mostrar nueva imagen si se seleccionó -->
             <img *ngIf="product.imagePreviewUrl" [src]="product.imagePreviewUrl" alt="Nueva imagen"
               style="max-width: 200px; margin-top: 10px;" />
-            <!-- Mostrar imagen actual si no hay nueva imagen -->
             <img *ngIf="!product.imagePreviewUrl" [src]="getImageUrl(product.image)" alt="{{ product.name }}"
               style="max-width: 200px; margin-top: 10px; opacity: 0.7;" />
           </div>
         </div>
 
+        <!-- Campos de edición -->
         <div *ngIf="product.editing">
           <div class="form-group mb-2">
             <label for="name">Nombre:</label>
-            <textarea type="text" class="form-control" id="name" [(ngModel)]="product.editName" name="name" required #editNameInput="ngModel" [ngClass]="{ 'is-invalid': editNameInput.invalid && editNameInput.touched }"></textarea>
+            <textarea class="form-control" [(ngModel)]="product.editName" name="name" required #editNameInput="ngModel"
+              [ngClass]="{ 'is-invalid': editNameInput.invalid && editNameInput.touched }"></textarea>
             <div *ngIf="editNameInput.invalid && editNameInput.touched" class="text-danger">
               <small>El nombre es obligatorio.</small>
             </div>
           </div>
-        </div>
-        <div *ngIf="!product.editing">
-          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif">Nombre: {{ product.name }}</h3>
-        </div>
 
-        <div *ngIf="product.editing">
-          <div class="form-group">
+          <div class="form-group mb-2">
             <label for="description">Descripción:</label>
-            <textarea class="form-control" id="description" [(ngModel)]="product.editDescription" name="description" required #editDescriptionInput="ngModel" [ngClass]="{ 'is-invalid': editDescriptionInput.invalid && editDescriptionInput.touched }"></textarea>
+            <textarea class="form-control" [(ngModel)]="product.editDescription" name="description" required #editDescriptionInput="ngModel"
+              [ngClass]="{ 'is-invalid': editDescriptionInput.invalid && editDescriptionInput.touched }"></textarea>
             <div *ngIf="editDescriptionInput.invalid && editDescriptionInput.touched" class="text-danger">
               <small>La descripción es obligatoria.</small>
             </div>
           </div>
-        </div>
-        <div *ngIf="!product.editing">
-          <h3 class="card-text truncate" style="font-family: 'Quicksand', sans-serif">Descripción: {{ product.description }}</h3>
-        </div>
 
-        <div *ngIf="product.editing">
           <div class="form-group mb-2">
             <label for="price">Precio:</label>
-            <input type="text" class="form-control" id="price" [(ngModel)]="product.editPrice" name="price" required #editPriceInput="ngModel" [ngClass]="{ 'is-invalid': editPriceInput.invalid && editPriceInput.touched }" />
+            <input type="text" class="form-control" [(ngModel)]="product.editPrice" name="price" required #editPriceInput="ngModel"
+              [ngClass]="{ 'is-invalid': editPriceInput.invalid && editPriceInput.touched }" />
             <div *ngIf="editPriceInput.invalid && editPriceInput.touched" class="text-danger">
               <small>El precio es obligatorio.</small>
             </div>
           </div>
-        </div>
-        <div *ngIf="!product.editing">
-          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif">Precio: {{ product.price }}</h3>
-        </div>
 
-        <div *ngIf="product.editing">
-          <div class="form-group">
+          <div class="form-group mb-2">
             <label for="stock">Stock:</label>
-            <input type="number" class="form-control" id="stock" [(ngModel)]="product.editStock" name="stock" required #editStockInput="ngModel" [ngClass]="{ 'is-invalid': editStockInput.invalid && editStockInput.touched }" />
+            <input type="number" class="form-control" [(ngModel)]="product.editStock" name="stock" required #editStockInput="ngModel"
+              [ngClass]="{ 'is-invalid': editStockInput.invalid && editStockInput.touched }" />
             <div *ngIf="editStockInput.invalid && editStockInput.touched" class="text-danger">
               <small>El stock es obligatorio.</small>
             </div>
           </div>
-        </div>
-        <div *ngIf="!product.editing">
-          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif">Stock: {{ product.stock }}</h3>
-        </div>
 
-        <div *ngIf="product.editing">
-          <div class="form-group">
+          <div class="form-group mb-2">
             <label for="minimumStock">Stock mínimo :</label>
-            <input type="number" class="form-control" id="minimumStock" [(ngModel)]="product.editMinimumStock" name="minimumStock" required #editMinimumStockInput="ngModel" [ngClass]="{ 'is-invalid': editMinimumStockInput.invalid && editMinimumStockInput.touched }" />
+            <input type="number" class="form-control" [(ngModel)]="product.editMinimumStock" name="minimumStock" required #editMinimumStockInput="ngModel"
+              [ngClass]="{ 'is-invalid': editMinimumStockInput.invalid && editMinimumStockInput.touched }" />
             <div *ngIf="editMinimumStockInput.invalid && editMinimumStockInput.touched" class="text-danger">
               <small>El stock mínimo es obligatorio.</small>
             </div>
           </div>
-        </div>
-        <div *ngIf="!product.editing">
-          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif">Stock mínimo: {{ product.minimumStock }}</h3>
+
+          <!-- Botones guardar y cancelar -->
+          <div style="margin-top: 10px;">
+            <button mat-icon-button class="btn" (click)="save(product)" style="color: #e7c633;"
+              [disabled]="!product.editName || !product.editDescription || !product.editPrice || !product.editStock || !product.editMinimumStock">
+              <mat-icon>save_alt</mat-icon>
+            </button>
+            <button mat-icon-button class="btn" (click)="cancelEdit(product)" style="color: #f76666; margin-left: 5px;">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </div>
         </div>
 
-      <div *ngIf="product.editing && product.isActive" style="margin-top: 10px;">
-        <button mat-icon-button class="btn" (click)="save(product) " style="color: #e7c633;"
-          [disabled]="!product.editName || !product.editDescription || !product.editPrice || !product.editStock || !product.editMinimumStock">
-          <mat-icon>save_alt</mat-icon>
-        </button>
+        <!-- Mostrar información cuando no está editando -->
+        <div *ngIf="!product.editing">
+          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif">Nombre: {{ product.name }}</h3>
+          <h3 class="card-text truncate" style="font-family: 'Quicksand', sans-serif">Descripción: {{ product.description }}</h3>
+          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif">Precio: {{ product.price }}</h3>
+          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif">Stock: {{ product.stock }}</h3>
+          <h3 class="card-text" style="font-family: 'Quicksand', sans-serif">Stock mínimo: {{ product.minimumStock }}</h3>
+        </div>
       </div>
+    </div>
+  </div>
 </div>
