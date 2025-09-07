@@ -1,178 +1,155 @@
-.card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 2rem;
-  box-shadow:
-    0 10px 30px rgba(231, 198, 51, 0.1),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(231, 198, 51, 0.15);
-  }
-}
-
-.card-img-top {
-  height: 260px;
-  width: 260px;
-  margin: 1rem auto;
-  object-fit: cover;
-  border-radius: 12px;
-  transition: all 0.5s ease;
-  filter: brightness(0.95);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    transform: scale(1.05);
-    filter: brightness(1.05);
-    box-shadow: 0 12px 30px rgba(231, 198, 51, 0.2);
-  }
-}
-
-/* Botón Añadir */
-#Añadir {
-  background: linear-gradient(45deg, #e7c633, #ffd700);
-  color: white;
-  border: none;
-  padding: 1rem 2rem;
-  border-radius: 8px;
-  font-weight: 550;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(231, 198, 51, 0.2);
-}
-
-#Añadir:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
-  background: linear-gradient(45deg, #ffd700, #e7c633);
-}
-
-#Añadir:active:not(:disabled) {
-  transform: translateY(1px);
-}
-
-/* 👉 Estado deshabilitado del botón */
-#Añadir:disabled,
-#Añadir[disabled] {
-  background: #ccc !important;
-  color: #777 !important;
-  cursor: not-allowed;
-  box-shadow: none;
-  transform: none;
-  background-image: none !important;
-  border: none;
-}
-
-/* Títulos */
-h1,
-h2,
-h3 {
-  font-family: 'Quicksand', sans-serif;
-  color: #333;
-  margin-bottom: 1rem;
-  position: relative;
-  padding-left: 20px;
-
-  &::after {
-    content: '';
-    display: block;
-    width: 50px;
-    height: 2px;
-    background: linear-gradient(45deg, #e7c633, #ffd700);
-    margin: 0.5rem 0;
-    border-radius: 2px;
-    transition: width 0.3s ease;
-  }
-
-  &:hover::after {
-    width: 100px;
-  }
-}
-
-/* Descripción */
-.product-description {
-  color: #666;
-  line-height: 1.6;
-  margin: 1.5rem 0;
-  font-size: 1.1rem;
-}
-
-/* Precio */
-.price {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #e7c633;
-  margin: 1rem 0;
-  text-shadow: 0 2px 4px rgba(231, 198, 51, 0.2);
-}
-
-/* Control de cantidad */
-.quantity-control {
+.product-detail {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin: 1.5rem 0;
+  flex-direction: row;
+  gap: 2rem;
+  margin: 3rem 2rem;
 
-  input {
-    width: 60px;
-    padding: 0.5rem;
-    border: 2px solid #eee;
-    border-radius: 8px;
-    text-align: center;
-    transition: all 0.3s ease;
+  &.out-of-stock .card-img-top {
+    filter: grayscale(100%) brightness(0.95);
+    opacity: 0.7;
+  }
 
-    &:focus {
-      outline: none;
-      border-color: #e7c633;
-      box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
+  .image-col,
+  .info-col {
+    flex: 1 1 50%;
+    min-width: 300px; // asegura que no se achiquen demasiado
+  }
+
+  .card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(231, 198, 51, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(231, 198, 51, 0.15);
+    }
+  }
+
+  .image-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem 0;
+
+
+    .card-img-top {
+      width: 260px;
+      height: 260px;
+      border-radius: 12px;
+      object-fit: cover;
+      filter: brightness(0.95);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: all 0.5s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        filter: brightness(1.05);
+        box-shadow: 0 12px 30px rgba(231, 198, 51, 0.2);
+      }
+    }
+
+    .overlay-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      pointer-events: none;
+      z-index: 2;
+    }
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+    .card-title {
+      font-size: 2rem;
+      font-family: 'Quicksand', sans-serif;
+      position: relative;
+
+      &::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 2px;
+        background: linear-gradient(45deg, #e7c633, #ffd700);
+        margin: 0.5rem 0;
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+
+      &:hover::after {
+        width: 100px;
+      }
+    }
+
+    .card-text {
+      color: #666;
+    }
+    .price {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #e7c633;
+      text-shadow: 0 2px 4px rgba(231, 198, 51, 0.2);
+    }
+
+    .btn-container {
+      .btn-add {
+        background: linear-gradient(45deg, #e7c633, #ffd700);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        font-weight: 550;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(231, 198, 51, 0.2);
+
+        &:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
+          background: linear-gradient(45deg, #ffd700, #e7c633);
+        }
+
+        &:active:not(:disabled) {
+          transform: translateY(1px);
+        }
+
+        &:disabled {
+          background: #ccc !important;
+          color: #777 !important;
+          cursor: not-allowed;
+          box-shadow: none;
+        }
+      }
     }
   }
 }
 
-/* Responsive */
+/* Responsive: se apilan en móviles */
 @media (max-width: 768px) {
+  .image-col,
+  .info-col {
+    flex: 1 1 100%;
+  }
+
   .card-img-top {
-    height: 220px;
     width: 220px;
+    height: 220px;
   }
-
-  #Añadir {
+  .btn-add {
     width: 100%;
-    margin-top: 1rem;
   }
-}
-
-/* --- ESTILOS PARA AGOTADO --- */
-
-/* Imagen en blanco y negro */
-.product-detail.out-of-stock .card-img-top {
-  filter: grayscale(100%) brightness(0.95);
-  opacity: 0.7;
-}
-
-/* Contenedor de la imagen */
-.image-wrapper {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5rem 0;
-}
-
-/* Texto "AGOTADO" */
-.overlay-text {
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.6);
-  color: #fff;
-  font-weight: 700;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  z-index: 2;
-  pointer-events: none;
 }

@@ -1,41 +1,126 @@
-h2, h3{
-  font-family: 'Dancing Script', cursive;
-  font-family: 'Quicksand', sans-serif;
-}
-    
-.card-img-top {
-  height: 260px;
-  width: 260px; 
-}
+.cart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem;
 
-#Cantidad{
-  background: linear-gradient(45deg, #e7c633, #ffd700);
-  font-weight: 550;
-  color: white;
-  border-color: white;
-  margin-left: 10px;
-  margin-right: 10px;
-}  
-
-#ConfirmarCompra {
-  background: linear-gradient(45deg, #e7c633, #ffd700);
-  color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 500;
-  font-size: 18;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(231, 198, 51, 0.2);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
-    background: linear-gradient(45deg, #ffd700, #e7c633);
+  .cart-items {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+    max-width: 900px;
   }
 
-  &:active {
-    transform: translateY(1px);
+  .cart-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.5rem;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+
+    &:hover { transform: translateY(-3px); }
+
+    .item-image img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+
+      &:hover { transform: scale(1.05); }
+    }
+
+    .item-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+
+      .card-title, .card-text { font-family: 'Quicksand', sans-serif; }
+
+      .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        .btn-quantity {
+          background: linear-gradient(45deg, #e7c633, #ffd700);
+          color: white;
+          border: none;
+          border-radius: 6px;
+          padding: 0.5rem 1rem;
+          font-weight: 600;
+          transition: all 0.3s ease;
+
+          &:hover { transform: translateY(-1px); }
+          &:active { transform: translateY(1px); }
+        }
+      }
+
+      .btn-delete {
+        color: #f76666;
+        margin-top: 0.5rem;
+      }
+    }
   }
+
+  .city-charge {
+    font-family: 'Quicksand', sans-serif;
+    background-color: #F4E3C1;
+    border: 1px solid #d4b876;
+    border-radius: 5px;
+    padding: 15px;
+    color: #8a6914;
+  }
+
+  .total {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.8rem;
+  }
+
+  .empty-cart-msg {
+    font-family: 'Quicksand', sans-serif;
+    margin: 10px 0;
+    background-color: #F4E3C1;
+    border: 1px solid #d4b876;
+    border-radius: 5px;
+    padding: 15px;
+    color: #8a6914;
+
+    i { vertical-align: middle; margin-right: 5px; }
+  }
+
+  .btn-confirm {
+    background: linear-gradient(45deg, #e7c633, #ffd700);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(231,198,51,0.2);
+    transition: all 0.3s ease;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(231,198,51,0.3);
+      background: linear-gradient(45deg, #ffd700, #e7c633);
+    }
+
+    &:active:not(:disabled) { transform: translateY(1px); }
+    &:disabled { opacity: 0.6; cursor: not-allowed; }
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-item { flex-direction: column; }
 }
