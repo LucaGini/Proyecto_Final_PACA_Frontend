@@ -75,6 +75,10 @@ export class EditListProvincesComponent implements OnInit {
     province.editing = true;
   }
 
+  cancelEdit(province: Province): void {
+    province.editing = false;
+  }
+
   save(province: Province): void {
     const original = { name: province.name };
     const updated = { name: province.editName };

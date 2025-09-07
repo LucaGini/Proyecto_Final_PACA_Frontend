@@ -23,7 +23,8 @@ export class AddProductComponent implements OnInit {
     private router: Router,
     private categoryService: CategoryService,
     private supplierService: SupplierService,
-    private utils: UtilsService) {}
+    private utils: UtilsService
+  ) {}
 
   ngOnInit(): void {
     this.getCategories();
@@ -106,8 +107,14 @@ export class AddProductComponent implements OnInit {
       next: () => {
         this.utils.showAlert('success', 'Éxito', 'Producto registrado con éxito');
         addForm.resetForm();
+
         this.selectedImage = null;
         this.imagePreviewUrl = null;
+        // Limpiar el input de archivo
+        const fileInput = document.getElementById('image') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
 
         this.router.navigate(['AdminProducts']);
       },
