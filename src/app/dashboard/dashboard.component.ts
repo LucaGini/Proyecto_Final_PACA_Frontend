@@ -346,6 +346,10 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.selectedProvince = province;
         this.loadSalesByCity(province);
       }
+    } else {
+      // Si no hay click activo, limpiar detalle
+      this.selectedProvince = '';
+      this.citiesChartData = { labels: [], datasets: [] };
     }
   }
 
@@ -379,6 +383,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         this.selectedCategory = category;
         this.loadProductsByCategory(category);
       }
+    } else {
+      this.selectedCategory = '';
+      this.productsByCategoryChartData = { labels: [], datasets: [] };
     }
   }
 
