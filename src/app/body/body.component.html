@@ -10,11 +10,10 @@
 <div *ngIf="products.length > 0" class="products-container">
   <div class="product-card-wrapper" *ngFor="let product of products">
     <a [routerLink]="['/product', product.id]" class="no-underline">
-      <div class="product-card" [ngClass]="{'out-of-stock': product.stock === 0}">
-
+      <div class="product-card" [ngClass]="{ 'out-of-stock': product.stock === 0 }">
         <!-- Imagen -->
         <div class="image-wrapper">
-          <img [src]="getImageUrl(product.image)" [alt]="product.name">
+          <img [src]="getImageUrl(product.image)" [alt]="product.name" />
           <div *ngIf="product.stock === 0" class="overlay-text">AGOTADO</div>
         </div>
 
@@ -25,9 +24,7 @@
           <h2 class="card-text">Precio: ${{ product.price }}</h2>
 
           <div class="button-container">
-            <a [routerLink]="['/product', product.id]" class="btn">
-              Ver producto
-            </a>
+            <a [routerLink]="['/product', product.id]" class="btn"> Ver producto </a>
           </div>
         </div>
       </div>
