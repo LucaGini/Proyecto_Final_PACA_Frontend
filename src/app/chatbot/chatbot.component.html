@@ -57,7 +57,7 @@
       </div>
     </div>
 
-    <!-- Preguntas sugeridas (solo cuando no hay mensajes de usuario) -->
+      <!-- Preguntas sugeridas (solo cuando no hay mensajes de usuario) -->
     <div class="suggested-questions" *ngIf="messages.length === 1 && !isLoading">
       <p class="suggestions-title">💡 Preguntas frecuentes:</p>
       <div class="suggestions-grid">
@@ -66,9 +66,7 @@
           <span>{{ question.text }}</span>
         </button>
       </div>
-    </div>
-
-    <!-- Input de mensaje -->
+    </div>    <!-- Input de mensaje -->
     <div class="chat-input">
       <div class="input-container">
         <div class="input-field-wrapper">

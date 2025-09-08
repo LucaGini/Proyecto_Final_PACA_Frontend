@@ -98,6 +98,16 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
   font-family: 'Poppins', sans-serif;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
 .material-symbols-outlined {
   font-family: "Material Symbols Outlined" !important;
 }
@@ -320,4 +330,55 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
   width: 60px;
   height: 60px;
   animation: spin 1s linear infinite;
+
+/* Información del producto */
+.card-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-text {
+    font-size: 0.9rem;
+    color: #666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #000;
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.5rem;
+
+    .btn {
+      background: linear-gradient(90deg, #f5c000, #e7b500);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: linear-gradient(90deg, #e7b500, #f5c000);
+        box-shadow: 0 6px 12px rgba(231, 198, 51, 0.2);
+      }
+    }
+  }
 }

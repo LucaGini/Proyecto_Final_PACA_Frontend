@@ -77,6 +77,10 @@ export class EditListCitiesComponent {
     city.editing = true;
   }
 
+  cancelEdit(city: any): void {
+    city.editing = false;
+  }
+
   save(city: any): void {
     const original = {
       name: city.name,

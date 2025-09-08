@@ -90,7 +90,7 @@
 
     <mat-icon
       *ngIf="isLoggedIn && !isAdmin"
-      style="color: #e7c633"
+      style="color: #e7c633; cursor: pointer"
       id="UserInformation"
       (click)="UserInformation()"
       >perm_identity</mat-icon
@@ -98,7 +98,7 @@
 
     <mat-icon
       *ngIf="isLoggedIn && !isAdmin"
-      style="color: #e7c633"
+      style="color: #e7c633; cursor: pointer"
       (click)="OrdersHistory()"
       matTooltip="Historial de pedidos"
       >history</mat-icon

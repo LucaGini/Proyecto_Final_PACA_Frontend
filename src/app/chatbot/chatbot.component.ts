@@ -51,7 +51,7 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
   private initializeChat(): void {
     this.messages = [
       {
-        text: '¡Hola! Soy el asistente virtual de PACA 🌱. Te puedo ayudar con consultas sobre nuestros productos agroecológicos, procesos de la cooperativa y preguntas frecuentes. ¿En qué puedo ayudarte?',
+        text: '¡Hola! Soy el asistente virtual de PACA 🌱. Te puedo ayudar con consultas sobre nuestros productos agroecológicos, stock disponible, procesos de la cooperativa y preguntas frecuentes. ¿En qué puedo ayudarte?',
         isUser: false,
         timestamp: new Date(),
         id: this.generateMessageId()
@@ -225,10 +225,12 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
    */
   getSuggestedQuestions(): Array<{text: string, icon: string}> {
     return [
+      { text: '¿Qué es PACA?', icon: 'info' },
       { text: '¿Qué productos ofrecen?', icon: 'eco' },
       { text: '¿Cómo hago un pedido?', icon: 'shopping_cart' },
+      { text: '¿Cuánto stock tienen disponible?', icon: 'inventory' },
       { text: '¿Los productos son orgánicos?', icon: 'verified' },
-      { text: '¿Hacen envíos?', icon: 'local_shipping' }
+      { text: '¿Hacen envíos?', icon: 'local_shipping' },
     ];
   }
 
@@ -248,13 +250,13 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   /**
-   * Formatea el contenido del mensaje (convierte \n a <br>)
+   * Formatea el contenido del mensaje para mejor visualización de respuestas de stock
    */
   formatMessageContent(content: string): string {
     if (!content) return '';
     
-    // Escapar HTML peligroso pero permitir <br>
-    const escaped = content
+    // Escapar HTML peligroso pero mantener ciertos caracteres
+    let formatted = content
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -262,6 +264,19 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
       .replace(/'/g, '&#x27;');
     
     // Convertir saltos de línea a <br>
-    return escaped.replace(/\n/g, '<br>');
+    formatted = formatted.replace(/\n/g, '<br>');
+    
+    // Formatear emojis y elementos especiales para stock
+    formatted = formatted
+      // Hacer emojis más visibles
+      .replace(/(📦|🔢|✅|⚠️|❌|📋|💡)/g, '<span class="emoji">$1</span>')
+      // Resaltar texto en negritas con **texto**
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Convertir listas numeradas simples
+      .replace(/^(\d+\.\s)/gm, '<span class="list-number">$1</span>')
+      // Resaltar cantidades de stock
+      .replace(/(\d+)\s+(unidades?)/gi, '<span class="stock-quantity">$1 $2</span>');
+    
+    return formatted;
   }
 }

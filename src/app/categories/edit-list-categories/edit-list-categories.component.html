@@ -45,6 +45,10 @@
         <mat-icon>save_alt</mat-icon>
       </button>
 
+      <button mat-icon-button class="btn" *ngIf="category.editing" (click)="cancelEdit(category)" style="color: #f76666; margin-left: 5px;">
+        <mat-icon>cancel</mat-icon>
+      </button>
+
       <button mat-icon-button class="btn" *ngIf="!category.editing" (click)="delete(category)" style="color: #f76666;">
         <mat-icon>delete</mat-icon>
       </button>
