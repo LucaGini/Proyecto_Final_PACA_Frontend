@@ -44,9 +44,12 @@
   <div id="map" class="map-container"></div>
 </div>
 
-<!-- LO TIENE QUE HACER LUCA-->
-<div *ngIf="!weeklyRoutes" class="no-orders-message">
-  <mat-icon>info</mat-icon>
-  <h3>Sin rutas cargadas</h3>
-  <p>Por favor, genera rutas para poder verlas aquí.</p>
-</div>
+<!-- Mensaje cuando no hay rutas: mostrar también si weeklyRoutes existe pero no contiene rutas -->
+<ng-container *ngIf="!weeklyRoutes || (weeklyRoutes && getProvinces().length === 0)" >
+  <div class="no-orders-message">
+    <mat-icon>receipt_long_off</mat-icon>
+    <h3>No hay rutas disponibles</h3>
+    <p *ngIf="weeklyRoutes && getProvinces().length === 0">No se encontraron rutas para mostrar. Intenta generar rutas o revisar los filtros/criterios.</p>
+    <p *ngIf="!weeklyRoutes">Aún no se han cargado rutas. Por favor, genera rutas para poder verlas aquí.</p>
+  </div>
+</ng-container>
