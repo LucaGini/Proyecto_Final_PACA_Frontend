@@ -26,6 +26,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { VrpComponent } from './vrp/vrp.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
 
@@ -43,6 +44,7 @@ const routes: Routes = [
   { path: 'EditListSuppliers', component: EditListSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'OrderList', component: OrderListComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'vrp', component: VrpComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  { path: 'Dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
 
   //TODOS MENOS ADMINISTRADOR
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador'] }},

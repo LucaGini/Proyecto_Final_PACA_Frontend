@@ -8,9 +8,7 @@
         <span *ngIf="emailInput.errors?.['email']">El email debe tener un formato válido.</span>
       </small>
     </div>
-  </div>
 
-  <div class="col-md-6 mx-auto">
     <div class="form-group mb-4">
       <label for="password">Contraseña</label>
       <div class="input-group flex-column">
@@ -44,6 +42,6 @@
   <div class="d-flex flex-column align-items-center">
     <re-captcha #captchaRef (resolved)="onCaptchaResolved($event)" siteKey="6Ld1vp0rAAAAAC7PNqnpJlclDZENU7DVWV-djyAq"> </re-captcha>
 
-    <button type="submit" class="gral-button mt-3" id="logIn" [disabled]="loginForm.invalid || !captchaToken">Iniciar Sesión</button>
+    <button type="submit" class="gral-button mt-4" id="logIn" [disabled]="loginForm.invalid || !captchaToken">Iniciar Sesión</button>
   </div>
 </form>
