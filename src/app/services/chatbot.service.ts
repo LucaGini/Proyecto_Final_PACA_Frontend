@@ -29,7 +29,7 @@ export interface ChatbotStatus {
 })
 export class ChatbotService {
   private readonly apiUrl = `${environment.apiUrl}api/chatbot`;
-  private readonly REQUEST_TIMEOUT = 10000; // 10 segundos
+  private readonly REQUEST_TIMEOUT = 15000; // 15 segundos para consultas de stock
   
   // Subject para manejar el estado del chat
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
@@ -38,7 +38,7 @@ export class ChatbotService {
   constructor(private http: HttpClient) {}
 
   /**
-   * Envía un mensaje al chatbot
+   * Envía un mensaje al chatbot con timeout dinámico según el tipo de consulta
    */
   sendMessage(message: string, conversationHistory?: string[]): Observable<ChatbotResponse> {
     this.isLoadingSubject.next(true);
@@ -48,9 +48,12 @@ export class ChatbotService {
       conversationHistory: conversationHistory || []
     };
 
+    // Determinar timeout basado en si es una consulta de stock
+    const requestTimeout = this.isStockQuery(message) ? 20000 : this.REQUEST_TIMEOUT;
+
     return this.http.post<ChatbotResponse>(`${this.apiUrl}/message`, payload)
       .pipe(
-        timeout(this.REQUEST_TIMEOUT),
+        timeout(requestTimeout),
         catchError(this.handleError),
         // Finalizar loading state
         catchError(error => {
@@ -58,6 +61,20 @@ export class ChatbotService {
           return throwError(() => error);
         })
       );
+  }
+
+  /**
+   * Detecta si el mensaje es una consulta sobre stock (para ajustar timeout)
+   */
+  private isStockQuery(message: string): boolean {
+    const stockKeywords = [
+      'stock', 'disponible', 'disponibilidad', 'inventario',
+      'cantidad', 'quedan', 'hay', 'tienen', 'existe',
+      'cuánto', 'cuántos', 'cuánta', 'cuántas'
+    ];
+
+    const lowerMessage = message.toLowerCase();
+    return stockKeywords.some(keyword => lowerMessage.includes(keyword));
   }
 
   /**
