@@ -127,6 +127,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['OrdersHistory']);
   }
 
+  Dashboard(){
+    this.router.navigate(['Dashboard']);
+  }
+
   onCategoryButtonClick(name: string) {
     this.navbarEventService.emitCategoryButtonClick(name);
     this.router.navigate([`collection/${name}`]);
