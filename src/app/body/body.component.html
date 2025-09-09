@@ -8,26 +8,22 @@
 
 <!-- Contenedor de productos -->
 <div *ngIf="products.length > 0" class="products-container">
-  <div class="product-card-wrapper" *ngFor="let product of products">
-    <a [routerLink]="['/product', product.id]" class="no-underline">
-      <div class="product-card" [ngClass]="{ 'out-of-stock': product.stock === 0 }">
-        <!-- Imagen -->
-        <div class="image-wrapper">
-          <img [src]="getImageUrl(product.image)" [alt]="product.name" />
-          <div *ngIf="product.stock === 0" class="overlay-text">AGOTADO</div>
-        </div>
+  <div class="product-card" *ngFor="let product of products" [ngClass]="{ 'out-of-stock': product.stock === 0 }">
+    <!-- Imagen -->
+    <div class="image-wrapper">
+      <img [src]="getImageUrl(product.image)" [alt]="product.name" />
+      <span *ngIf="product.stock === 0" class="overlay-text">AGOTADO</span>
+    </div>
 
-        <!-- Información -->
-        <div class="card-body">
-          <h1 class="card-title truncate">{{ product.name }}</h1>
-          <h3 class="card-text truncate">{{ product.description }}</h3>
-          <h2 class="card-text">Precio: ${{ product.price }}</h2>
+    <!-- Información -->
+    <div class="card-body">
+      <h2 class="card-title truncate">{{ product.name }}</h2>
+      <p class="card-text truncate">{{ product.description }}</p>
+      <p class="price">Precio: ${{ product.price }}</p>
 
-          <div class="button-container">
-            <a [routerLink]="['/product', product.id]" class="btn"> Ver producto </a>
-          </div>
-        </div>
+      <div class="button-container">
+        <a [routerLink]="['/product', product.id]" class="btn"> Ver producto </a>
       </div>
-    </a>
+    </div>
   </div>
 </div>
