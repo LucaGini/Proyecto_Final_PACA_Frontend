@@ -13,6 +13,12 @@ type DecodeUserPayload = {
   exp: number
 }
 
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -116,7 +122,7 @@ sendRequestToLogin(email: string, password: any, captchaToken: string): Observab
   return this.http.post<any>(url, { email, password, captchaToken  }, { headers: this.getAuthHeaders() }).pipe(
     catchError((err) => {
       console.error('Error en el servicio:', err);
-      return throwError(() => err); // Reemite el error
+      return throwError(() => err); 
     })
   );
 }
@@ -132,7 +138,7 @@ updateUserEmail(newEmail: string): void {
         email: newEmail
       };
 
-      // Store updated email immediately
+      
       localStorage.setItem('currentUserEmail', newEmail);
     } catch (error) {
       console.error('Token update failed:', error);
@@ -143,5 +149,50 @@ updateUserEmail(newEmail: string): void {
     return localStorage.getItem(this.tokenKey);
   }
 
+  initializeGoogleSignIn(): void {
+    if (typeof window !== 'undefined' && window.google) {
+      window.google.accounts.id.initialize({
+        client_id: environment.googleClientId,
+        callback: (response: any) => this.handleGoogleResponse(response),
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+    }
+  }
+
+  handleGoogleResponse(response: any): void {
+    this.sendGoogleTokenToBackend(response.credential).subscribe({
+      next: (data) => {
+        this.saveToken(data.accessToken);
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error('Google authentication error:', error);
+      }
+    });
+  }
+
+  sendGoogleTokenToBackend(googleToken: string): Observable<any> {
+    return this.http.post(`${this.URL}/auth/google/verify`, { token: googleToken });
+  }
+
+  renderGoogleButton(elementId: string): void {
+    if (typeof window !== 'undefined' && window.google) {
+      const isSignUp = elementId.includes('signup');
+      
+      window.google.accounts.id.renderButton(
+        document.getElementById(elementId),
+        {
+          theme: 'outline',
+          size: 'large',
+          width: 300,
+          text: isSignUp ? 'signup_with' : 'signin_with',
+          shape: 'rectangular',
+          logo_alignment: 'left',
+          locale: 'es'
+        }
+      );
+    }
+  }
 }
 

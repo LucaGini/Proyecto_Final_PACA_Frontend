@@ -312,3 +312,26 @@ h1, h2, h3, h4, h5, h6, p, label, span, a {
     margin-right: 0.5rem;
   }
 }
+
+// Estilos globales para botón de Google Sign-In
+.google-signin-button-global {
+  // Asegurar que los estilos se apliquen globalmente
+  div[role="button"] {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    
+    &:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    &:focus {
+      outline: 2px solid #567518 !important;
+      outline-offset: 2px !important;
+    }
+  }
+}
+
+// Mejorar los estilos del iframe de Google
+iframe[src*="accounts.google.com"] {
+  border-radius: 8px !important;
+}

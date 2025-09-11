@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { LoginService } from '../../services/login.service';
@@ -11,19 +11,47 @@ import { RecaptchaComponent } from 'ng-recaptcha';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit, AfterViewInit {
   @ViewChild('captchaRef') captchaRef!: RecaptchaComponent;
 
   captchaToken: string | null = null;
-
   loginError: string = '';
   isPasswordIncorrect: boolean = false;
   showPassword: boolean = false;
-
   email: string = '';
   password: string = '';
 
-  constructor(private router: Router, private authService: AuthService, private loginService: LoginService, private utils: UtilsService) {}
+  constructor(
+    private router: Router, 
+    private authService: AuthService, 
+    private loginService: LoginService, 
+    private utils: UtilsService
+  ) {}
+
+  ngOnInit(): void {
+    this.authService.initializeGoogleSignIn();
+  }
+
+  ngAfterViewInit(): void {
+    // Dar más tiempo para que Google se cargue y aplicar estilos personalizados
+    setTimeout(() => {
+      this.authService.renderGoogleButton('google-signin-button');
+      
+      // Aplicar estilos adicionales después de que se renderice el botón
+      setTimeout(() => {
+        this.applyCustomGoogleButtonStyles();
+      }, 500);
+    }, 1000);
+  }
+
+  private applyCustomGoogleButtonStyles(): void {
+    const googleButton = document.querySelector('#google-signin-button div[role="button"]') as HTMLElement;
+    if (googleButton) {
+      // Aplicar estilos adicionales si es necesario
+      googleButton.style.fontFamily = '"Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
+      googleButton.style.borderRadius = '8px';
+    }
+  }
 
   onCaptchaResolved(token: string | null) {
     this.captchaToken = token;
@@ -67,6 +95,10 @@ export class LoginComponent {
             case 'Invalid user':
               this.loginError = 'Usuario no encontrado';
               this.utils.showAlert('error', 'Error', 'Usuario no registrado');
+              break;
+            case 'Esta cuenta está vinculada con Google. Por favor, inicia sesión con Google.':
+              this.loginError = 'Cuenta vinculada con Google';
+              this.utils.showAlert('info', 'Información', 'Esta cuenta está vinculada con Google. Usa el botón de Google para iniciar sesión.');
               break;
             default:
               this.loginError = msg;
