@@ -1,9 +1,19 @@
 <div *ngIf="weeklyRoutes" class="vrp-container">
   <!-- Encabezado con total de órdenes y botón de exportar -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
-    <button (click)="exportPDF()" class="gral-button mt-3">Exportar PDF</button>
-  </div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
+
+  <button class="gral-button" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }" >
+    <ng-container *ngIf="isLoading; else normalBtn">
+      <div class="spinner"></div>
+      Descargando...
+    </ng-container>
+    <ng-template #normalBtn>
+      <mat-icon>download</mat-icon> Descargar PDF
+    </ng-template>
+  </button>
+</div>
+
 
   <!-- Cards por provincia -->
   <div *ngFor="let province of getProvinces(); let i = index" class="card shadow-sm" [style.--animation-order]="i">
