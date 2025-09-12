@@ -284,6 +284,7 @@ $success-color: #4caf50;
 
       strong {
         font-weight: 600;
+        color: $primary-dark;
       }
 
       em {
@@ -296,6 +297,33 @@ $success-color: #4caf50;
         &:last-child {
           margin-bottom: 0;
         }
+      }
+
+      // Estilos especiales para respuestas de stock
+      .emoji {
+        font-size: 1.1em;
+        margin-right: 4px;
+      }
+
+      .stock-quantity {
+        background: rgba($accent-color, 0.1);
+        color: $accent-color;
+        padding: 2px 6px;
+        border-radius: 12px;
+        font-weight: 500;
+        font-size: 0.95em;
+      }
+
+      .list-number {
+        font-weight: 600;
+        color: $primary-color;
+      }
+
+      // Mejorar espaciado para listas de stock
+      br + .list-number,
+      br + strong {
+        display: inline-block;
+        margin-top: 8px;
       }
     }
   }

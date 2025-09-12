@@ -22,6 +22,10 @@ export class UserInformationComponent implements OnInit {
   showPassword: boolean = false;
 
   password: string = '';
+  
+  // Guardar información completa de provincia y ciudad para mostrar en modo lectura
+  currentProvinceInfo: any = null;
+  currentCityInfo: any = null;
 
   constructor(private authService: AuthService, private userService: UserService, private provinceService: ProvinceService, private cityService: CityService, private router: Router, private utils: UtilsService) {}
 
@@ -48,8 +52,9 @@ export class UserInformationComponent implements OnInit {
             if (updatedEmail) {
               localStorage.removeItem('currentUserEmail');
             }
+            // Cargar información completa de ciudad y provincia
             if (this.userData?.city) {
-              this.loadCityById(this.userData.city);
+              this.loadCityDetails(this.userData.city);
             }
           } else {
             this.utils.showAlert('error', 'Error', 'Usuario no encontrado');
@@ -103,14 +108,55 @@ export class UserInformationComponent implements OnInit {
     });
   }
 
+  loadCityDetails(cityId: string): void {
+    this.cityService.findCityById(cityId).subscribe({
+      next: (response) => {
+        if (response.data) {
+          this.currentCityInfo = response.data;
+          // Cargar información de la provincia si existe
+          if (response.data.province) {
+            this.currentProvinceInfo = { id: response.data.province };
+            // Buscar el nombre de la provincia en la lista cargada
+            const province = this.provinces.find(p => p.id === response.data.province);
+            if (province) {
+              this.currentProvinceInfo = province;
+            }
+          }
+        }
+      },
+      error: () => {
+        console.error('Error al cargar detalles de la ciudad');
+      },
+    });
+  }
+
   edit(): void {
     this.isEditMode = true;
     this.password = '';
+    
+    // Configurar los valores para los dropdowns cuando se entra en modo edición
+    if (this.currentCityInfo && this.currentProvinceInfo) {
+      // Establecer la provincia seleccionada
+      this.userData.province = this.currentProvinceInfo.id;
+      
+      // Cargar las ciudades de esa provincia
+      this.provinceService.findCitiesByProvince(this.currentProvinceInfo.id).subscribe({
+        next: (response) => {
+          this.cities = Array.isArray(response) ? response : [];
+          // Establecer la ciudad seleccionada
+          this.userData.city = this.currentCityInfo.id;
+        },
+        error: () => {
+          this.utils.showAlert('error', 'Error', 'No se pudieron cargar las ciudades');
+        },
+      });
+    }
   }
 
   cancelEdit(): void {
     this.isEditMode = false;
     this.password = '';
+    this.cities = []; // Limpiar las ciudades cargadas
     this.loadUserData();
   }
 
@@ -130,7 +176,7 @@ export class UserInformationComponent implements OnInit {
       phone: this.userData.phone,
       street: this.userData.street,
       streetNumber: String(this.userData.streetNumber),
-      city: this.userData.city,
+      city: this.userData.city, // Este ahora es el ID de la ciudad
       ...(this.password ? { password: this.password } : {}),
     };
 
@@ -177,6 +223,7 @@ export class UserInformationComponent implements OnInit {
         } else {
           this.utils.showAlert('success', 'Éxito', 'Información actualizada').then(() => {
             this.isEditMode = false;
+            this.cities = []; // Limpiar las ciudades cargadas
             this.loadUserData();
           });
         }

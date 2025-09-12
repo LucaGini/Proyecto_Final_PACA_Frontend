@@ -127,7 +127,7 @@ export class SignUpComponent implements OnInit, AfterViewInit {
       this.utils.showAlert(
         'error',
         'Error en la verificación',
-        'Las contraseñas no coinciden.'
+        'Las contraseñas ingresadas no coinciden.'
       );
       return;
     }

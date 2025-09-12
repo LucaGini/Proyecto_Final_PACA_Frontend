@@ -1,0 +1,178 @@
+<!-- Filtros fuera del PDF -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="d-flex align-items-center justify-content-between w-100" style="padding-right: 2rem">
+    <!-- FILTROS IZQUIERDA -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <div class="form-group">
+          <div class="filter-header">
+            <h2 style="font-family: 'Quicksand', sans-serif">Filtros</h2>
+            <button *ngIf="hasActiveFilters()" type="button" class="clear-filters-btn" (click)="clearAllFilters()" matTooltip="Limpiar todos los filtros">
+              <mat-icon>filter_list_off</mat-icon>
+            </button>
+          </div>
+
+          <div class="input-group">
+            <div>
+              <label>Desde</label>
+              <input type="date" class="form-control" id="startDate" (change)="onDateChange()" [(ngModel)]="startDate" [max]="endDate || getToday()" />
+            </div>
+            <div>
+              <label>Hasta</label>
+              <input type="date" class="form-control" id="endDate" (change)="onDateChange()" [(ngModel)]="endDate" [min]="startDate" [max]="getToday()" />
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <!-- BOTÓN DERECHA -->
+    <div class="nav-item form-group align-button pr-5">
+      <button class="gral-button" (click)="downloadPDF()"[disabled]="isLoading() || !hasAnyChartDataFlag || isDateRangeEmpty"
+        [ngClass]="{ 'disabled-btn': isLoading() || !hasAnyChartDataFlag }"
+      >
+        <ng-container *ngIf="isLoading(); else normalBtn">
+          <div class="spinner"></div>
+          Descargando...
+        </ng-container>
+        <ng-template #normalBtn> <mat-icon>download</mat-icon> Descargar PDF </ng-template>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- dashboard.component.html -->
+<div class="dashboard-wrapper position-relative">
+  <!-- Sidebar -->
+
+  <div *ngIf="isDateRangeEmpty" class="alert alert-warning p-3 my-3 rounded">⚠️ Por favor, selecciona un rango de fechas completo para mostrar los gráficos.</div>
+
+  <div *ngIf="noChartData" class="alert alert-info p-3 my-3 rounded">ℹ️ No hay registros relevantes en estas fechas.</div>
+
+  <div *ngIf="!isDateRangeEmpty && !noChartData" class="dashboard-tabs d-flex flex-column position-absolute top-0 start-0">
+    <button type="button" class="list-group-item list-group-item-action" [class.active]="selectedSection === 'ventas'" (click)="selectedSection = 'ventas'">Ventas</button>
+    <button type="button" class="list-group-item list-group-item-action" [class.active]="selectedSection === 'ordenes'" (click)="selectedSection = 'ordenes'">Órdenes</button>
+    <button type="button" class="list-group-item list-group-item-action" [class.active]="selectedSection === 'clientes'" (click)="selectedSection = 'clientes'">Clientes</button>
+  </div>
+
+  <!-- Contenido -->
+  <div *ngIf="!isDateRangeEmpty && !noChartData" class="dashboard-content p-4 rounded-3">
+    <!-- Ventas -->
+    <div *ngIf="selectedSection === 'ventas'">
+      <div *ngIf="noChartDataVentas" class="alert alert-info p-3 my-3 mx-5 rounded">ℹ️ No hay registros de ventas relevantes en estas fechas.</div>
+
+      <div *ngIf="!noChartDataVentas">
+        <!-- Top Productos y Peores Productos -->
+        <div class="row g-3 mb-4">
+          <div class="col-12 col-md-6">
+            <div class="chart-card">
+              <h3>Top 5 Productos más vendidos</h3>
+              <canvas baseChart [data]="topProductsChartData" [options]="topProductsChartOptions" [type]="'bar'"> </canvas>
+            </div>
+          </div>
+
+          <div class="col-12 col-md-6">
+            <div class="chart-card">
+              <h3>Top 5 Peores Productos</h3>
+              <canvas baseChart [data]="worstProductsChartData" [options]="worstProductsChartOptions" [type]="'bar'"> </canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Evolución de Ganancias -->
+        <div class="row g-3 mb-4">
+          <div class="col-12">
+            <div class="chart-card line-container">
+              <h3>Evolución de Ganancias</h3>
+              <canvas baseChart [data]="revenueChartData" [options]="revenueChartOptions" [type]="'line'"> </canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ventas por Provincia y detalle por Ciudad -->
+        <div class="row g-3 p-4">
+          <!-- Gráfico general: Provincias -->
+          <div class="col-12 col-md-6">
+            <div class="chart-card">
+              <h3>Ventas por Provincia</h3>
+              <canvas baseChart [data]="salesChartData" [options]="salesChartOptions" [type]="'bar'" (chartClick)="onProvinceClick($event)"> </canvas>
+            </div>
+          </div>
+
+          <!-- Gráfico detalle: Ciudades -->
+          <div class="col-12 col-md-6 d-flex align-items-center justify-content-center" *ngIf="!citiesChartData.labels?.length">
+            <div class="alert alert-info p-3 rounded">ℹ️ Selecciona una categoría para ver los productos en detalle.</div>
+          </div>
+
+          <div class="col-12 col-md-6" *ngIf="citiesChartData.labels?.length">
+            <div class="chart-card">
+              <h3>Ventas por Ciudad en {{ selectedProvince }}</h3>
+              <canvas baseChart [data]="citiesChartData" [options]="citiesChartOptions" [type]="'bar'"> </canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ventas por Categoría y detalle por Producto -->
+        <div class="row g-3 p-4">
+          <!-- Gráfico general: Categorías -->
+          <div class="col-12 col-md-6">
+            <div class="chart-card">
+              <h3>Ventas por Categoría</h3>
+              <canvas baseChart [data]="categoriesChartData" [options]="categoriesChartOptions" [type]="'bar'" (chartClick)="onCategoryClick($event)"> </canvas>
+            </div>
+          </div>
+
+          <!-- Gráfico detalle: Productos por categoría -->
+          <div class="col-12 col-md-6 d-flex align-items-center justify-content-center" *ngIf="!productsByCategoryChartData.labels?.length">
+            <div class="alert alert-info p-3 rounded">ℹ️ Selecciona una categoría para ver los productos en detalle.</div>
+          </div>
+
+          <div class="col-12 col-md-6" *ngIf="productsByCategoryChartData.labels?.length">
+            <div class="chart-card">
+              <h3>Productos en {{ selectedCategory }}</h3>
+              <canvas baseChart [data]="productsByCategoryChartData" [options]="productsByCategoryChartOptions" [type]="'bar'"> </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Órdenes -->
+    <div *ngIf="selectedSection === 'ordenes'">
+      <div *ngIf="noChartDataOrdenes" class="alert alert-info p-3 my-3 mx-5 rounded">ℹ️ No hay registros de órdenes relevantes en estas fechas.</div>
+
+      <div *ngIf="!noChartDataOrdenes">
+        <div class="row g-3 mb-4 justify-content-center">
+          <div class="col-12 col-md-6 col-lg-4">
+            <div class="chart-card doughnut-container mx-auto">
+              <h3 class="text-center">Órdenes por Estado</h3>
+              <canvas baseChart [data]="orderStatusChartData" [options]="orderStatusChartOptions" [type]="'doughnut'"> </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clientes -->
+    <div *ngIf="selectedSection === 'clientes'">
+      <div *ngIf="noChartDataClientes" class="alert alert-info p-3 my-3 mx-5 rounded">ℹ️ No hay registros de clientes relevantes en estas fechas.</div>
+
+      <div *ngIf="!noChartDataClientes">
+        <div class="row g-3 mb-4">
+          <div class="col-12 col-md-6">
+            <div class="chart-card">
+              <h3>Top 5 Clientes</h3>
+              <canvas baseChart [data]="topCustomersChartData" [options]="topCustomersChartOptions" [type]="'bar'"> </canvas>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="chart-card">
+              <h3>Peores clientes (más cancelaciones)</h3>
+              <canvas baseChart [data]="worstCustomersChartData" [options]="worstCustomersChartOptions" [type]="'bar'"> </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -130,9 +130,10 @@ export class NavbarComponent implements OnInit {
   Route(){
     this.router.navigate(['vrp']);
   }
-
+  Dashboard(){
+    this.router.navigate(['Dashboard']);
+  }
   
-
   onCategoryButtonClick(name: string) {
     this.navbarEventService.emitCategoryButtonClick(name);
     this.router.navigate([`collection/${name}`]);

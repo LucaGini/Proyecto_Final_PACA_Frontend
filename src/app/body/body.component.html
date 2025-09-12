@@ -1,5 +1,3 @@
-<app-carousel *ngIf="!isSearching"></app-carousel>
-
 <!-- Mensaje cuando no hay productos -->
 <div *ngIf="products.length === 0" class="no-products-message">
   <mat-icon>inventory_2_off</mat-icon>
@@ -8,31 +6,24 @@
   <p *ngIf="!isSearching">No hay productos disponibles en este momento.</p>
 </div>
 
-<!-- Contenedor de productos cuando hay productos disponibles -->
-<div *ngIf="products.length > 0" class="products-container"style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
-  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-3 py-5 mb-3"  style="flex: 0 0 calc(33.33% - 15px);" *ngFor="let product of products" id="product">
+<!-- Contenedor de productos -->
+<div *ngIf="products.length > 0" class="products-container">
+  <div class="product-card" *ngFor="let product of products" [ngClass]="{ 'out-of-stock': product.stock === 0 }">
+    <!-- Imagen -->
+    <div class="image-wrapper">
+      <img [src]="getImageUrl(product.image)" [alt]="product.name" />
+      <span *ngIf="product.stock === 0" class="overlay-text">AGOTADO</span>
+    </div>
 
-    <a [routerLink]="['/product', product.id]" class="no-underline">
+    <!-- Información -->
+    <div class="card-body">
+      <h2 class="card-title truncate">{{ product.name }}</h2>
+      <p class="card-text truncate">{{ product.description }}</p>
+      <p class="price">Precio: ${{ product.price }}</p>
 
-      <div class="card product-card" [ngClass]="{ 'out-of-stock': product.stock === 0 }">
-        <div class="image-wrapper">
-          <img class="card-img-top" [src]="getImageUrl(product.image)" alt="{{ product.name }}">
-          <div *ngIf="product.stock === 0" class="overlay-text">AGOTADO</div>
-        </div>
-
-        <div class="card-body">
-          <h1 class="card-title truncate">{{ product.name }}</h1>
-          <h3 class="card-text truncate">{{ product.description }}</h3>
-          <h2 class="card-text">Precio: ${{ product.price }}</h2>
-
-          <div class="button-container right-align">
-            <a [routerLink]="['/product', product.id]" class="btn btn-warning" id="Product">
-              Ver producto
-            </a>
-          </div>
-          
-        </div>
+      <div class="button-container">
+        <a [routerLink]="['/product', product.id]" class="btn"> Ver producto </a>
       </div>
-    </a>
+    </div>
   </div>
 </div>

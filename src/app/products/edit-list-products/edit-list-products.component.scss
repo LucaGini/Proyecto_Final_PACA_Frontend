@@ -6,7 +6,6 @@
   background: rgba(255, 255, 255, 0.95) !important;
   backdrop-filter: blur(10px);
   margin-bottom: 2rem;
-  box-shadow: 0 4px 15px rgba(231, 198, 51, 0.1);
 
   .navbar-nav {
     display: flex;
@@ -15,30 +14,6 @@
   }
 
   .nav-item {
-    display: flex;
-    flex-direction: column;
-  
-    .form-group {
-      margin: 1rem;
-      display: flex;
-      flex-direction: column;
-      min-height: 120px; 
-      justify-content: flex-end; 
-    }
-
-    &:first-child .form-group {
-      justify-content: flex-start; 
-    }
-    &:nth-child(2) .form-group {
-      justify-content: flex-end;
-    }
-    &:nth-child(3) .form-group {
-      justify-content: flex-end;
-    }
-  }
-
-  .form-group {
-    margin: 1rem;
     display: flex;
     flex-direction: column;
 
@@ -61,28 +36,8 @@
         width: 100px;
       }
     }
-
-    label {
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: #333;
-    }
-
-    select.form-control {
-      border: 2px solid #eee;
-      border-radius: 8px;
-      padding: 0.8rem;
-      min-width: 200px;
-
-      &:focus {
-        outline: none;
-        border-color: #e7c633;
-        box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
-      }
-    }
   }
 }
-
 
 .card {
   background: rgba(255, 255, 255, 0.95);
@@ -90,12 +45,8 @@
   border: none;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow:
-    0 10px 20px rgba(0, 0, 0, 0.05),
-    0 6px 6px rgba(0, 0, 0, 0.1),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   display: flex;
-
 }
 
 .card-img-top {
@@ -127,20 +78,7 @@
   }
 }
 
-.form-control {
-  width: 100%;
-  padding: 0.8rem;
-  border: 2px solid #eee;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  margin-bottom: 1rem;
 
-  &:focus {
-    outline: none;
-    border-color: #e7c633;
-    box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
-  }
-}
 
 .example-button-container {
   display: flex;
@@ -155,19 +93,9 @@
   font-size: 1.1rem;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-.products-container>div {
+.products-container > div {
   animation: fadeIn 0.6s ease-out;
   animation-fill-mode: both;
 
@@ -176,16 +104,6 @@
       animation-delay: #{$i * 0.1}s;
     }
   }
-}
-
-.form-control.is-invalid {
-  border-color: #dc3545 !important;
-  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
-}
-
-button:disabled, button[disabled] {
-  background: #ccc !important;
-  color: #777 !important;
 }
 
 .no-products-message {
@@ -201,7 +119,7 @@ button:disabled, button[disabled] {
     font-size: 4rem;
     width: 4rem;
     height: 4rem;
-    color: #A67C52;
+    color: #a67c52;
     margin-bottom: 1rem;
   }
 

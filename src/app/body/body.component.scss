@@ -1,212 +1,131 @@
+/* Mensaje sin productos */
+.no-products-message {
+  text-align: center;
+  margin: 3rem auto;
+  color: #666;
+}
+.no-products-message mat-icon {
+  font-size: 4rem;
+  color: #bbb;
+  margin-bottom: 1rem;
+}
+.no-products-message h3 {
+  font-size: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+/* Contenedor responsivo */
 .products-container {
-  padding: 2rem;
-  background: linear-gradient(45deg, rgba(231, 198, 51, 0.05), rgba(255, 255, 255, 0.1));
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: space-between;
+  display: grid;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
-.no-underline {
-  text-decoration: none !important;
-  color: inherit;
-
-  &:hover {
-    text-decoration: none !important;
-    color: inherit;
+@media (max-width: 992px) {
+  .products-container {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 800px;
   }
 }
 
-.card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.95);
-  border: none;
-  border-radius: 15px;
+@media (max-width: 600px) {
+  .products-container {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+}
+
+/* Tarjeta de producto */
+.product-card {
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
-  box-shadow:
-    0 10px 20px rgba(0, 0, 0, 0.05),
-    0 6px 6px rgba(0, 0, 0, 0.1),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    background: linear-gradient(45deg, rgba(231, 198, 51, 0.1), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-  }
-
-  &:hover {
-    transform: translateY(-10px) scale(1.02);
-    box-shadow:
-      0 20px 40px rgba(0, 0, 0, 0.12),
-      0 15px 12px rgba(0, 0, 0, 0.08),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.2);
-
-    &::before {
-      transform: translateX(0);
-    }
-  }
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+.product-card.out-of-stock {
+  opacity: 0.8;
 }
 
+/* Imagen */
 .image-wrapper {
   position: relative;
-  display: flex;
-  justify-content: center; // centra horizontal
-  align-items: center;     // centra vertical
-  padding-top: 1rem;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* cuadrada */
+  overflow: hidden;
 }
-
-.card-img-top {
-  height: 200px;
-  width: 200px;
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: center;
-  filter: brightness(0.95);
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-
-  &:hover {
-    transform: scale(1.05) rotate(1deg);
-    filter: brightness(1.05);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-  }
+}
+.overlay-text {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(200, 0, 0, 0.8);
+  color: #fff;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
+/* Cuerpo tarjeta */
 .card-body {
-  padding: 1.5rem;
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.9));
-
-  .card-title {
-    font-size: 1.25rem;
-    color: #333;
-    margin-bottom: 1rem;
-    font-weight: 600;
-    transform: translateZ(0);
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: #e7c633;
-    }
-  }
-
-  .card-text {
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-    transition: all 0.3s ease;
-  }
+  padding: 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.3rem;
+}
+.card-text {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+.price {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0.5rem 0;
 }
 
+/* Botón */
 .button-container {
-  float: right;
-  margin-top: 1rem;
+  margin-top: auto;
 }
-
-#Product {
-  background: linear-gradient(45deg, #e7c633, #ffd700);
+.btn {
+  display: inline-block;
+  background: #1976d2;
   color: white;
-  border: none;
-  padding: 0.8rem 1.5rem;
+  padding: 0.5rem 1rem;
   border-radius: 8px;
-  font-weight: 550;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(231, 198, 51, 0.2);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
-    background: linear-gradient(45deg, #ffd700, #e7c633);
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+.btn:hover {
+  background: #145ea8;
 }
 
+/* Truncar textos */
 .truncate {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.no-products-message {
-  text-align: center;
-  padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin: 2rem;
-  backdrop-filter: blur(10px);
-
-  mat-icon {
-    font-size: 4rem;
-    width: 4rem;
-    height: 4rem;
-    color: #A67C52;
-    margin-bottom: 1rem;
-  }
-
-  h3 {
-    color: #333;
-    margin-bottom: 0.5rem;
-    font-family: 'Quicksand', sans-serif;
-  }
-
-  p {
-    color: #666;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-  }
-}
-
-.col-xs-6 {
-  animation: fadeInUp 0.6s ease-out;
-  animation-fill-mode: both;
-
-  @for $i from 1 through 20 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.1}s;
-    }
-  }
-}
-
-// estilos para agotado
-.product-card.out-of-stock img {
-  filter: grayscale(100%);
-  opacity: 0.6;
-}
-
-.overlay-text {
-  position: absolute;
-  top: 50%; 
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.6);
-  color: white;
-  font-weight: bold;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 1.2rem;
 }

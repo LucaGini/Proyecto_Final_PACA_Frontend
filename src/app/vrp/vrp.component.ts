@@ -110,19 +110,36 @@ export class VrpComponent implements OnInit, AfterViewInit {
     }
   }
 
-  exportPDF() {
-    if (!this.weeklyRoutes) return;
+isLoading = false;
 
+downloadPDF() {
+  if (!this.weeklyRoutes) return;
+
+  this.isLoading = true;
+
+  try {
     const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text('Rutas semanales', 14, 15);
-    doc.setFontSize(12);
-    doc.text(`Total de órdenes: ${this.weeklyRoutes.totalOrders}`, 14, 25);
 
-    let y = 35;
+    // --- Logo ---
+    const logo = new Image();
+    logo.src = 'assets/img/paca-logo.png';
+    doc.addImage(logo, 'PNG', 10, 10, 30, 30);
+
+    // --- Título ---
+    doc.setFontSize(16);
+    doc.text('Rutas semanales', 50, 20);
+    doc.setFontSize(12);
+    doc.text(`Total de órdenes: ${this.weeklyRoutes.totalOrders}`, 50, 35);
+
+    let y = 50;
+
+    // --- Tablas por provincia ---
     for (const province of this.getProvinces()) {
       const { route } = this.weeklyRoutes.routesByProvince[province];
+      if (!route || route.length === 0) continue;
+
       doc.setFontSize(14);
+      doc.setTextColor('#000000');
       doc.text(`Provincia: ${province}`, 14, y);
       y += 5;
 
@@ -139,14 +156,17 @@ export class VrpComponent implements OnInit, AfterViewInit {
         head: [['N° Orden', 'Cliente', 'Total', 'Dirección', 'Coordenadas']],
         body: data,
         theme: 'striped',
-        headStyles: { fillColor: '#F4E3C1' }
+        headStyles: { fillColor: '#F4E3C1', textColor: '#000000' },
+        styles: { fontSize: 10 }
       });
 
       y = (doc as any).lastAutoTable.finalY + 10;
     }
 
+    // --- Órdenes no geolocalizadas ---
     if (this.weeklyRoutes.notGeolocated.length > 0) {
       doc.setFontSize(14);
+      doc.setTextColor('#c94c4c');
       doc.text('Órdenes no geolocalizadas', 14, y);
 
       const data = this.weeklyRoutes.notGeolocated.map((order: any) => [
@@ -162,12 +182,42 @@ export class VrpComponent implements OnInit, AfterViewInit {
         head: [['N° Orden', 'Cliente', 'Total', 'Dirección', 'Motivo']],
         body: data,
         theme: 'striped',
-        headStyles: { fillColor: '#C94C4C' }
+        headStyles: { fillColor: '#c94c4c', textColor: '#ffffff' },
+        styles: { fontSize: 10 }
       });
     }
 
-    const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0];
-    doc.save(`rutas_semanales_${formattedDate}.pdf`);
+    // --- Pie de página (fecha + número de página) ---
+    const pageCount = (doc as any).internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(9);
+      doc.setTextColor(100);
+
+      doc.text(
+        `Generado el ${new Date().toLocaleDateString()}`,
+        14,
+        doc.internal.pageSize.getHeight() - 10
+      );
+
+      doc.text(
+        `Página ${i} de ${pageCount}`,
+        doc.internal.pageSize.getWidth() - 50,
+        doc.internal.pageSize.getHeight() - 10
+      );
+    }
+
+    // --- Guardar PDF ---
+    const today = new Date().toISOString().split('T')[0];
+    doc.save(`rutas_semanales_${today}.pdf`);
+
+  } catch (error) {
+    console.error('Error exportando PDF:', error);
+  } finally {
+    this.isLoading = false;
   }
+}
+
+
+
 }
