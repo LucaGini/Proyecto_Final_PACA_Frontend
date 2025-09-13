@@ -96,8 +96,10 @@ export class AuthService {
     localStorage.setItem(this.tokenKey, token);
     this.isLoggedInSubject.next(true);
     this.isAdminInSubject.next(this.checkAdmin());
-    this.checkAdmin()
-    this.router.navigate(['/']);
+    this.checkAdmin();
+    
+    // Verificar si el perfil está completo antes de navegar
+    this.checkProfileCompletionAndNavigate();
   }
 
   logout(): void {
@@ -193,6 +195,52 @@ updateUserEmail(newEmail: string): void {
         }
       );
     }
+  }
+
+  private checkProfileCompletionAndNavigate(): void {
+    const user = this.getLoggedUser();
+    if (!user) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    // Solo verificar perfil para usuarios clientes (no administradores)
+    if (user.privilege === 'administrador') {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    // Importar UserService dinámicamente para evitar dependencia circular
+    import('./user.service').then(module => {
+      const userService = new module.UserService(
+        this.http, 
+        this.router
+      );
+
+      userService.findUserByEmail(user.email).subscribe({
+        next: (response) => {
+          if (response && response.data) {
+            const userData = response.data;
+            
+            // Si el perfil no está completo, redirigir a User-Information
+            if (!userService.isProfileComplete(userData)) {
+              this.router.navigate(['/UserInformation']);
+              return;
+            }
+          }
+          
+          // Perfil completo o no se pudo verificar, ir al home
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          // Error al verificar perfil, ir al home por defecto
+          this.router.navigate(['/']);
+        }
+      });
+    }).catch(() => {
+      // Error al cargar UserService, ir al home por defecto
+      this.router.navigate(['/']);
+    });
   }
 }
 

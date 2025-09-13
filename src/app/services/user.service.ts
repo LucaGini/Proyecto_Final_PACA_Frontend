@@ -115,4 +115,53 @@ getUsers(isActive: boolean | null, searchTerm?: string): Observable<User[]> {
 
     return this.http.get<User[]>(`${this.URL}/users`, { params });
   }
+
+  /**
+   * Verifica si el perfil del usuario está completo
+   * Un perfil se considera incompleto si faltan campos obligatorios para usuarios registrados con OAuth
+   */
+  isProfileComplete(user: any): boolean {
+    if (!user) return false;
+    
+    // Verificar campos obligatorios
+    const isFirstNameEmpty = !user.firstName || user.firstName.trim() === '';
+    const isLastNameEmpty = !user.lastName || user.lastName.trim() === '';
+    const isPhoneEmpty = !user.phone || user.phone === '' || user.phone === '0';
+    const isStreetEmpty = !user.street || user.street.trim() === '';
+    const isStreetNumberEmpty = !user.streetNumber || user.streetNumber === '' || user.streetNumber === '0';
+    const isCityEmpty = !user.city || user.city.trim() === '';
+    
+    // El perfil está completo si TODOS los campos tienen valores válidos
+    return !isFirstNameEmpty && !isLastNameEmpty && !isPhoneEmpty && !isStreetEmpty && !isStreetNumberEmpty && !isCityEmpty;
+  }
+
+  /**
+   * Obtiene los campos que faltan completar en el perfil
+   */
+  getMissingProfileFields(user: any): string[] {
+    if (!user) return ['Datos de usuario'];
+    
+    const missingFields: string[] = [];
+    
+    if (!user.firstName || user.firstName.trim() === '') {
+      missingFields.push('Nombre');
+    }
+    if (!user.lastName || user.lastName.trim() === '') {
+      missingFields.push('Apellido');
+    }
+    if (!user.phone || user.phone === '' || user.phone === '0') {
+      missingFields.push('Teléfono');
+    }
+    if (!user.street || user.street.trim() === '') {
+      missingFields.push('Calle');
+    }
+    if (!user.streetNumber || user.streetNumber === '' || user.streetNumber === '0') {
+      missingFields.push('Número de calle');
+    }
+    if (!user.city || user.city.trim() === '') {
+      missingFields.push('Ciudad');
+    }
+    
+    return missingFields;
+  }
 }
