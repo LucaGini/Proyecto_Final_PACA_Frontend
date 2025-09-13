@@ -19,3 +19,48 @@
     }
   }
 }
+
+// Estilos para el mensaje de perfil incompleto
+.alert-warning {
+  background-color: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 8px;
+  color: #856404;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+
+  h4 {
+    color: #856404;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    i {
+      color: #ffc107;
+    }
+  }
+
+  ul {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+
+    li {
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+    }
+  }
+
+  p {
+    margin-bottom: 0.5rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+      font-weight: 600;
+    }
+  }
+}
+
+.mb-3 {
+  margin-bottom: 1rem !important;
+}

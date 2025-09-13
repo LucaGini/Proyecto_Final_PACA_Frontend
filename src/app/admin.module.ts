@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+//import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -38,7 +38,7 @@ import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cit
 import { AdminSuppliersComponent } from './suppliers/admin-suppliers/admin-suppliers.component';
 import { AddSupplierComponent } from './suppliers/add-supplier/add-supplier.component';
 import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
-
+import { VrpComponent } from './vrp/vrp.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
@@ -58,10 +58,11 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     AdminSuppliersComponent,
     AddSupplierComponent,
     EditListSuppliersComponent,
+    VrpComponent,
     DashboardComponent
   ],
   imports: [
-    BrowserModule,
+    //BrowserModule,
     CommonModule,
     HttpClientModule,
     FormsModule,

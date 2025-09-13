@@ -13,6 +13,12 @@ type DecodeUserPayload = {
   exp: number
 }
 
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -90,8 +96,10 @@ export class AuthService {
     localStorage.setItem(this.tokenKey, token);
     this.isLoggedInSubject.next(true);
     this.isAdminInSubject.next(this.checkAdmin());
-    this.checkAdmin()
-    this.router.navigate(['/']);
+    this.checkAdmin();
+    
+    // Verificar si el perfil está completo antes de navegar
+    this.checkProfileCompletionAndNavigate();
   }
 
   logout(): void {
@@ -116,7 +124,7 @@ sendRequestToLogin(email: string, password: any, captchaToken: string): Observab
   return this.http.post<any>(url, { email, password, captchaToken  }, { headers: this.getAuthHeaders() }).pipe(
     catchError((err) => {
       console.error('Error en el servicio:', err);
-      return throwError(() => err); // Reemite el error
+      return throwError(() => err); 
     })
   );
 }
@@ -132,7 +140,7 @@ updateUserEmail(newEmail: string): void {
         email: newEmail
       };
 
-      // Store updated email immediately
+      
       localStorage.setItem('currentUserEmail', newEmail);
     } catch (error) {
       console.error('Token update failed:', error);
@@ -143,5 +151,96 @@ updateUserEmail(newEmail: string): void {
     return localStorage.getItem(this.tokenKey);
   }
 
+  initializeGoogleSignIn(): void {
+    if (typeof window !== 'undefined' && window.google) {
+      window.google.accounts.id.initialize({
+        client_id: environment.googleClientId,
+        callback: (response: any) => this.handleGoogleResponse(response),
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+    }
+  }
+
+  handleGoogleResponse(response: any): void {
+    this.sendGoogleTokenToBackend(response.credential).subscribe({
+      next: (data) => {
+        this.saveToken(data.accessToken);
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error('Google authentication error:', error);
+      }
+    });
+  }
+
+  sendGoogleTokenToBackend(googleToken: string): Observable<any> {
+    return this.http.post(`${this.URL}/auth/google/verify`, { token: googleToken });
+  }
+
+  renderGoogleButton(elementId: string): void {
+    if (typeof window !== 'undefined' && window.google) {
+      const isSignUp = elementId.includes('signup');
+      
+      window.google.accounts.id.renderButton(
+        document.getElementById(elementId),
+        {
+          theme: 'outline',
+          size: 'large',
+          width: 300,
+          text: isSignUp ? 'signup_with' : 'signin_with',
+          shape: 'rectangular',
+          logo_alignment: 'left',
+          locale: 'es'
+        }
+      );
+    }
+  }
+
+  private checkProfileCompletionAndNavigate(): void {
+    const user = this.getLoggedUser();
+    if (!user) {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    // Solo verificar perfil para usuarios clientes (no administradores)
+    if (user.privilege === 'administrador') {
+      this.router.navigate(['/']);
+      return;
+    }
+
+    // Importar UserService dinámicamente para evitar dependencia circular
+    import('./user.service').then(module => {
+      const userService = new module.UserService(
+        this.http, 
+        this.router
+      );
+
+      userService.findUserByEmail(user.email).subscribe({
+        next: (response) => {
+          if (response && response.data) {
+            const userData = response.data;
+            
+            // Si el perfil no está completo, redirigir a User-Information
+            if (!userService.isProfileComplete(userData)) {
+              this.router.navigate(['/UserInformation']);
+              return;
+            }
+          }
+          
+          // Perfil completo o no se pudo verificar, ir al home
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          // Error al verificar perfil, ir al home por defecto
+          this.router.navigate(['/']);
+        }
+      });
+    }).catch(() => {
+      // Error al cargar UserService, ir al home por defecto
+      this.router.navigate(['/']);
+    });
+  }
 }
 

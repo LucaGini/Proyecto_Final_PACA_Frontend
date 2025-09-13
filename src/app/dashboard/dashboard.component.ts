@@ -1,21 +1,7 @@
-import {
-  Component,
-  OnInit,
-  signal,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  ViewChildren,
-  QueryList,
-  AfterViewInit,
-} from '@angular/core';
+import { Component, OnInit, signal, ChangeDetectionStrategy, ChangeDetectorRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { MatExpansionPanel } from '@angular/material/expansion';
 import { ChartData, ChartOptions } from 'chart.js';
-import {
-  DashboardService,
-  ProvinceSales,
-  TopProduct,
-  TopCustomer,
-} from '../services/dashboard.service';
+import { DashboardService, ProvinceSales, TopProduct, TopCustomer} from '../services/dashboard.service';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -38,14 +24,11 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   // Devuelve true si al menos una gráfica tiene datos
   get hasAnyChartDataFlag(): boolean {
-    const hasData = (chart: any) =>
-      chart &&
-      chart.datasets &&
-      chart.datasets.some(
-        (ds: any) =>
-          Array.isArray(ds.data) &&
-          ds.data.some((v: any) => v !== 0 && v !== null && v !== undefined)
-      );
+    const hasData = (chart: any) => 
+      chart && chart.datasets && chart.datasets.some( (ds: any) =>
+          Array.isArray(ds.data) && ds.data.some((v: any) => v !== 0 && v !== null && v !== undefined)
+
+  );
 
     return (
       hasData(this.topProductsChartData) ||
@@ -76,12 +59,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   get hasAnyChartData(): boolean {
     const hasData = (chart: any) =>
-      chart &&
-      chart.datasets &&
-      chart.datasets.some(
+      chart && chart.datasets && chart.datasets.some(
         (ds: any) =>
-          Array.isArray(ds.data) &&
-          ds.data.some((v: any) => v !== 0 && v !== null && v !== undefined)
+          Array.isArray(ds.data) && ds.data.some((v: any) => v !== 0 && v !== null && v !== undefined)
       );
 
     return (
@@ -121,86 +101,106 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   // Reutilizable:
   private hasData(chart: ChartData<any>): boolean {
-    return (
-      chart &&
-      chart.datasets &&
-      chart.datasets.some(
-        (ds) =>
-          Array.isArray(ds.data) &&
-          ds.data.some((v: any) => v !== 0 && v != null)
+    return ( chart && chart.datasets && chart.datasets.some( (ds) =>
+      Array.isArray(ds.data) &&
+      ds.data.some((v: any) => v !== 0 && v != null)
       )
     );
   }
 
   // Descarga PDF de todas las gráficas
-  async downloadPDF() {
-    this.isLoading.set(true);
+async downloadPDF() {
+  this.isLoading.set(true);
 
-    // Forzar actualización de vista para que se vea el spinner
-    await Promise.resolve();
+  await Promise.resolve();
 
-    try {
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'pt',
-        format: 'a4',
-      });
+  try {
+    const pdf = new jsPDF({
+      orientation: 'landscape',
+      unit: 'pt',
+      format: 'a4',
+    });
 
-      const sections: ('ventas' | 'ordenes' | 'clientes')[] = [
-        'ventas',
-        'ordenes',
-        'clientes',
-      ];
-      let pageNum = 1;
+    const img = new Image();
+    img.src = 'assets/img/paca-logo.png';
 
-      for (const section of sections) {
-        this.selectedSection = section;
-        this.cdr.detectChanges(); // Forzar render
+    const sections: ('ventas' | 'ordenes' | 'clientes')[] = [
+      'ventas',
+      'ordenes',
+      'clientes',
+    ];
 
-        await new Promise((r) => setTimeout(r, 500)); // Espera a que renderice
+    let pageNum = 1;
 
-        const chartCards = Array.from(
-          document.querySelectorAll('.chart-card')
-        ) as HTMLElement[];
+    for (const section of sections) {
+      this.selectedSection = section;
+      this.cdr.detectChanges();
 
-        for (let i = 0; i < chartCards.length; i++) {
-          const card = chartCards[i];
-          const canvas = await html2canvas(card, { scale: 3, useCORS: true });
-          const imgData = canvas.toDataURL('image/png');
-          const pageWidth = pdf.internal.pageSize.getWidth();
-          const pageHeight = pdf.internal.pageSize.getHeight();
-          let imgWidth = pageWidth - 80;
-          let imgHeight = canvas.height * (imgWidth / canvas.width);
+      await new Promise((r) => setTimeout(r, 500));
 
-          if (imgHeight > pageHeight - 80) {
-            imgHeight = pageHeight - 80;
-            imgWidth = canvas.width * (imgHeight / canvas.height);
-          }
+      const chartCards = Array.from(
+        document.querySelectorAll('.chart-card')
+      ) as HTMLElement[];
 
-          pdf.addImage(imgData, 'PNG', 40, 40, imgWidth, imgHeight);
-          pdf.text(`Página ${pageNum}`, pageWidth - 80, pageHeight - 20);
+      for (let i = 0; i < chartCards.length; i++) {
+        const card = chartCards[i];
+        const canvas = await html2canvas(card, { scale: 3, useCORS: true });
+        const imgData = canvas.toDataURL('image/png');
 
-          if (
-            !(
-              section === sections[sections.length - 1] &&
-              i === chartCards.length - 1
-            )
-          ) {
-            pdf.addPage();
-          }
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+        let imgWidth = pageWidth - 80;
+        let imgHeight = canvas.height * (imgWidth / canvas.width);
 
-          pageNum++;
+        if (imgHeight > pageHeight - 120) {
+          imgHeight = pageHeight - 120;
+          imgWidth = canvas.width * (imgHeight / canvas.height);
         }
-      }
 
-      pdf.save('DashboardCompleto.pdf');
-    } catch (error) {
-      console.error('Error generando PDF:', error);
-    } finally {
-      this.isLoading.set(false);
-      this.cdr.markForCheck(); // fuerza refresco con OnPush
+        // --- Encabezado con logo + título ---
+        pdf.addImage(img, 'PNG', 20, 15, 40, 40);
+        pdf.setFontSize(18);
+        pdf.text('Dashboard Completo', pageWidth / 2, 35, { align: 'center' });
+
+        // --- Imagen de la tarjeta (gráfico) ---
+        pdf.addImage(imgData, 'PNG', 40, 70, imgWidth, imgHeight);
+
+        // --- Pie de página ---
+        pdf.setFontSize(10);
+        pdf.setTextColor(100);
+        pdf.text(
+          `Generado el ${new Date().toLocaleDateString()}`,
+          40,
+          pageHeight - 20
+        );
+        pdf.text(
+          `Página ${pageNum}`,
+          pageWidth - 80,
+          pageHeight - 20
+        );
+
+        // Añadir nueva página si no es la última
+        if (
+          !(section === sections[sections.length - 1] &&
+          i === chartCards.length - 1)
+        ) {
+          pdf.addPage();
+        }
+
+        pageNum++;
+      }
     }
+
+    const today = new Date().toISOString().split('T')[0];
+    pdf.save(`Dashboard_${today}.pdf`);
+  } catch (error) {
+    console.error('Error generando PDF:', error);
+  } finally {
+    this.isLoading.set(false);
+    this.cdr.markForCheck();
   }
+}
+
 
   startDate: string = '';
   endDate: string = '';

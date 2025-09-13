@@ -1,17 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { CityService } from '../../services/city.service';
 import { ProvinceService } from '../../services/province.service';
 import { UtilsService } from '../../services/utils.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit, AfterViewInit {
   cities: any[] = [];
   provinces: any[] = [];
   selectedProvince: string = '';
@@ -24,11 +25,19 @@ export class SignUpComponent {
     private userService: UserService,
     private cityService: CityService,
     private provinceService: ProvinceService,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.authService.initializeGoogleSignIn();
     this.getProvinces();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.authService.renderGoogleButton('google-signup-button');
+    }, 1000);
   }
 
   getProvinces() {
@@ -162,5 +171,10 @@ export class SignUpComponent {
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
+  }
+
+  signUpWithGoogle(): void {
+    // Se maneja automáticamente con el botón renderizado
+    // La lógica está en AuthService.handleGoogleResponse()
   }
 }

@@ -27,6 +27,10 @@ export class UserInformationComponent implements OnInit {
   currentProvinceInfo: any = null;
   currentCityInfo: any = null;
 
+  // Propiedades para el estado del perfil
+  isProfileComplete: boolean = true;
+  missingFields: string[] = [];
+
   constructor(private authService: AuthService, private userService: UserService, private provinceService: ProvinceService, private cityService: CityService, private router: Router, private utils: UtilsService) {}
 
   ngOnInit(): void {
@@ -52,6 +56,10 @@ export class UserInformationComponent implements OnInit {
             if (updatedEmail) {
               localStorage.removeItem('currentUserEmail');
             }
+            
+            // Verificar estado del perfil
+            this.checkProfileCompletion();
+            
             // Cargar información completa de ciudad y provincia
             if (this.userData?.city) {
               this.loadCityDetails(this.userData.city);
@@ -224,7 +232,7 @@ export class UserInformationComponent implements OnInit {
           this.utils.showAlert('success', 'Éxito', 'Información actualizada').then(() => {
             this.isEditMode = false;
             this.cities = []; // Limpiar las ciudades cargadas
-            this.loadUserData();
+            this.loadUserData(); // Esto también verificará el perfil actualizado
           });
         }
       },
@@ -249,5 +257,15 @@ export class UserInformationComponent implements OnInit {
         });
       }
     });
+  }
+
+  /**
+   * Verifica si el perfil del usuario está completo y actualiza las propiedades correspondientes
+   */
+  private checkProfileCompletion(): void {
+    if (this.userData) {
+      this.isProfileComplete = this.userService.isProfileComplete(this.userData);
+      this.missingFields = this.userService.getMissingProfileFields(this.userData);
+    }
   }
 }
