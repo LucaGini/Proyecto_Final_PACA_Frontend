@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { VrpService, WeeklyRoutesResponse, Route } from 'src/app/services/vrp.service';
 import { OrderService } from 'src/app/services/order.service';
+import { UtilsService } from 'src/app/services/utils.service';
 
 @Component({
   selector: 'app-vrp-list',
@@ -13,7 +14,8 @@ export class VrpListComponent implements OnInit {
 
   constructor(
     private vrpService: VrpService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private utils: UtilsService 
   ) {}
 
   ngOnInit() {
@@ -21,7 +23,10 @@ export class VrpListComponent implements OnInit {
       next: (res: WeeklyRoutesResponse) => {
         this.weeklyRoutes = res;
       },
-      error: (err) => console.error('Error cargando rutas semanales', err)
+      error: (err) => {
+        console.error('Error cargando rutas semanales', err);
+        this.utils.showAlert('error', 'Error', 'No se pudieron cargar las rutas semanales');
+      }
     });
   }
 
@@ -32,26 +37,22 @@ export class VrpListComponent implements OnInit {
   }
 
   toggleSelection(order: Route) {
-  if (!order.orderId) return;
-  const key = order.orderId.toString();   // usar el campo que ya viene del back
-  if (this.selectedOrderNumbers.has(key)) {
-    this.selectedOrderNumbers.delete(key);
-  } else {
-    this.selectedOrderNumbers.add(key);
+    if (!order.orderId) return;
+    const key = order.orderId.toString();
+    if (this.selectedOrderNumbers.has(key)) {
+      this.selectedOrderNumbers.delete(key);
+    } else {
+      this.selectedOrderNumbers.add(key);
+    }
   }
-}
-
 
   updateSelectedOrders(newStatus: string) {
     const selectedKeys = Array.from(this.selectedOrderNumbers);
-    console.log('Selected order IDs for update:', selectedKeys);
-
     if (selectedKeys.length === 0) {
-      alert('Selecciona al menos una orden');
+      this.utils.showAlert('warning', 'Atención', 'Selecciona al menos una orden');
       return;
     }
 
-    console.log('LO QUE LE MANDO AL BACK',selectedKeys, newStatus );
     this.orderService.bulkUpdateStatus(selectedKeys, newStatus).subscribe({
       next: () => {
         this.weeklyRoutes?.routesByProvince &&
@@ -64,9 +65,13 @@ export class VrpListComponent implements OnInit {
             });
           });
 
+        this.utils.showAlert('success', 'Órdenes actualizadas con éxito!');
         this.selectedOrderNumbers.clear();
       },
-      error: (err) => console.error('Error al actualizar órdenes:', err)
+      error: (err) => {
+        console.error('Error al actualizar órdenes:', err);
+        this.utils.showAlert('error', 'Error', 'No se pudieron actualizar las órdenes');
+      }
     });
   }
 
@@ -76,7 +81,6 @@ export class VrpListComponent implements OnInit {
   }
 
   trackByRouteId(index: number, route: Route): string {
-    //console.log('Tracking route:', route);
     return route.orderNumber ? route.orderNumber.toString() : index.toString();
   }
 }

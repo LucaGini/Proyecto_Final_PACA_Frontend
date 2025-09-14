@@ -66,7 +66,7 @@ const routes: Routes = [
   { path: 'products', component: BodyComponent },
   { path: 'product/:productId', component: ProductDetailsComponent },
   { path: 'collection/:collection', component: CollectionComponent },
-  { path: 'a', component: VrpListComponent },
+  { path: 'vrp-list', component: VrpListComponent },
   { path: '**', component: NotFoundComponent, data: { hideHeaderFooter: true } },
 
 ];
