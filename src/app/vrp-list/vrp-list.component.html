@@ -1,0 +1,43 @@
+<div *ngIf="weeklyRoutes" class="vrp-container">
+  <h3>Total de órdenes: {{ weeklyRoutes?.totalOrders }}</h3>
+
+<div *ngIf="selectedOrderNumbers.size > 0" class="mb-3 p-2 bg-light border rounded">
+  <p>{{ selectedOrderNumbers.size }} órdenes seleccionadas</p>
+  <button (click)="updateSelectedOrders('completed')">
+    Marcar como completadas
+  </button>
+  <button (click)="updateSelectedOrders('reprogramada')">
+    Marcar como reprogramadas
+  </button>
+</div>
+  <div *ngFor="let province of getProvinces()" class="card mb-3">
+    <div class="card-header">
+      <h4>{{ province | titlecase }}</h4>
+    </div>
+    <div class="card-body p-0">
+      <ul class="list-group list-group-flush">
+        <li *ngFor="let route of weeklyRoutes?.routesByProvince?.[province]?.route; trackBy: trackByRouteId"
+          class="list-group-item d-flex justify-content-between align-items-center"
+          [class.bg-primary-subtle]="isSelected(route)">
+          <div class="d-flex align-items-center">
+            <input type="checkbox"
+                  class="form-check-input me-2"
+                  [checked]="isSelected(route)"
+                  [attr.name]="'order_' + route.orderNumber"
+                  (change)="toggleSelection(route)" />
+
+            <div>
+              <span class="fw-bold">#{{ route?.orderNumber }}</span>
+              — {{ route?.firstName }} {{ route?.lastName }}
+              — <span class="text-success">${{ route?.total }}</span>
+              <br>
+              <small class="text-muted">{{ route?.address }}</small>
+              <div>Estado: <strong>{{ route?.status}}</strong></div>
+            </div>
+          </div>
+      </li>
+
+      </ul>
+    </div>
+  </div>
+</div>

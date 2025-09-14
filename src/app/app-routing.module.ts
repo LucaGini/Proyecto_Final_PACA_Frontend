@@ -27,6 +27,7 @@ import { AboutUsComponent } from './about-us/about-us.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { VrpComponent } from './vrp/vrp.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { VrpListComponent } from './vrp-list/vrp-list.component';
 
 const routes: Routes = [
 
@@ -65,7 +66,9 @@ const routes: Routes = [
   { path: 'products', component: BodyComponent },
   { path: 'product/:productId', component: ProductDetailsComponent },
   { path: 'collection/:collection', component: CollectionComponent },
+  { path: 'a', component: VrpListComponent },
   { path: '**', component: NotFoundComponent, data: { hideHeaderFooter: true } },
+
 ];
 
 @NgModule({

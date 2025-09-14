@@ -38,8 +38,11 @@ import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cit
 import { AdminSuppliersComponent } from './suppliers/admin-suppliers/admin-suppliers.component';
 import { AddSupplierComponent } from './suppliers/add-supplier/add-supplier.component';
 import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
-import { VrpComponent } from './vrp/vrp.component';
+
 import { DashboardComponent } from './dashboard/dashboard.component';
+
+import { VrpComponent } from './vrp/vrp.component';
+import { VrpListComponent } from './vrp-list/vrp-list.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +62,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     AddSupplierComponent,
     EditListSuppliersComponent,
     VrpComponent,
-    DashboardComponent
+    DashboardComponent,
+    VrpListComponent
   ],
   imports: [
     //BrowserModule,
