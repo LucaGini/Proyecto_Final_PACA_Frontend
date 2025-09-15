@@ -161,9 +161,16 @@ export class OrderListComponent implements OnInit {
     }
 
     if (order.status !== order.editStatus) {
+      if (order.editStatus === 'rescheduled') { 
+        order.rescheduleQuantity = (order.rescheduleQuantity || 0) + 1;
+        if (order.rescheduleQuantity > 2) {
+          order.editStatus = 'cancelled';
+        }}
+        
       const updatedOrder = {
         ...order,
         status: order.editStatus,
+        rescheduleQuantity: order.rescheduleQuantity || 0,
         updatedDate: new Date()
       };
       console.log('Actualizando orden:', updatedOrder);
