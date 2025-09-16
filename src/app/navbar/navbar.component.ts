@@ -23,6 +23,7 @@ export class NavbarComponent implements OnInit {
 
   isLoggedIn: boolean = false;
   isAdmin: boolean = false;
+  isDriver: boolean = false;
 
   cartCount: number = 0;
   private cartSub!: Subscription;
@@ -46,8 +47,13 @@ export class NavbarComponent implements OnInit {
     this.authService.isLoggedIn$().subscribe((status) => {
       this.isLoggedIn = status;
     });
+
     this.authService.isAdmin$().subscribe((status) => {
       this.isAdmin = status;
+    });
+    
+    this.authService.isDriver$().subscribe((status) => {
+      this.isDriver = status;
     });
 
     this.cartCount = this.cartService.getItems().reduce(
@@ -130,8 +136,13 @@ export class NavbarComponent implements OnInit {
   Route(){
     this.router.navigate(['vrp']);
   }
+
   Dashboard(){
     this.router.navigate(['Dashboard']);
+  }
+
+  DeliveryReport(){
+    this.router.navigate(['vrp-list']);
   }
   
   onCategoryButtonClick(name: string) {

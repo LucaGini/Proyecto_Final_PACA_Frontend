@@ -24,10 +24,13 @@ export class VrpListComponent implements OnInit {
         this.weeklyRoutes = res;
       },
       error: (err) => {
-        console.error('Error cargando rutas semanales', err);
+        if (err.status === 403 && err.error?.message) {
+        this.utils.showAlert('error', 'Acceso denegado', err.error.message);
+      } else {
         this.utils.showAlert('error', 'Error', 'No se pudieron cargar las rutas semanales');
       }
-    });
+      }
+    }); 
   }
 
   getProvinces(): string[] {
