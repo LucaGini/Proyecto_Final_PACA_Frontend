@@ -119,6 +119,28 @@ delete(orderId: string): Observable<any> {
     );
   }
 
+  findInDistribution(): Observable<any> {
+  const url = `${this.URL}/orders/in-distribution`;
+  return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
+    map((response: any) => {
+      const orders = response.data.map((order: any) => ({
+        ...order,
+        orderItems: order.orderItems?.map((item: any) => ({
+          ...item,
+          product: item.productId || item.product, 
+          subtotal: item.quantity * item.unitPrice
+        })) || []
+      }));
+      return { data: orders };
+    }),
+    catchError((error: any) => {
+      console.error('Error fetching orders in distribution:', error);
+      return throwError(() => error);
+    })
+  );
+}
+
+
 }
 
 
