@@ -12,7 +12,6 @@ export interface Route {
   address: string;
   lat?: number;
   lon?: number;
-  status: string;
 }
 
 export interface ProvinceRoutes {

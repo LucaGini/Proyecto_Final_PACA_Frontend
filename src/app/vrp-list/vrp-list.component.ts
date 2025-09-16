@@ -36,13 +36,15 @@ export class VrpListComponent implements OnInit {
   }
 
   private groupByProvince(orders: any[]): { [province: string]: any[] } {
-    return orders.reduce((acc, order) => {
-      const province = order.province || 'Sin provincia';
-      if (!acc[province]) acc[province] = [];
-      acc[province].push(order);
-      return acc;
-    }, {} as { [province: string]: any[] });
-  }
+  return orders.reduce((acc, order) => {
+    const province = order?.user?.city?.province?.name || 'Sin provincia';
+    console.log(`LA PROVIIINNNCAA, order?.user?.city?.province?.name`);
+    if (!acc[province]) acc[province] = [];
+    acc[province].push(order);
+    return acc;
+  }, {} as { [province: string]: any[] });
+}
+
 
   getProvinces(): string[] {
     return Object.keys(this.routesByProvince);
