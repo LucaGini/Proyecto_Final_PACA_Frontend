@@ -88,8 +88,12 @@
       Cerrar Sesion
     </button>
 
+    <button *ngIf="isLoggedIn && isDriver" (click)="DeliveryReport()" mat-button>
+      Reportes de entregas
+    </button>
+
     <mat-icon
-      *ngIf="isLoggedIn && !isAdmin"
+      *ngIf="isLoggedIn && !isAdmin && !isDriver"
       style="color: #e7c633; cursor: pointer"
       id="UserInformation"
       (click)="UserInformation()"
@@ -97,7 +101,7 @@
     >
 
     <mat-icon
-      *ngIf="isLoggedIn && !isAdmin"
+      *ngIf="isLoggedIn && !isAdmin && !isDriver"
       style="color: #e7c633; cursor: pointer"
       (click)="OrdersHistory()"
       matTooltip="Historial de pedidos"
@@ -114,7 +118,7 @@
       data-bs-target="#cartModal"
       style="background-color: white"
       id="shopping_cart"
-      *ngIf="!isAdmin"
+      *ngIf="!isAdmin && !isDriver"
       [matBadge]="cartCount" matBadgeColor="warn" matBadgePosition="above after"
     >
       <mat-icon style="color: #e7c633">shopping_cart</mat-icon>

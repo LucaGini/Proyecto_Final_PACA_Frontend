@@ -29,10 +29,13 @@ export class VrpListComponent implements OnInit {
         console.log('Órdenes en distribución cargadas:', this.ordersInDistribution);
       },
       error: (err) => {
-        console.error('Error cargando órdenes en distribución', err);
-        this.utils.showAlert('error', 'Error', 'No se pudieron cargar las órdenes en distribución');
+        if (err.status === 403 && err.error?.message) {
+        this.utils.showAlert('error', 'Acceso denegado', err.error.message);
+      } else {
+        this.utils.showAlert('error', 'Error', 'No se pudieron cargar las rutas semanales')
       }
-    });
+      }
+    }); 
   }
 
   private groupByProvince(orders: any[]): { [province: string]: any[] } {
