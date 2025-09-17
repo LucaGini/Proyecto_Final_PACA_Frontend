@@ -31,21 +31,23 @@
     .card-body {
       background: white;
 
-      .route-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.8rem 1rem;
+      table {
+        width: 100%;
+        table-layout: fixed; // columnas fijas
+        word-wrap: break-word;
 
-        .order-number {
-          font-weight: 600;
-          color: #567518;
+        th, td {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
-        .address {
-          font-size: 0.9rem;
-          color: var(--text-color);
-        }
+        th:nth-child(1), td:nth-child(1) { width: 30px; }   // checkbox
+        th:nth-child(2), td:nth-child(2) { width: 80px; }   // número de orden
+        th:nth-child(3), td:nth-child(3) { width: 180px; }  // cliente
+        th:nth-child(4), td:nth-child(4) { width: 100px; }  // total
+        th:nth-child(5), td:nth-child(5) { width: 250px; }  // dirección
+        th:nth-child(6), td:nth-child(6) { width: 120px; }  // estado
       }
     }
   }
@@ -74,7 +76,6 @@
   }
 }
 
-
 .btn-completed {
   background-color: #6b8e23; 
   margin-right: 10px;
@@ -92,7 +93,6 @@
   transform: translateY(-2px);
 }
 
-/* Estilo para botón de órdenes reprogramadas */
 .btn-rescheduled {
   background-color: #fd7e14; /* naranja */
   color: white;

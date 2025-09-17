@@ -1,5 +1,4 @@
 <div *ngIf="ordersInDistribution.length > 0" class="vrp-container">
-  <!-- Barra de acciones -->
   <div *ngIf="selectedOrderNumbers.size > 0" class="mb-3 p-2 bg-light border rounded">
     <p>{{ selectedOrderNumbers.size }} órdenes seleccionadas</p>
       <button (click)="updateSelectedOrders('completed')" class="btn-completed">
@@ -10,7 +9,6 @@
       </button>
   </div>
 
-  <!-- Provincias -->
   <div *ngFor="let province of getProvinces()" class="card mb-3">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h4 class="mb-0">{{ province | titlecase }}</h4>
@@ -39,8 +37,7 @@
                 type="checkbox"
                 class="form-check-input custom-checkbox"
                 [checked]="isSelected(order)"
-                (change)="toggleSelection(order, $event)"
-              />
+                (change)="toggleSelection(order, $event)"/>
             </td>
 
             <td class="order-number">#{{ order?.orderNumber }}</td>
@@ -56,8 +53,7 @@
                   'bg-success': order?.status === 'completed',
                   'bg-warning text-dark': order?.status === 'rescheduled',
                   'bg-secondary': order?.status !== 'in distribution' && order?.status !== 'completed' && order?.status !== 'rescheduled'
-                }"
-              >
+                }">
                 {{ order?.status }}
               </span>
             </td>
@@ -68,6 +64,16 @@
   </div>
 </div>
 
-<div *ngIf="ordersInDistribution.length === 0" class="alert alert-info mt-3">
-  No hay órdenes en distribución.
-</div>
+<!-- Mensaje cuando no hay órdenes en distribución -->
+<ng-container *ngIf="!ordersInDistribution || (ordersInDistribution && getProvinces().length === 0)">
+  <div class="no-orders-message">
+    <mat-icon>receipt_long_off</mat-icon>
+    <h3>No hay órdenes disponibles</h3>
+    <p *ngIf="ordersInDistribution && getProvinces().length === 0">
+      No se encontraron órdenes para mostrar. Intenta revisar filtros o carga nuevas órdenes.
+    </p>
+    <p *ngIf="!ordersInDistribution || ordersInDistribution.length === 0">
+      Aún no se han cargado órdenes. Por favor, genera o asigna órdenes para poder verlas aquí.
+    </p>
+  </div>
+</ng-container>

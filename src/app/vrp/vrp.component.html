@@ -1,34 +1,43 @@
 <div *ngIf="weeklyRoutes" class="vrp-container">
   <!-- Encabezado con total de órdenes y botón de exportar -->
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
 
-  <button class="gral-button" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }" >
-    <ng-container *ngIf="isLoading; else normalBtn">
-      <div class="spinner"></div>
-      Descargando...
-    </ng-container>
-    <ng-template #normalBtn>
-      <mat-icon>download</mat-icon> Descargar PDF
-    </ng-template>
-  </button>
-</div>
+    <button class="gral-button" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }">
+      <ng-container *ngIf="isLoading; else normalBtn">
+        <div class="spinner"></div>
+        Descargando...
+      </ng-container>
+      <ng-template #normalBtn>
+        <mat-icon>download</mat-icon> Descargar PDF
+      </ng-template>
+    </button>
+  </div>
 
-
-  <!-- Cards por provincia -->
+  <!-- Órdenes por provincia -->
   <div *ngFor="let province of getProvinces(); let i = index" class="card shadow-sm" [style.--animation-order]="i">
     <div class="card-header">
       <h4>{{ province | titlecase }}</h4>
     </div>
     <div class="card-body p-0">
-      <ul class="list-group list-group-flush">
-        <li *ngFor="let route of weeklyRoutes.routesByProvince[province].route" class="list-group-item route-item">
-          <span class="order-number fw-bold">#{{ route.orderNumber }}</span>
-          <span class="client ms-3">{{ route.firstName }} {{ route.lastName }}</span>
-          <span class="total ms-3 text-success fw-semibold">$ {{ route.total | number:'1.0-0' }}</span>
-          <div class="address text-muted mt-1">{{ route.address }}</div>
-        </li>
-      </ul>
+      <table class="table table-orders">
+        <thead>
+          <tr>
+            <th># Orden</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Dirección</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let route of weeklyRoutes.routesByProvince[province].route">
+            <td class="order-number">#{{ route.orderNumber }}</td>
+            <td class="client">{{ route.firstName }} {{ route.lastName }}</td>
+            <td class="total">$ {{ route.total | number:'1.0-0' }}</td>
+            <td class="address">{{ route.address }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -38,15 +47,26 @@
       Órdenes no geolocalizadas
     </div>
     <div class="card-body p-0">
-      <ul class="list-group list-group-flush">
-        <li *ngFor="let route of weeklyRoutes.notGeolocated" class="list-group-item route-item">
-          <span class="order-number fw-bold">#{{ route.orderNumber }}</span>
-          <span class="client ms-3">{{ route.firstName }} {{ route.lastName }}</span>
-          <span class="total ms-3 text-success fw-semibold">$ {{ route.total | number:'1.0-0' }}</span>
-          <div class="address text-muted mt-1">{{ route.address }}</div>
-          <div class="reason text-danger mt-1">Motivo: {{ route.reason }}</div>
-        </li>
-      </ul>
+      <table class="table table-orders">
+        <thead>
+          <tr>
+            <th># Orden</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Dirección</th>
+            <th>Motivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let route of weeklyRoutes.notGeolocated">
+            <td class="order-number">#{{ route.orderNumber }}</td>
+            <td class="client">{{ route.firstName }} {{ route.lastName }}</td>
+            <td class="total">$ {{ route.total | number:'1.0-0' }}</td>
+            <td class="address">{{ route.address }}</td>
+            <td class="reason text-danger"> {{ route.reason }} </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -54,8 +74,8 @@
   <div id="map" class="map-container"></div>
 </div>
 
-<!-- Mensaje cuando no hay rutas: mostrar también si weeklyRoutes existe pero no contiene rutas -->
-<ng-container *ngIf="!weeklyRoutes || (weeklyRoutes && getProvinces().length === 0)" >
+<!-- Mensaje cuando no hay rutas -->
+<ng-container *ngIf="!weeklyRoutes || (weeklyRoutes && getProvinces().length === 0)">
   <div class="no-orders-message">
     <mat-icon>receipt_long_off</mat-icon>
     <h3>No hay rutas disponibles</h3>
