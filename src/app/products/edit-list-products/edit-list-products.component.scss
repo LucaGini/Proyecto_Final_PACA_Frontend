@@ -1,11 +1,11 @@
-.products-container {
-  background: linear-gradient(45deg, rgba(231, 198, 51, 0.05), rgba(255, 255, 255, 0.1));
+.form-group {
+  margin-bottom: 0.5rem;
 }
 
 .navbar {
   background: rgba(255, 255, 255, 0.95) !important;
   backdrop-filter: blur(10px);
-  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 
   .navbar-nav {
     display: flex;
@@ -19,7 +19,7 @@
 
     h2 {
       color: #333;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       position: relative;
 
       &::after {
@@ -39,73 +39,12 @@
   }
 }
 
-.card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: none;
-  border-radius: 15px;
-  overflow: hidden;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05), 0 6px 6px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  display: flex;
-}
-
-.card-img-top {
-  height: 260px;
-  width: 260px;
-  object-fit: cover;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: center;
-  filter: brightness(0.95);
-  margin: 1rem auto;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  display: block;
-  margin: 1rem auto;
-}
-
 .btn {
   background: transparent;
   color: white;
   border: none;
   transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: translateY(1px);
-  }
 }
-
-
-
-.example-button-container {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin: 1rem;
-}
-
-.card-text {
-  color: #666;
-  margin: 0.5rem 0;
-  font-size: 1.1rem;
-}
-
-
-
-.products-container > div {
-  animation: fadeIn 0.6s ease-out;
-  animation-fill-mode: both;
-
-  @for $i from 1 through 20 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.1}s;
-    }
-  }
-}
-
 .no-products-message {
   text-align: center;
   padding: 4rem 2rem;
@@ -134,4 +73,121 @@
     font-size: 1.1rem;
     margin-bottom: 0.5rem;
   }
+}
+.products-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  margin: 1rem 0 1rem 0;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+}
+
+.card-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-bottom: 1px solid #eee;
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.card-body h3 {
+  font-size: 1.1rem;
+  margin: 0 0 0.4rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.card-body .desc {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.6rem;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 0.5rem;
+}
+
+.card-actions mat-icon {
+  font-size: 20px;
+}
+
+.card-actions .warning {
+  color: #f76666;
+}
+
+.card-actions .sent {
+  display: flex;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #4caf50;
+  gap: 4px;
+}
+
+.edit-mode {
+  padding: 0rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.edit-mode .form-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #444;
+  margin-bottom: 0.2rem;
+}
+
+.edit-mode .form-control {
+  font-size: 0.9rem;
+
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 0.8rem;
+}
+
+.image-preview {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 160px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview img.faded {
+  opacity: 0.8;
+}
+
+.yellow-btn {
+  color: #ffc107; // Amarillo bootstrap
 }
