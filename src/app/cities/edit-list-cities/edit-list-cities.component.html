@@ -1,4 +1,46 @@
-<div class="cities-container">
+<!-- NAVBAR CON FILTROS -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <div class="form-group">
+            <div class="filter-header d-flex align-items-center justify-content-between">
+              <h2 style="font-family: 'Quicksand', sans-serif;">Filtros</h2>
+              <button *ngIf="hasActiveFilters()" type="button" class="clear-filters-btn" (click)="clearAllFilters()"
+                matTooltip="Limpiar todos los filtros">
+                <mat-icon>filter_list_off</mat-icon>
+              </button>
+            </div>
+
+            <label for="province">Provincias</label>
+            <select class="form-control" id="province" (change)="onProvinceChange($event)"
+              [(ngModel)]="selectedProvinceId" name="province">
+              <option value="">Todas</option>
+              <option *ngFor="let province of provinces" [value]="province.id">{{ province.name }}</option>
+            </select>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- MENSAJE CUANDO NO HAY CIUDADES -->
+<div *ngIf="cities.length === 0" class="no-cities-message text-center mt-4">
+  <mat-icon>location_city</mat-icon>
+  <h3>No hay ciudades disponibles</h3>
+  <p *ngIf="hasActiveFilters()">No se encontraron ciudades con los filtros aplicados. Intenta ajustar los criterios de búsqueda.</p>
+  <p *ngIf="!hasActiveFilters()">No hay ciudades cargadas en el sistema en este momento.</p>
+</div>
+
+<!-- CONTENEDOR DE CIUDADES -->
+<div *ngIf="cities.length > 0" class="cities-container">
   <div class="city-card" *ngFor="let city of cities">
     <div class="card">
       <!-- Acciones -->
@@ -24,7 +66,8 @@
           <div class="form-group">
             <label>Nombre</label>
             <textarea class="form-control" [(ngModel)]="city.editName" name="editName" required
-              #editNameInput="ngModel" [ngClass]="{ 'is-invalid': editNameInput.invalid && editNameInput.touched }"></textarea>
+              #editNameInput="ngModel"
+              [ngClass]="{ 'is-invalid': editNameInput.invalid && editNameInput.touched }"></textarea>
             <small *ngIf="editNameInput.invalid && editNameInput.touched" class="error-msg">El nombre es obligatorio.</small>
           </div>
 
@@ -32,7 +75,8 @@
             <label>Código postal</label>
             <input type="text" class="form-control" [(ngModel)]="city.editPostCode" name="editPostCode"
               pattern="[A-Za-z0-9]{8,10}" required minlength="8" maxlength="10"
-              #editPostCodeInput="ngModel" [ngClass]="{ 'is-invalid': editPostCodeInput.invalid && editPostCodeInput.touched }" />
+              #editPostCodeInput="ngModel"
+              [ngClass]="{ 'is-invalid': editPostCodeInput.invalid && editPostCodeInput.touched }" />
             <div *ngIf="editPostCodeInput.invalid && editPostCodeInput.touched" class="text-danger">
               <small *ngIf="editPostCodeInput.errors?.['required']">El código postal es obligatorio.</small>
               <small *ngIf="editPostCodeInput.errors?.['minlength']">Debe tener entre 8 y 10 caracteres.</small>
@@ -44,7 +88,8 @@
           <div class="form-group">
             <label>Recargo</label>
             <input type="number" class="form-control" [(ngModel)]="city.editSurcharge" name="editSurcharge" required
-              #editSurchargeInput="ngModel" [ngClass]="{ 'is-invalid': editSurchargeInput.invalid && editSurchargeInput.touched }" />
+              #editSurchargeInput="ngModel"
+              [ngClass]="{ 'is-invalid': editSurchargeInput.invalid && editSurchargeInput.touched }" />
             <small *ngIf="editSurchargeInput.invalid && editSurchargeInput.touched" class="error-msg">El recargo es obligatorio.</small>
           </div>
         </div>
