@@ -1,56 +1,26 @@
-.orders-container {
-  background: linear-gradient(45deg, rgba(231, 198, 51, 0.05), rgba(255, 255, 255, 0.1));
-  padding: 20px;
-
-  .card{
-    animation: fadeInUp 0.5s ease-out forwards;
-    animation-delay: calc(var(--animation-order,0) * 0.1s);
-  }
+.form-group {
+  margin-bottom: 0.5rem;
 }
 
 .navbar {
   background: rgba(255, 255, 255, 0.95) !important;
   backdrop-filter: blur(10px);
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 15px rgba(231, 198, 51, 0.1);
-
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   .navbar-nav {
     display: flex;
     align-items: flex-end;
     gap: 2rem;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 1rem;
-    }
   }
 
   .nav-item {
     display: flex;
     flex-direction: column;
-    
-    // Los filtros adicionales (ciudad y fechas) necesitan alinearse con el primero
-    &:nth-child(2) .form-group,
-    &:nth-child(3) .form-group {
-      margin-top: calc(1rem + 60px); // Compensar la altura del h2
-    }
-  }
-
-  .form-group {
-    margin: 1rem;
-    display: flex;
-    flex-direction: column;
-
-    @media (max-width: 768px) {
-      margin: 0.5rem;
-      width: 100%;
-    }
 
     h2 {
       color: #333;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
       position: relative;
+      font-family: 'Quicksand', sans-serif;
 
       &::after {
         content: '';
@@ -66,168 +36,14 @@
         width: 100px;
       }
     }
-
-    label {
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-      color: #333;
-    }
-
-    select.form-control,
-    input.form-control {
-      border: 2px solid #eee;
-      border-radius: 8px;
-      padding: 0.8rem;
-      min-width: 200px;
-
-      &:focus {
-        outline: none;
-        border-color: #e7c633;
-        box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
-      }
-    }
-
-    .input-group {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-
-      @media (max-width: 576px) {
-        flex-direction: column;
-        align-items: stretch;
-
-        input {
-          width: 100%;
-        }
-      }
-
-      .input-group-text {
-        background: #f8f9fa;
-        border: 2px solid #eee;
-        border-radius: 8px;
-        padding: 0.8rem;
-        color: #666;
-      }
-    }
-  }
-}
-
-.card {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border: none;
-  border-radius: 15px;
-  box-shadow:
-    0 10px 20px rgba(0, 0, 0, 0.05),
-    0 6px 6px rgba(0, 0, 0, 0.1),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  margin-bottom: 2rem;
-
-  .card-header {
-    background: transparent;
-    border-bottom: 1px solid rgba(231, 198, 51, 0.2);
-    padding: 1.5rem;
-
-    h3 {
-      color: #333;
-      margin: 0;
-    }
-  }
-
-  .card-body {
-    padding: 1.5rem;
-
-    h4 {
-      color: #444;
-      margin-bottom: 1.2rem;
-    }
-
-    p {
-      color: #666;
-      margin-bottom: 0.5rem;
-    }
-  }
-
-    @media (max-width: 768px) {
-      .card-body {
-        .row {
-          flex-direction: column;
-  
-          .col-md-6 {
-            width: 100%;
-            margin-bottom: 1.5rem;
-          }
-        }
-      }
-    }
-  
-    .table {
-      @media (max-width: 576px) {
-        display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-    }
-}
-
-.table {
-  margin-top: 1.5rem;
-
-  thead {
-    background-color: rgba(231, 198, 51, 0.1);
-
-    th {
-      color: #444;
-      font-weight: 600;
-      border: none;
-      padding: 1rem;
-    }
-  }
-
-  tbody {
-    tr {
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-
-      td {
-        padding: 1rem;
-        color: #666;
-        vertical-align: middle;
-      }
-    }
   }
 }
 
 .btn {
   background: transparent;
+  color: white;
   border: none;
-
-  &:hover {
-    opacity: 0.8;
-  }
-}
-
-.badge {
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 550;
-  border-radius: 6px;
-}
-
-.example-button-container {
-  display: flex;
-  gap: 10px;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  transition: all 0.3s ease;
 }
 
 .no-orders-message {
@@ -238,24 +54,33 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin: 2rem;
   backdrop-filter: blur(10px);
-
-  mat-icon {
-    font-size: 4rem;
-    width: 4rem;
-    height: 4rem;
-    color: #A67C52;
-    margin-bottom: 1rem;
-  }
-
-  h3 {
-    color: #333;
-    margin-bottom: 0.5rem;
-    font-family: 'Quicksand', sans-serif;
-  }
-
-  p {
-    color: #666;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-  }
 }
+
+.no-orders-message mat-icon {
+  font-size: 4rem;
+  height: 4rem;
+  width: 4rem;
+  color: #a67c52;
+  margin-bottom: 1rem;
+}
+
+.orders-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); /* cards responsivas */
+  gap: 20px;
+  padding: 2rem;
+}
+
+.orders-container .card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.orders-container .card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+

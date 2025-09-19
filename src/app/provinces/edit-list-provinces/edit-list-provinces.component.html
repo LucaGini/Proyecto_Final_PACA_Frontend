@@ -1,40 +1,47 @@
- <div class="provinces-container" style="display: flex; flex-wrap: wrap; gap: 15px;">
-  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex" style="flex: 0 0 calc(50% - 15px); margin-bottom: 15px;" *ngFor="let province of provinces">
-    <div class="card-body">
-      <div *ngIf="province.editing">
-        <div class="form-group">
-          <label for="name">Nombre: </label>
-          <input type="text" class="form-control" id="name" [(ngModel)]="province.editName" name="name" required #editNameInput="ngModel"
-            [ngClass]="{ 'is-invalid': editNameInput.invalid && editNameInput.touched }"/>
-          <div *ngIf="editNameInput.invalid && editNameInput.touched" class="text-danger">
-            <small>El nombre es obligatorio.</small>
+<div class="provinces-container">
+  <div class="province-card" *ngFor="let province of provinces">
+    <div class="card">
+      <!-- Acciones -->
+      <div class="card-actions">
+        <button mat-icon-button *ngIf="!province.editing" class="yellow-btn" (click)="edit(province)">
+          <mat-icon>create</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="!province.editing" color="warn" (click)="delete(province.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="province.editing" color="primary" (click)="save(province)" [disabled]="!province.editName">
+          <mat-icon>save_alt</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="province.editing" color="warn" (click)="cancelEdit(province)">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </div>
+
+      <!-- Contenido -->
+      <div class="card-body">
+        <div *ngIf="province.editing" class="edit-mode">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="province.editName"
+              name="name"
+              required
+              #editNameInput="ngModel"
+              [ngClass]="{ 'is-invalid': editNameInput.invalid && editNameInput.touched }"
+            />
+            <div *ngIf="editNameInput.invalid && editNameInput.touched" class="text-danger">
+              <small>El nombre es obligatorio.</small>
+            </div>
           </div>
         </div>
 
+        <div *ngIf="!province.editing">
+          <h3 class="card-text">Nombre</h3>
+          <p>{{ province.name }}</p>
+        </div>
       </div>
-
-      <div *ngIf="!province.editing">
-        <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Nombre: {{ province.name }}</h2>
-      </div>
-    </div>
-  
-  <div class="example-button-container" style="display: flex; justify-content: flex-end;">
-      <button mat-icon-button class="btn" *ngIf="!province.editing" (click)="edit(province)" style="color: #e7c633;">
-        <mat-icon>create</mat-icon>
-      </button>
-
-      <button mat-icon-button class="btn" *ngIf="province.editing" (click)="save(province)" style="color: #e7c633;"
-        [disabled]="!province.editName ">
-        <mat-icon>save_alt</mat-icon>
-      </button>
-      
-      <button mat-icon-button class="btn" *ngIf="province.editing" (click)="cancelEdit(province)" style="color: #f76666; margin-left: 5px;">
-        <mat-icon>cancel</mat-icon>
-      </button>
-
-      <button mat-icon-button class="btn" *ngIf="!province.editing" (click)="delete(province.id)" style="color: #f76666;">
-        <mat-icon>delete</mat-icon>
-      </button>
     </div>
   </div>
 </div>
