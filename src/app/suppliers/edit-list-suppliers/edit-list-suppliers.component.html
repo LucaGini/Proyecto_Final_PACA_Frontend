@@ -9,8 +9,13 @@
         <button mat-icon-button *ngIf="!supplier.editing" color="warn" (click)="delete(supplier)">
           <mat-icon>delete</mat-icon>
         </button>
-        <button mat-icon-button *ngIf="supplier.editing" color="primary" (click)="save(supplier)"
-          [disabled]="!supplier.editCuit || !supplier.editBusinessName || !supplier.editEmail || !supplier.editPhone">
+        <button
+          mat-icon-button
+          *ngIf="supplier.editing"
+          color="primary"
+          (click)="save(supplier)"
+          [disabled]="!supplier.editCuit || !supplier.editBusinessName || !supplier.editEmail || !supplier.editPhone"
+        >
           <mat-icon>save_alt</mat-icon>
         </button>
         <button mat-icon-button *ngIf="supplier.editing" color="warn" (click)="cancelEdit(supplier)">
@@ -23,8 +28,15 @@
         <div *ngIf="supplier.editing" class="edit-mode">
           <div class="form-group">
             <label>CUIT</label>
-            <input type="text" class="form-control" [(ngModel)]="supplier.editCuit" required pattern="^[0-9]{11}$"
-                   #cuitInput="ngModel" [ngClass]="{ 'is-invalid': cuitInput.invalid && cuitInput.touched }"/>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="supplier.editCuit"
+              required
+              pattern="^[0-9]{11}$"
+              #cuitInput="ngModel"
+              [ngClass]="{ 'is-invalid': cuitInput.invalid && cuitInput.touched }"
+            />
             <small *ngIf="cuitInput.invalid && cuitInput.touched" class="error-msg">
               <span *ngIf="cuitInput.errors?.['required']">El CUIT es obligatorio.</span>
               <span *ngIf="cuitInput.errors?.['pattern']">Debe tener exactamente 11 números.</span>
@@ -33,15 +45,27 @@
 
           <div class="form-group">
             <label>Nombre</label>
-            <input type="text" class="form-control" [(ngModel)]="supplier.editBusinessName" required
-                   #nameInput="ngModel" [ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }"/>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="supplier.editBusinessName"
+              required
+              #nameInput="ngModel"
+              [ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }"
+            />
             <small *ngIf="nameInput.invalid && nameInput.touched" class="error-msg">El nombre es obligatorio.</small>
           </div>
 
           <div class="form-group">
             <label>Email</label>
-            <input type="email" class="form-control" [(ngModel)]="supplier.editEmail" required
-                   #emailInput="ngModel" [ngClass]="{ 'is-invalid': emailInput.invalid && emailInput.touched }"/>
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="supplier.editEmail"
+              required
+              #emailInput="ngModel"
+              [ngClass]="{ 'is-invalid': emailInput.invalid && emailInput.touched }"
+            />
             <small *ngIf="emailInput.invalid && emailInput.touched" class="error-msg">
               <span *ngIf="emailInput.errors?.['required']">El email es obligatorio.</span>
               <span *ngIf="emailInput.errors?.['email']">Formato inválido.</span>
@@ -50,8 +74,14 @@
 
           <div class="form-group">
             <label>Teléfono</label>
-            <input type="text" class="form-control" [(ngModel)]="supplier.editPhone" required
-                   #phoneInput="ngModel" [ngClass]="{ 'is-invalid': phoneInput.invalid && phoneInput.touched }"/>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="supplier.editPhone"
+              required
+              #phoneInput="ngModel"
+              [ngClass]="{ 'is-invalid': phoneInput.invalid && phoneInput.touched }"
+            />
             <small *ngIf="phoneInput.invalid && phoneInput.touched" class="error-msg">El teléfono es obligatorio.</small>
           </div>
         </div>

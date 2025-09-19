@@ -1,11 +1,11 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
     <div class="collapse navbar-collapse">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav align-items-center">
         <li class="nav-item me-4">
           <div class="form-group">
-            <div class="filter-header">
-              <h2 style="font-family: 'Quicksand', sans-serif;">Filtros</h2>
+            <div class="filter-header d-flex align-items-center justify-content-between">
+              <h2>Filtros</h2>
               <button *ngIf="hasActiveFilters()" class="clear-filters-btn" (click)="clearAllFilters()" matTooltip="Limpiar todos los filtros">
                 <mat-icon>filter_list_off</mat-icon>
               </button>
@@ -19,22 +19,24 @@
             </select>
           </div>
         </li>
+
         <li class="nav-item me-4">
           <div class="form-group">
             <label for="city">Ciudad:</label>
             <select class="form-control" id="city" (change)="onCityChange($event)" [(ngModel)]="selectedCity" name="city">
               <option value="">Todas</option>
-              <option *ngFor="let city of cities" [value]="city.name">{{city.name}}</option>
+              <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
             </select>
           </div>
         </li>
+
         <li class="nav-item">
           <div class="form-group">
             <label for="dateRange">Rango de fechas:</label>
             <div class="input-group">
-              <input type="date" class="form-control" id="startDate" (change)="onDateChange()" [(ngModel)]="startDate">
+              <input type="date" class="form-control" id="startDate" (change)="onDateChange()" [(ngModel)]="startDate" />
               <span class="input-group-text">hasta</span>
-              <input type="date" class="form-control" id="endDate" (change)="onDateChange()" [(ngModel)]="endDate">
+              <input type="date" class="form-control" id="endDate" (change)="onDateChange()" [(ngModel)]="endDate" />
             </div>
           </div>
         </li>
@@ -51,21 +53,26 @@
   <p *ngIf="!hasActiveFilters()">No hay órdenes registradas en el sistema en este momento.</p>
 </div>
 
-<!-- Contenedor de órdenes cuando hay órdenes disponibles -->
-<div *ngIf="filteredOrders.length > 0" class="orders-container" style="padding: 20px;">
+<!-- Contenedor de órdenes -->
+<div *ngIf="filteredOrders.length > 0" class="orders-container">
   <div class="card mb-3" *ngFor="let order of filteredOrders; let i = index">
     <div class="card-header">
       <div class="d-flex justify-content-between align-items-center">
-        <h3>Orden #{{order.orderNumber}}</h3>
+        <h3>Orden #{{ order.orderNumber }}</h3>
         <div class="d-flex align-items-center">
           <div *ngIf="!order.editing" class="me-3">
-            <span class="badge" [ngClass]="{
-              'bg-warning': order.status === 'pending',
-              'bg-success': order.status === 'completed',
-              'bg-danger': order.status === 'cancelled'
-            }">{{order.status}}</span>
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-warning': order.status === 'pending',
+                'bg-success': order.status === 'completed',
+                'bg-danger': order.status === 'cancelled',
+                'bg-info': order.status === 'rescheduled'
+              }"
+              >{{ order.status }}</span
+            >
           </div>
-          <div *ngIf="order.editing"class="me-3">
+          <div *ngIf="order.editing" class="me-3">
             <select class="form-control" [(ngModel)]="order.editStatus">
               <option value="pending">Pendiente</option>
               <option value="completed">Completado</option>
@@ -73,28 +80,30 @@
             </select>
           </div>
           <div class="example-button-container">
-            <button mat-icon-button class="btn" *ngIf="!order.editing  && order.status === 'pending'" (click)="edit(order)"
-              style="color: #e7c633;"><mat-icon>create</mat-icon></button>
-            <button mat-icon-button class="btn" *ngIf="order.editing" (click)="save(order)"
-              style="color: #e7c633;"><mat-icon>save_alt</mat-icon></button>
+            <button mat-icon-button class="btn" *ngIf="!order.editing && order.status === 'pending'" (click)="edit(order)" style="color: #e7c633">
+              <mat-icon>create</mat-icon>
+            </button>
+            <button mat-icon-button class="btn" *ngIf="order.editing" (click)="save(order)" style="color: #e7c633">
+              <mat-icon>save_alt</mat-icon>
+            </button>
           </div>
         </div>
       </div>
     </div>
     <div class="card-body">
+      <!-- Info del cliente y pedido -->
       <div class="row">
         <div class="col-md-6">
           <h4>Información del Cliente</h4>
-          <p><strong>Nombre:</strong> {{order.user?.firstName}} {{order.user?.lastName}}</p>
-          <p><strong>Email:</strong> {{order.user?.email}}</p>
-          <p><strong>Dirección:</strong> {{order.user?.street}} {{order.user?.streetNumber}}, {{order.user?.cityName}}
-          </p>
+          <p><strong>Nombre:</strong> {{ order.user?.firstName }} {{ order.user?.lastName }}</p>
+          <p><strong>Email:</strong> {{ order.user?.email }}</p>
+          <p><strong>Dirección:</strong> {{ order.user?.street }} {{ order.user?.streetNumber }}, {{ order.user?.cityName }}</p>
         </div>
         <div class="col-md-6">
           <h4>Información del Pedido</h4>
-          <p><strong>Fecha de Orden:</strong> {{order.orderDate | date:'dd/MM/yyyy HH:mm'}}</p>
-          <p><strong>Última Actualización:</strong> {{order.updatedDate | date:'dd/MM/yyyy HH:mm'}}</p>
-          <p><strong>Total:</strong> ${{order.total}}</p>
+          <p><strong>Fecha de Orden:</strong> {{ order.orderDate | date : 'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Última Actualización:</strong> {{ order.updatedDate | date : 'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Total:</strong> ${{ order.total }}</p>
         </div>
       </div>
 
@@ -109,9 +118,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of order.orderItems">
-            <td>{{item?.product?.name || item?.product?.data?.name || item?.productId?.name || 'N/A'}}</td>
-            <td>{{item.quantity}}</td>
-            <td>${{item.subtotal || (item.quantity * item.unitPrice) || 0}}</td>
+            <td>{{ item?.product?.name || item?.product?.data?.name || item?.productId?.name || 'N/A' }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.subtotal || item.quantity * item.unitPrice || 0 }}</td>
           </tr>
         </tbody>
       </table>

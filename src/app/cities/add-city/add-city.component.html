@@ -1,25 +1,10 @@
 <div class="mb-3 col-xs-6 col-sm-6 col-md-6 col-lg-6 mx-auto">
   <div class="card-body">
-    <form
-      #addForm="ngForm"
-      id="addForm"
-      (ngSubmit)="add(addForm)"
-      enctype="multipart/form-data"
-      novalidate
-    >
+    <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data" novalidate>
       <!-- Nombre -->
       <div class="form-group">
         <label for="name">Nombre</label>
-        <input
-          type="text"
-          class="form-control"
-          id="name"
-          name="name"
-          ngModel
-          required
-          #nameInput="ngModel"
-          [ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }"
-        />
+        <input type="text" class="form-control" id="name" name="name" ngModel required #nameInput="ngModel" [ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }" />
         <small *ngIf="nameInput.invalid && nameInput.touched" class="error-msg">
           <span *ngIf="nameInput.errors?.['required']">El nombre es obligatorio.</span>
         </small>
@@ -87,9 +72,7 @@
             {{ province.name }}
           </option>
         </select>
-        <small *ngIf="provinceInput.invalid && provinceInput.touched" class="error-msg">
-          La provincia es obligatoria.
-        </small>
+        <small *ngIf="provinceInput.invalid && provinceInput.touched" class="error-msg"> La provincia es obligatoria. </small>
       </div>
 
       <!-- Botón centrado -->
