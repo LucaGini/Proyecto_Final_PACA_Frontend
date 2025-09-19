@@ -1,0 +1,111 @@
+.vrp-container {
+  padding: 1.5rem;
+  animation: fadeIn 0.6s ease-out;
+
+  h3 {
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    margin: 1rem 0;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header {
+      background: linear-gradient(45deg, #ca8a4a, #b38558);
+      color: white;
+      border-radius: 12px 12px 0 0;
+      font-weight: 600;
+
+      &.not-geolocated {
+        background: #c94c4c; 
+      }
+    }
+
+    .card-body {
+      background: white;
+
+      .table-orders {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+
+        th, td {
+          padding: 0.75rem;
+          border-bottom: 1px solid #eee;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        td.order-number {
+          width: 100px;
+          font-weight: bold;
+          color: #333;
+        }
+
+        td.client {
+          width: 200px;
+          color: #555;
+        }
+
+        td.total {
+          width: 120px;
+          color: #6b8e23;
+          font-weight: 600;
+        }
+
+        td.address {
+          width: 300px;
+          color: #666;
+        }
+
+        td.reason {
+          width: 200px;
+          color: #c94c4c;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .map-container {
+    height: 350px;
+    width: 100%;
+    margin: 1.5rem auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .no-orders-message {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-color);
+
+    h3 {
+      margin: 0.8rem 0;
+      font-weight: 600;
+    }
+
+    p {
+      color: #666;
+    }
+  }
+
+  .gral-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+}

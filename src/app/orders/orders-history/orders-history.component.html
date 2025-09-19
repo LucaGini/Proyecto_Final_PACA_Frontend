@@ -16,6 +16,8 @@
               <option value="pending">Pendiente</option>
               <option value="completed">Completado</option>
               <option value="cancelled">Cancelado</option>
+              <option value="in distribution">En distribución</option>
+              <option value="rescheduled">Reprogramada</option>
             </select>
           </div>
         </li>
@@ -50,7 +52,9 @@
           <span class="badge" [ngClass]="{
             'bg-warning': order.status === 'pending',
             'bg-success': order.status === 'completed',
-            'bg-danger': order.status === 'cancelled'
+            'bg-danger': order.status === 'cancelled',
+            'bg-primary': order.status === 'in distribution',
+            'bg-orange': order.status === 'rescheduled'
           }">{{order.status}}</span>
           <button mat-icon-button class="btn" *ngIf="order.status === 'pending'" style="color: #f76666;" (click)="cancelOrder(order)">
             <span class="material-symbols-outlined">cancel</span>

@@ -25,7 +25,9 @@ import { OrdersHistoryComponent } from './orders/orders-history/orders-history.c
 import { AuthGuard } from './guards/auth.guard';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { VrpComponent } from './vrp/vrp.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { VrpListComponent } from './vrp-list/vrp-list.component';
 
 const routes: Routes = [
 
@@ -42,17 +44,21 @@ const routes: Routes = [
   { path: 'EditListCities', component: EditListCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'EditListSuppliers', component: EditListSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'OrderList', component: OrderListComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  { path: 'vrp', component: VrpComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'Dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
 
-  //TODOS MENOS ADMINISTRADOR
-  { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador'] }},
+  // SOLO CLIENTES Y NO LOGUEADOS
+  { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador','transportista'] }},
 
   // SOLO CLIENTES
   { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['cliente'] }},
   { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate: [AuthGuard], data: { roles: ['cliente'] }},
 
+  // SOLO TRANSPORTISTAS
+  { path: 'vrp-list', component: VrpListComponent, canActivate: [AuthGuard], data: { roles: ['transportista'] }},
+
   // SOLO NO LOGUEADOS
-  { path: 'UserRegistration/new-password', component: NewPasswordComponent},//, canActivate: [AuthGuard], data: { onlyGuest: true } },
+  { path: 'UserRegistration/new-password', component: NewPasswordComponent, canActivate: [AuthGuard], data: { onlyGuest: true } },///
   { path: 'reset-password', component: ResetPasswordComponent, canActivate: [AuthGuard], data: { onlyGuest: true } },
   { path: 'UserRegistration/login', component: LoginComponent , canActivate: [AuthGuard], data: { onlyGuest: true } },
   { path: 'UserRegistration', component: UserRegistrationComponent , canActivate: [AuthGuard], data: { onlyGuest: true } },
@@ -64,6 +70,7 @@ const routes: Routes = [
   { path: 'product/:productId', component: ProductDetailsComponent },
   { path: 'collection/:collection', component: CollectionComponent },
   { path: '**', component: NotFoundComponent, data: { hideHeaderFooter: true } },
+
 ];
 
 @NgModule({

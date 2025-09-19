@@ -16,6 +16,8 @@
               <option value="pending">Pendiente</option>
               <option value="completed">Completado</option>
               <option value="cancelled">Cancelado</option>
+              <option value="in distribution">En distribución</option>
+              <option value="rescheduled">Reprogramada</option>
             </select>
           </div>
         </li>
@@ -61,31 +63,28 @@
         <h3>Orden #{{ order.orderNumber }}</h3>
         <div class="d-flex align-items-center">
           <div *ngIf="!order.editing" class="me-3">
-            <span
-              class="badge"
-              [ngClass]="{
-                'bg-warning': order.status === 'pending',
-                'bg-success': order.status === 'completed',
-                'bg-danger': order.status === 'cancelled',
-                'bg-info': order.status === 'rescheduled'
-              }"
-              >{{ order.status }}</span
-            >
+            <span class="badge" [ngClass]="{
+              'bg-warning': order.status === 'pending',
+              'bg-success': order.status === 'completed',
+              'bg-danger': order.status === 'cancelled',
+              'bg-primary': order.status === 'in distribution',
+              'bg-orange': order.status === 'rescheduled'
+            }">{{order.status}}</span>
           </div>
           <div *ngIf="order.editing" class="me-3">
             <select class="form-control" [(ngModel)]="order.editStatus">
               <option value="pending">Pendiente</option>
               <option value="completed">Completado</option>
               <option value="cancelled">Cancelado</option>
+              <option value="in distribution">En distribucion</option>
+              <option value="rescheduled">Reenviado</option>
             </select>
           </div>
           <div class="example-button-container">
-            <button mat-icon-button class="btn" *ngIf="!order.editing && order.status === 'pending'" (click)="edit(order)" style="color: #e7c633">
-              <mat-icon>create</mat-icon>
-            </button>
-            <button mat-icon-button class="btn" *ngIf="order.editing" (click)="save(order)" style="color: #e7c633">
-              <mat-icon>save_alt</mat-icon>
-            </button>
+            <button mat-icon-button class="btn"  *ngIf="!order.editing && order.status !== 'cancelled' && order.status !== 'completed'" (click)="edit(order)" style="color: #e7c633;">
+              <mat-icon>create</mat-icon></button>
+            <button mat-icon-button class="btn" *ngIf="order.editing" (click)="save(order)"
+              style="color: #e7c633;"><mat-icon>save_alt</mat-icon></button>
           </div>
         </div>
       </div>
@@ -101,9 +100,10 @@
         </div>
         <div class="col-md-6">
           <h4>Información del Pedido</h4>
-          <p><strong>Fecha de Orden:</strong> {{ order.orderDate | date : 'dd/MM/yyyy HH:mm' }}</p>
-          <p><strong>Última Actualización:</strong> {{ order.updatedDate | date : 'dd/MM/yyyy HH:mm' }}</p>
-          <p><strong>Total:</strong> ${{ order.total }}</p>
+          <p><strong>Fecha de Orden:</strong> {{order.orderDate | date:'dd/MM/yyyy HH:mm'}}</p>
+          <p><strong>Última Actualización:</strong> {{order.updatedDate | date:'dd/MM/yyyy HH:mm'}}</p>
+          <p><strong>Total:</strong> ${{order.total}}</p>
+          <p><strong>Cantidad de reenviados:</strong> {{order.rescheduleQuantity}}</p>
         </div>
       </div>
 

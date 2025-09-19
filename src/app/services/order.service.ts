@@ -4,9 +4,11 @@ import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs'; 
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
+
 export class OrderService {
   private URL = `${environment.apiUrl}api`; 
 
@@ -14,6 +16,7 @@ export class OrderService {
     private http: HttpClient,
     private router: Router
   ) {}
+
 
   private getAuthHeaders(): HttpHeaders {
         const token = localStorage.getItem('access_token');
@@ -102,6 +105,41 @@ delete(orderId: string): Observable<any> {
       })
     );
   }
+
+    bulkUpdateStatus(orderIds: string[], status: string): Observable<any> {
+    const url = `${this.URL}/orders/bulk-status`;
+    console.log("ESTOY EN EL SERVICIO")
+    console.log('Updating orders:', orderIds, 'to status:', status);
+    console.log('PUT URL:', url);
+    return this.http.put(url, { orderIds, status }).pipe(
+      catchError((error: any) => {
+        console.error('Error in bulkUpdateStatus:', error);
+        return throwError(error);
+      })
+    );
+  }
+
+  findInDistribution(): Observable<any> {
+  const url = `${this.URL}/orders/in-distribution`;
+  return this.http.get(url, { headers: this.getAuthHeaders() }).pipe(
+    map((response: any) => {
+      const orders = response.data.map((order: any) => ({
+        ...order,
+        orderItems: order.orderItems?.map((item: any) => ({
+          ...item,
+          product: item.productId || item.product, 
+          subtotal: item.quantity * item.unitPrice
+        })) || []
+      }));
+      return { data: orders };
+    }),
+    catchError((error: any) => {
+      console.error('Error fetching orders in distribution:', error);
+      return throwError(() => error);
+    })
+  );
+}
+
 
 }
 

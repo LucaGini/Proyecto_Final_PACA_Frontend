@@ -1,0 +1,120 @@
+.vrp-container {
+  padding: 1.5rem;
+  animation: fadeIn 0.6s ease-out;
+
+  h3 {
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    margin: 1rem 0;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    animation: fadeIn 0.6s ease-out;
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-header {
+      background: linear-gradient(45deg, #ca8a4a, #b38558);
+      color: white;
+      border-radius: 12px 12px 0 0;
+      font-weight: 600;
+    }
+
+    .card-body {
+      background: white;
+
+      table {
+        width: 100%;
+        table-layout: fixed; // columnas fijas
+        word-wrap: break-word;
+
+        th, td {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        th:nth-child(1), td:nth-child(1) { width: 30px; }   // checkbox
+        th:nth-child(2), td:nth-child(2) { width: 80px; }   // número de orden
+        th:nth-child(3), td:nth-child(3) { width: 180px; }  // cliente
+        th:nth-child(4), td:nth-child(4) { width: 100px; }  // total
+        th:nth-child(5), td:nth-child(5) { width: 250px; }  // dirección
+        th:nth-child(6), td:nth-child(6) { width: 120px; }  // estado
+      }
+    }
+  }
+
+  .no-orders-message {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-color);
+    animation: fadeIn 0.6s ease-out;
+
+    mat-icon {
+      font-size: 3rem;
+      color: #e7c633;
+      display: block;
+      margin: 0 auto 0.6rem auto;
+    }
+
+    h3 {
+      margin: 0.8rem 0;
+      font-weight: 600;
+    }
+
+    p {
+      color: #666;
+    }
+  }
+}
+
+.btn-completed {
+  background-color: #6b8e23; 
+  margin-right: 10px;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-completed:hover {
+  background-color:  #6b8e23;
+  transform: translateY(-2px);
+}
+
+.btn-rescheduled {
+  background-color: #fd7e14; /* naranja */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-rescheduled:hover {
+  background-color: #e76c1c;
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.bg-orange {
+  background-color: orange !important;
+}

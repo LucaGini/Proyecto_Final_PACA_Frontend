@@ -1,0 +1,85 @@
+<div *ngIf="weeklyRoutes" class="vrp-container">
+  <!-- Encabezado con total de órdenes y botón de exportar -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
+
+    <button class="gral-button" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }">
+      <ng-container *ngIf="isLoading; else normalBtn">
+        <div class="spinner"></div>
+        Descargando...
+      </ng-container>
+      <ng-template #normalBtn>
+        <mat-icon>download</mat-icon> Descargar PDF
+      </ng-template>
+    </button>
+  </div>
+
+  <!-- Órdenes por provincia -->
+  <div *ngFor="let province of getProvinces(); let i = index" class="card shadow-sm" [style.--animation-order]="i">
+    <div class="card-header">
+      <h4>{{ province | titlecase }}</h4>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-orders">
+        <thead>
+          <tr>
+            <th># Orden</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Dirección</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let route of weeklyRoutes.routesByProvince[province].route">
+            <td class="order-number">#{{ route.orderNumber }}</td>
+            <td class="client">{{ route.firstName }} {{ route.lastName }}</td>
+            <td class="total">$ {{ route.total | number:'1.0-0' }}</td>
+            <td class="address">{{ route.address }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Órdenes no geolocalizadas -->
+  <div *ngIf="weeklyRoutes.notGeolocated.length > 0" class="card shadow-sm">
+    <div class="card-header not-geolocated">
+      Órdenes no geolocalizadas
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-orders">
+        <thead>
+          <tr>
+            <th># Orden</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Dirección</th>
+            <th>Motivo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let route of weeklyRoutes.notGeolocated">
+            <td class="order-number">#{{ route.orderNumber }}</td>
+            <td class="client">{{ route.firstName }} {{ route.lastName }}</td>
+            <td class="total">$ {{ route.total | number:'1.0-0' }}</td>
+            <td class="address">{{ route.address }}</td>
+            <td class="reason text-danger"> {{ route.reason }} </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Mapa de rutas -->
+  <div id="map" class="map-container"></div>
+</div>
+
+<!-- Mensaje cuando no hay rutas -->
+<ng-container *ngIf="!weeklyRoutes || (weeklyRoutes && getProvinces().length === 0)">
+  <div class="no-orders-message">
+    <mat-icon>receipt_long_off</mat-icon>
+    <h3>No hay rutas disponibles</h3>
+    <p *ngIf="weeklyRoutes && getProvinces().length === 0">No se encontraron rutas para mostrar. Intenta generar rutas o revisar los filtros/criterios.</p>
+    <p *ngIf="!weeklyRoutes">Aún no se han cargado rutas. Por favor, genera rutas para poder verlas aquí.</p>
+  </div>
+</ng-container>

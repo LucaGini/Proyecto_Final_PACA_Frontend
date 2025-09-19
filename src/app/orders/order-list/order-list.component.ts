@@ -25,7 +25,7 @@ export class OrderListComponent implements OnInit {
     private productService: ProductService,
     private cityService: CityService,
     private router: Router,
-    private utils: UtilsService
+    private utils: UtilsService,
   ) {}
 
   ngOnInit() {
@@ -161,9 +161,16 @@ export class OrderListComponent implements OnInit {
     }
 
     if (order.status !== order.editStatus) {
+      if (order.editStatus === 'rescheduled') { 
+        order.rescheduleQuantity = (order.rescheduleQuantity || 0) + 1;
+        if (order.rescheduleQuantity > 2) {
+          order.editStatus = 'cancelled';
+        }}
+        
       const updatedOrder = {
         ...order,
         status: order.editStatus,
+        rescheduleQuantity: order.rescheduleQuantity || 0,
         updatedDate: new Date()
       };
       console.log('Actualizando orden:', updatedOrder);

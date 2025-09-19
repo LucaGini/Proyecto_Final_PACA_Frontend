@@ -48,7 +48,7 @@ export class SupplierService {
   }
 
   findAll(): Observable<any[]> {
-    return this.http.get<any[]>(this.URL + '/suppliers')
+    return this.http.get<any[]>(this.URL + '/suppliers',{ headers: this.getAuthHeaders() })
     //.pipe(tap(() => this.loadSuppliers()));
   }
 
