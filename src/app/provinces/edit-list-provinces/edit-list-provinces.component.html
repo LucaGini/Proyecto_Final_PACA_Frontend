@@ -1,7 +1,6 @@
 <div class="provinces-container">
   <div class="province-card" *ngFor="let province of provinces">
     <div class="card">
-
       <!-- Acciones -->
       <div class="card-actions">
         <button mat-icon-button *ngIf="!province.editing" class="yellow-btn" (click)="edit(province)">
@@ -39,7 +38,8 @@
         </div>
 
         <div *ngIf="!province.editing">
-          <h3>{{ province.name }}</h3>
+          <h3 class="card-text">Nombre</h3>
+          <p>{{ province.name }}</p>
         </div>
       </div>
     </div>
