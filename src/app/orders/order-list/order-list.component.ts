@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OrderService } from '../../services/order.service';
-import { Router } from '@angular/router';
+import { Router, NavigationStart } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { CityService } from '../../services/city.service';
 import { UtilsService } from '../../services/utils.service';
-import { forkJoin } from 'rxjs';
+import { EditGuardService, EditingComponent } from '../../services/edit-guard.service';
+import { forkJoin, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-order-list',
   templateUrl: './order-list.component.html',
   styleUrls: ['./order-list.component.scss']
 })
-export class OrderListComponent implements OnInit {
+export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   orders: any[] = [];
   filteredOrders: any[] = [];
   cities: any[] = [];
@@ -20,17 +21,82 @@ export class OrderListComponent implements OnInit {
   selectedStatus: string = '';
   selectedCity: string = '';
 
+  // Variables para control de navegación
+  private routerSubscription: Subscription = new Subscription();
+  private allowNavigation = false;
+  
+  // Propiedades de EditingComponent
+  componentName = 'order-list';
+
   constructor(
     private orderService: OrderService,
     private productService: ProductService,
     private cityService: CityService,
     private router: Router,
     private utils: UtilsService,
+    private editGuardService: EditGuardService
   ) {}
 
   ngOnInit() {
+    // Registrar este componente en el servicio de guardia
+    this.editGuardService.registerComponent(this);
+    
     this.loadOrders();
     this.loadCities();
+    
+    // Listener para advertir al usuario antes de cerrar/recargar la página si hay ediciones pendientes
+    window.addEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
+    
+    // Interceptar navegación dentro de la SPA
+    this.setupNavigationGuard();
+  }
+
+  ngOnDestroy() {
+    // Desregistrar este componente del servicio de guardia
+    this.editGuardService.unregisterComponent(this.componentName);
+    
+    // Limpiar el listener cuando el componente se destruya
+    window.removeEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
+    // Limpiar suscripción del router
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  private beforeUnloadHandler(event: BeforeUnloadEvent): void {
+    if (this.hasOrdersInEditMode()) {
+      event.preventDefault();
+      event.returnValue = 'Tienes órdenes en edición. Si sales, perderás los cambios no guardados.';
+    }
+  }
+
+  private setupNavigationGuard(): void {
+    this.routerSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart && !this.allowNavigation) {
+        if (this.hasOrdersInEditMode()) {
+          // Prevenir la navegación
+          this.router.navigateByUrl(this.router.url);
+          
+          // Mostrar alerta de confirmación
+          this.utils.showConfirm(
+            'Orden en edición',
+            'Estás editando una orden. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+          ).then((result) => {
+            if (result.isConfirmed) {
+              // Cancelar todas las ediciones
+              this.cancelAllEdits();
+              // Permitir la navegación
+              this.allowNavigation = true;
+              // Navegar a la URL que el usuario quería
+              this.router.navigateByUrl(event.url).then(() => {
+                // Resetear la bandera después de la navegación exitosa
+                this.allowNavigation = false;
+              });
+            }
+          });
+        }
+      }
+    });
   }
 
   loadOrders() {
@@ -150,8 +216,18 @@ export class OrderListComponent implements OnInit {
   }
 
   edit(order: any) {
+    // Verificar si ya hay alguna orden en edición
+    if (this.hasOrdersInEditMode()) {
+      this.utils.showAlert('warning', 'Orden en edición', 'Ya tienes una orden en modo edición. Debes guardar o cancelar los cambios antes de editar otra orden.');
+      return;
+    }
+
     order.editStatus = order.status;
     order.editing = true;
+  }
+
+  cancelEdit(order: any): void {
+    order.editing = false;
   }
 
   save(order: any): void {
@@ -195,5 +271,36 @@ export class OrderListComponent implements OnInit {
       this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en la orden.');
       order.editing = false;
     }
+  }
+
+  // Métodos auxiliares para el control de edición
+  private hasOrdersInEditMode(): boolean {
+    return this.filteredOrders.some(order => order.editing === true);
+  }
+
+  private cancelAllEdits(): void {
+    this.filteredOrders.forEach(order => {
+      if (order.editing) {
+        this.cancelEdit(order);
+      }
+    });
+  }
+
+  // Implementación de EditingComponent
+  hasUnsavedChanges(): boolean {
+    return this.hasOrdersInEditMode();
+  }
+
+  async handleUnsavedChanges(): Promise<boolean> {
+    return this.utils.showConfirm(
+      'Orden en edición',
+      'Estás editando una orden. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+    ).then((result) => {
+      if (result.isConfirmed) {
+        this.cancelAllEdits();
+        return true;
+      }
+      return false;
+    });
   }
 }
