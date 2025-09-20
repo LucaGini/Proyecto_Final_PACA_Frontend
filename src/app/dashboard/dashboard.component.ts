@@ -547,26 +547,25 @@ async downloadPDF() {
     });
 
     // Órdenes por estado
-    this.dashboardService.getOrderStatusSummary(start, end).subscribe((res) => {
-      const summary = { completed: 0, pending: 0, cancelled: 0 };
+  this.dashboardService.getOrderStatusSummary(start, end).subscribe((res) => {
+    const summary = res.data; 
+    this.orderStatusChartData = {
+      labels: ['Completadas', 'Pendientes', 'Canceladas', 'Reenviadas'],
+      datasets: [
+        {
+          data: [
+            summary.completed,
+            summary.pending,
+            summary.cancelled,
+            summary.rescheduled,
+          ],
+          backgroundColor: ['#6b8e23', '#ffd700', '#c94c4c', 'orange'],
+        },
+      ],
+    };
 
-      res.data.forEach((item: any) => {
-        if (item.status === 'completed') summary.completed = item.total;
-        if (item.status === 'pending') summary.pending = item.total;
-        if (item.status === 'cancelled') summary.cancelled = item.total;
-      });
+    this.cdr.markForCheck();
+  });
 
-      this.orderStatusChartData = {
-        labels: ['Completadas', 'Pendientes', 'Canceladas'],
-        datasets: [
-          {
-            data: [summary.completed, summary.pending, summary.cancelled],
-            backgroundColor: ['#6b8e23', '#ffd700', '#c94c4c'],
-          },
-        ],
-      };
-
-      this.cdr.markForCheck();
-    });
   }
 }
