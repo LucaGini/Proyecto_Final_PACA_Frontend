@@ -1,21 +1,22 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { ProductService } from 'src/app/services/product.service';
-import { Router } from '@angular/router';
 import { SupplierService } from 'src/app/services/supplier.service';
 import { FilterProductsSupplierService } from 'src/app/services/filters/filter-products-supplier.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { FilterProductsCategoryService } from 'src/app/services/filters/filter-products-category.service';
 import { environment } from '../../../environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
+import { EditGuardService, EditingComponent } from 'src/app/services/edit-guard.service';
 import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-list-products',
   templateUrl: './edit-list-products.component.html',
   styleUrls: ['./edit-list-products.component.scss']
 })
-export class EditListProductsComponent {
+export class EditListProductsComponent implements OnDestroy, EditingComponent {
   products: any[] = [];
   allProducts: any[] = []; // Nueva propiedad para mantener todos los productos
   suppliers: any[] = [];
@@ -26,6 +27,13 @@ export class EditListProductsComponent {
   selectedSupplierCuit: number | string = '';
   selectedCategoryName: string = '';
   selectedStatus: boolean | string = '';
+  
+  // Variables para control de navegación
+  private routerSubscription: Subscription = new Subscription();
+  private allowNavigation = false;
+  
+  // Propiedades de EditingComponent
+  componentName = 'edit-list-products';
 
   getImageUrl(imageUrl: string): string {
     // Si la imagen ya es una URL completa (Cloudinary), la retornamos tal como está
@@ -44,12 +52,16 @@ export class EditListProductsComponent {
     private filterProductsSupplierService: FilterProductsSupplierService,
     private categoryService: CategoryService,
     private filterProductsCategoryService: FilterProductsCategoryService,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private editGuardService: EditGuardService
   ) {}
 
   ngOnInit() {
     this.getSuppliers();
     this.getCategories();
+    
+    // Registrar este componente en el servicio de guardia
+    this.editGuardService.registerComponent(this);
     
     // Cargar todos los productos inicialmente
     this.productService.products$.subscribe((data: any) => {
@@ -67,6 +79,60 @@ export class EditListProductsComponent {
     this.filterProductsCategoryService.categorySelected$.subscribe((categoryName: string) => {
       this.selectedCategoryName = categoryName;
       this.applyFilters();
+    });
+
+    // Listener para advertir al usuario antes de cerrar/recargar la página si hay ediciones pendientes
+    window.addEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
+    
+    // Interceptar navegación dentro de la SPA
+    this.setupNavigationGuard();
+  }
+
+  ngOnDestroy() {
+    // Desregistrar este componente del servicio de guardia
+    this.editGuardService.unregisterComponent(this.componentName);
+    
+    // Limpiar el listener cuando el componente se destruya
+    window.removeEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
+    // Limpiar suscripción del router
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  private beforeUnloadHandler(event: BeforeUnloadEvent): void {
+    if (this.hasProductsInEditMode()) {
+      event.preventDefault();
+      event.returnValue = 'Tienes productos en edición. Si sales, perderás los cambios no guardados.';
+    }
+  }
+
+  private setupNavigationGuard(): void {
+    this.routerSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart && !this.allowNavigation) {
+        if (this.hasProductsInEditMode()) {
+          // Prevenir la navegación
+          this.router.navigateByUrl(this.router.url);
+          
+          // Mostrar alerta de confirmación
+          this.utils.showConfirm(
+            'Producto en edición',
+            'Estás editando un producto. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+          ).then((result) => {
+            if (result.isConfirmed) {
+              // Cancelar todas las ediciones
+              this.cancelAllEdits();
+              // Permitir la navegación
+              this.allowNavigation = true;
+              // Navegar a la URL que el usuario quería
+              this.router.navigateByUrl(event.url).then(() => {
+                // Resetear la bandera después de la navegación exitosa
+                this.allowNavigation = false;
+              });
+            }
+          });
+        }
+      }
     });
   }
 
@@ -88,6 +154,12 @@ export class EditListProductsComponent {
   }
 
   edit(product: any): void {
+    // Verificar si ya hay algún producto en edición
+    if (this.hasProductsInEditMode()) {
+      this.utils.showAlert('warning', 'Producto en edición', 'Ya tienes un producto en modo edición. Debes guardar o cancelar los cambios antes de editar otro producto.');
+      return;
+    }
+
     product.editName = product.name;
     product.editPrice = product.price;
     product.editStock = product.stock;
@@ -382,6 +454,37 @@ reactivate(product: any) {
       this.utils.showAlert('error', 'Error', 'No se pudo reactivar el producto.');
       console.error(err);
     }
+  });
+}
+
+// Métodos auxiliares para el control de edición
+private hasProductsInEditMode(): boolean {
+  return this.products.some(product => product.editing === true);
+}
+
+private cancelAllEdits(): void {
+  this.products.forEach(product => {
+    if (product.editing) {
+      this.cancelEdit(product);
+    }
+  });
+}
+
+// Implementación de EditingComponent
+hasUnsavedChanges(): boolean {
+  return this.hasProductsInEditMode();
+}
+
+async handleUnsavedChanges(): Promise<boolean> {
+  return this.utils.showConfirm(
+    'Producto en edición',
+    'Estás editando un producto. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+  ).then((result) => {
+    if (result.isConfirmed) {
+      this.cancelAllEdits();
+      return true;
+    }
+    return false;
   });
 }
 

@@ -1,21 +1,29 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { CityService } from 'src/app/services/city.service';
 import { ProvinceService } from 'src/app/services/province.service';
 import { FilterCitiesProvinceService } from 'src/app/services/filters/filter-cities-province.service';
-import { Router } from '@angular/router';
 import { UtilsService } from 'src/app/services/utils.service';
+import { EditGuardService, EditingComponent } from 'src/app/services/edit-guard.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-list-cities',
   templateUrl: './edit-list-cities.component.html',
   styleUrls: ['./edit-list-cities.component.scss']
 })
-export class EditListCitiesComponent {
+export class EditListCitiesComponent implements OnDestroy, EditingComponent {
 
   cities: any[] = [];
   provinces: any[] = [];
   selectedProvinceId: string = '';
+
+  // Variables para control de navegación
+  private routerSubscription: Subscription = new Subscription();
+  private allowNavigation = false;
+  
+  // Propiedades de EditingComponent
+  componentName = 'edit-list-cities';
 
   constructor(
     private cityService: CityService,
@@ -23,10 +31,14 @@ export class EditListCitiesComponent {
     private filterCitiesProvinceService: FilterCitiesProvinceService,
     private route: ActivatedRoute,
     private router: Router,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private editGuardService: EditGuardService
   ) {}
 
   ngOnInit() {
+    // Registrar este componente en el servicio de guardia
+    this.editGuardService.registerComponent(this);
+    
     this.getProvinces();
     this.cityService.cities$.subscribe((data: any) => {
       this.cities = data;
@@ -36,6 +48,60 @@ export class EditListCitiesComponent {
       await this.provinceService.findCitiesByProvince(provinceId).subscribe((data: any) => {
         this.cities = data;
       });
+    });
+    
+    // Listener para advertir al usuario antes de cerrar/recargar la página si hay ediciones pendientes
+    window.addEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
+    
+    // Interceptar navegación dentro de la SPA
+    this.setupNavigationGuard();
+  }
+
+  ngOnDestroy() {
+    // Desregistrar este componente del servicio de guardia
+    this.editGuardService.unregisterComponent(this.componentName);
+    
+    // Limpiar el listener cuando el componente se destruya
+    window.removeEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
+    // Limpiar suscripción del router
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  private beforeUnloadHandler(event: BeforeUnloadEvent): void {
+    if (this.hasCitiesInEditMode()) {
+      event.preventDefault();
+      event.returnValue = 'Tienes ciudades en edición. Si sales, perderás los cambios no guardados.';
+    }
+  }
+
+  private setupNavigationGuard(): void {
+    this.routerSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart && !this.allowNavigation) {
+        if (this.hasCitiesInEditMode()) {
+          // Prevenir la navegación
+          this.router.navigateByUrl(this.router.url);
+          
+          // Mostrar alerta de confirmación
+          this.utils.showConfirm(
+            'Ciudad en edición',
+            'Estás editando una ciudad. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+          ).then((result) => {
+            if (result.isConfirmed) {
+              // Cancelar todas las ediciones
+              this.cancelAllEdits();
+              // Permitir la navegación
+              this.allowNavigation = true;
+              // Navegar a la URL que el usuario quería
+              this.router.navigateByUrl(event.url).then(() => {
+                // Resetear la bandera después de la navegación exitosa
+                this.allowNavigation = false;
+              });
+            }
+          });
+        }
+      }
     });
   }
 
@@ -71,6 +137,12 @@ export class EditListCitiesComponent {
   }
 
   edit(city: any): void {
+    // Verificar si ya hay alguna ciudad en edición
+    if (this.hasCitiesInEditMode()) {
+      this.utils.showAlert('warning', 'Ciudad en edición', 'Ya tienes una ciudad en modo edición. Debes guardar o cancelar los cambios antes de editar otra ciudad.');
+      return;
+    }
+
     city.editName = city.name;
     city.editPostCode = (city.postCode ?? '').toUpperCase();
     city.editSurcharge = city.surcharge;
@@ -219,5 +291,36 @@ export class EditListCitiesComponent {
         }
       }
     }
+  }
+
+  // Métodos auxiliares para el control de edición
+  private hasCitiesInEditMode(): boolean {
+    return this.cities.some(city => city.editing === true);
+  }
+
+  private cancelAllEdits(): void {
+    this.cities.forEach(city => {
+      if (city.editing) {
+        this.cancelEdit(city);
+      }
+    });
+  }
+
+  // Implementación de EditingComponent
+  hasUnsavedChanges(): boolean {
+    return this.hasCitiesInEditMode();
+  }
+
+  async handleUnsavedChanges(): Promise<boolean> {
+    return this.utils.showConfirm(
+      'Ciudad en edición',
+      'Estás editando una ciudad. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+    ).then((result) => {
+      if (result.isConfirmed) {
+        this.cancelAllEdits();
+        return true;
+      }
+      return false;
+    });
   }
 }

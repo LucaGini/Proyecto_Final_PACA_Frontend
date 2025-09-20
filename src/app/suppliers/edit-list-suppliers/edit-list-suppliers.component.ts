@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { SupplierService } from 'src/app/services/supplier.service';
-import { Router } from '@angular/router';
 import { FormControl, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils.service';
+import { EditGuardService, EditingComponent } from 'src/app/services/edit-guard.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-list-suppliers',
   templateUrl: './edit-list-suppliers.component.html',
   styleUrls: ['./edit-list-suppliers.component.scss']
 })
-export class EditListSuppliersComponent {
+export class EditListSuppliersComponent implements OnDestroy, EditingComponent {
   suppliers: any[] = [];
 
   cuitControl = new FormControl('', [
@@ -18,16 +19,81 @@ export class EditListSuppliersComponent {
     Validators.pattern(/^[0-9]{11}$/)
   ]);
 
+  // Variables para control de navegación
+  private routerSubscription: Subscription = new Subscription();
+  private allowNavigation = false;
+  
+  // Propiedades de EditingComponent
+  componentName = 'edit-list-suppliers';
+
   constructor(
     private supplierService: SupplierService,
     private route: ActivatedRoute,
     private router: Router,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private editGuardService: EditGuardService
   ) {}
 
   ngOnInit() {
+    // Registrar este componente en el servicio de guardia
+    this.editGuardService.registerComponent(this);
+    
     this.supplierService.suppliers$.subscribe((data: any) => {
       this.suppliers = data;
+    });
+    
+    // Listener para advertir al usuario antes de cerrar/recargar la página si hay ediciones pendientes
+    window.addEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
+    
+    // Interceptar navegación dentro de la SPA
+    this.setupNavigationGuard();
+  }
+
+  ngOnDestroy() {
+    // Desregistrar este componente del servicio de guardia
+    this.editGuardService.unregisterComponent(this.componentName);
+    
+    // Limpiar el listener cuando el componente se destruya
+    window.removeEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
+    // Limpiar suscripción del router
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  private beforeUnloadHandler(event: BeforeUnloadEvent): void {
+    if (this.hasSuppliersInEditMode()) {
+      event.preventDefault();
+      event.returnValue = 'Tienes proveedores en edición. Si sales, perderás los cambios no guardados.';
+    }
+  }
+
+  private setupNavigationGuard(): void {
+    this.routerSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart && !this.allowNavigation) {
+        if (this.hasSuppliersInEditMode()) {
+          // Prevenir la navegación
+          this.router.navigateByUrl(this.router.url);
+          
+          // Mostrar alerta de confirmación
+          this.utils.showConfirm(
+            'Proveedor en edición',
+            'Estás editando un proveedor. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+          ).then((result) => {
+            if (result.isConfirmed) {
+              // Cancelar todas las ediciones
+              this.cancelAllEdits();
+              // Permitir la navegación
+              this.allowNavigation = true;
+              // Navegar a la URL que el usuario quería
+              this.router.navigateByUrl(event.url).then(() => {
+                // Resetear la bandera después de la navegación exitosa
+                this.allowNavigation = false;
+              });
+            }
+          });
+        }
+      }
     });
   }
 
@@ -63,6 +129,12 @@ export class EditListSuppliersComponent {
   }
 
   edit(supplier: any): void {
+    // Verificar si ya hay algún proveedor en edición
+    if (this.hasSuppliersInEditMode()) {
+      this.utils.showAlert('warning', 'Proveedor en edición', 'Ya tienes un proveedor en modo edición. Debes guardar o cancelar los cambios antes de editar otro proveedor.');
+      return;
+    }
+
     supplier.editBusinessName = supplier.businessName;
     supplier.editEmail = supplier.email;
     supplier.editPhone = supplier.phone;
@@ -140,5 +212,36 @@ save(supplier: any): void {
     this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en el proveedor.');
     supplier.editing = false;
   }
+}
+
+// Métodos auxiliares para el control de edición
+private hasSuppliersInEditMode(): boolean {
+  return this.suppliers.some(supplier => supplier.editing === true);
+}
+
+private cancelAllEdits(): void {
+  this.suppliers.forEach(supplier => {
+    if (supplier.editing) {
+      this.cancelEdit(supplier);
+    }
+  });
+}
+
+// Implementación de EditingComponent
+hasUnsavedChanges(): boolean {
+  return this.hasSuppliersInEditMode();
+}
+
+async handleUnsavedChanges(): Promise<boolean> {
+  return this.utils.showConfirm(
+    'Proveedor en edición',
+    'Estás editando un proveedor. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+  ).then((result) => {
+    if (result.isConfirmed) {
+      this.cancelAllEdits();
+      return true;
+    }
+    return false;
+  });
 }
 }
