@@ -20,6 +20,7 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   endDate: string = '';
   selectedStatus: string = '';
   selectedCity: string = '';
+  searchTerm: string = '';
 
   // Variables para control de navegación
   private routerSubscription: Subscription = new Subscription();
@@ -175,7 +176,82 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
       });
     }
 
+    // Filtro de búsqueda por número de orden
+    if (this.searchTerm) {
+      filtered = filtered.filter(order => 
+        order.orderNumber && 
+        order.orderNumber.toString().toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    }
+
     this.filteredOrders = filtered;
+  }
+
+  // Método para búsqueda de órdenes por número
+  onOrderSearch(event: Event): void {
+    event.preventDefault();
+    
+    // Verificar si hay órdenes en edición antes de permitir búsqueda
+    if (this.hasOrdersInEditMode()) {
+      this.utils.showAlert('warning', 'Orden en edición', 'No puedes buscar mientras hay órdenes en modo edición. Guarda o cancela los cambios primero.');
+      return;
+    }
+    
+    const searchInput = (document.getElementById('order-search-input') as HTMLInputElement);
+    const query = searchInput.value.trim();
+    
+    if (!query) {
+      this.utils.showAlert('warning', 'Búsqueda', 'Ingrese un número de orden para buscar');
+      return;
+    }
+    
+    this.searchTerm = query;
+    this.applyFilters();
+  }
+
+  // Método para validar que solo se ingresen números
+  onlyNumbers(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    // Permitir teclas especiales: backspace (8), delete (46), tab (9), escape (27), enter (13)
+    if (charCode === 8 || charCode === 46 || charCode === 9 || charCode === 27 || charCode === 13) {
+      return true;
+    }
+    // Solo permitir números (48-57 son los códigos de 0-9)
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+      return false;
+    }
+    return true;
+  }
+
+  // Método para validar el pegado de texto (solo números)
+  onPaste(event: ClipboardEvent): void {
+    event.preventDefault();
+    const paste = (event.clipboardData || (window as any).clipboardData).getData('text');
+    
+    // Verificar si el texto pegado contiene solo números
+    if (paste && /^\d+$/.test(paste)) {
+      const input = event.target as HTMLInputElement;
+      input.value = paste;
+    } else {
+      this.utils.showAlert('warning', 'Entrada inválida', 'Solo se permiten números en la búsqueda');
+    }
+  }
+
+  // Método para limpiar la búsqueda
+  clearSearch(): void {
+    // Verificar si hay órdenes en edición antes de permitir limpiar búsqueda
+    if (this.hasOrdersInEditMode()) {
+      this.utils.showAlert('warning', 'Orden en edición', 'No puedes limpiar la búsqueda mientras hay órdenes en modo edición. Guarda o cancela los cambios primero.');
+      return;
+    }
+    
+    this.searchTerm = '';
+    const searchInput = (document.getElementById('order-search-input') as HTMLInputElement);
+    if (searchInput) {
+      searchInput.value = '';
+    }
+    this.applyFilters();
   }
 
   // Método para verificar si hay filtros activos
@@ -183,7 +259,8 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
     return this.selectedStatus !== '' || 
            this.selectedCity !== '' || 
            this.startDate !== '' || 
-           this.endDate !== '';
+           this.endDate !== '' ||
+           this.searchTerm !== '';
   }
 
   // Método para limpiar todos los filtros
@@ -194,6 +271,13 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
     this.selectedCity = '';
     this.startDate = '';
     this.endDate = '';
+    this.searchTerm = '';
+    
+    // Limpiar también el input de búsqueda
+    const searchInput = (document.getElementById('order-search-input') as HTMLInputElement);
+    if (searchInput) {
+      searchInput.value = '';
+    }
     
     // Reaplicar filtros (mostrará todas las órdenes)
     this.applyFilters();

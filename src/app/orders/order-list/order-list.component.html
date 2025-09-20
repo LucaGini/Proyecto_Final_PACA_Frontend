@@ -42,6 +42,48 @@
             </div>
           </div>
         </li>
+
+        <li class="nav-item">
+          <div class="form-group">
+            <label for="orderSearch">Buscar por número de orden:</label>
+            <form
+              id="order-search-form"
+              class="search-form-container"
+              (submit)="onOrderSearch($event)"
+            >
+              <div class="search-input-container">
+                <input
+                  type="text"
+                  id="order-search-input"
+                  class="form-control search-input"
+                  placeholder="Ej: 202509000063"
+                  aria-label="Buscar orden"
+                  pattern="[0-9]*"
+                  inputmode="numeric"
+                  (keypress)="onlyNumbers($event)"
+                  (paste)="onPaste($event)"
+                />
+                <button
+                  type="submit"
+                  class="search-button"
+                  aria-label="Buscar orden"
+                  matTooltip="Buscar orden por número"
+                >
+                  <mat-icon>search</mat-icon>
+                </button>
+                <button
+                  type="button"
+                  class="clear-search-button"
+                  (click)="clearSearch()"
+                  aria-label="Limpiar búsqueda"
+                  matTooltip="Limpiar búsqueda"
+                >
+                  <mat-icon>clear</mat-icon>
+                </button>
+              </div>
+            </form>
+          </div>
+        </li>
       </ul>
     </div>
   </div>
