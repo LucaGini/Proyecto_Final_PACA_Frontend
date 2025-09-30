@@ -33,13 +33,31 @@
     Agrega productos al carrito para poder confirmar tu compra
   </div>
 
-  <button
-    type="button"
-    class="btn-confirm"
-    [disabled]="isCartEmpty"
-    *ngIf="showConfirmButton"
-    (click)="confirmPurchase()"
-  >
-    Confirmar compra
-  </button>
+  <div class="payment-method" *ngIf="showConfirmButton">
+  <h4>Seleccione medio de pago</h4>
+
+  <mat-radio-group [(ngModel)]="paymentMethod" class="payment-options">
+    <mat-radio-button value="cash">
+      <mat-icon>payments</mat-icon> Efectivo
+    </mat-radio-button>
+
+    <mat-radio-button value="mercadoPago">
+      <img src="assets/img/mp-logo.png" alt="Mercado Pago" class="mp-logo" />
+      Mercado Pago
+    </mat-radio-button>
+  </mat-radio-group>
+</div>
+
+<div *ngIf="paymentMethod === 'mercadoPago'" class="mercado-pago-info">
+  <p>Será redirigido a Mercado Pago para completar su compra.</p>
+</div>
+
+<button
+  type="button"
+  class="btn-confirm"
+  [disabled]="isCartEmpty"
+  *ngIf="showConfirmButton"
+  (click)="confirmPurchase()">
+  Confirmar compra
+</button>
 </div>

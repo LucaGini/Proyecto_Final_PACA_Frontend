@@ -111,6 +111,7 @@
           <h4>Información del Pedido</h4>
           <p><strong>Fecha de Orden:</strong> {{order.orderDate | date:'dd/MM/yyyy HH:mm'}}</p>
           <p><strong>Última Actualización:</strong> {{order.updatedDate | date:'dd/MM/yyyy HH:mm'}}</p>
+          <p><strong>Medio de Pago:</strong> {{order.paymentMethod === 'cash' ? 'Efectivo' : order.paymentMethod === 'mercadoPago' ? 'Mercado Pago' : order.paymentMethod}}</p>
           <p><strong>Total:</strong> ${{order.total}}</p>
         </div>
       </div>

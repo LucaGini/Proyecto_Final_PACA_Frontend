@@ -124,3 +124,41 @@
 @media (max-width: 768px) {
   .cart-item { flex-direction: column; }
 }
+
+
+.payment-method {
+  margin: 20px 0;
+  text-align: left;
+}
+
+.payment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.payment-options mat-radio-button {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f7f7f7;
+  transition: background 0.3s;
+}
+
+.payment-options mat-radio-button:hover {
+  background: #eaeaea;
+}
+
+.payment-options mat-icon {
+  margin-right: 8px;
+  color: #1976d2;
+}
+
+.mp-logo {
+  width: 24px;
+  height: auto;
+  margin-right: 8px;
+}
+
+

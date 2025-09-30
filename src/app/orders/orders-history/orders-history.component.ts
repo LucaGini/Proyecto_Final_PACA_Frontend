@@ -31,6 +31,7 @@ interface Order {
   total: number;
   orderItems: OrderItem[];
   user?: any;
+  paymentMethod: string;
 }
 
 @Component({

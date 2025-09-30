@@ -25,6 +25,7 @@ export class CartComponent implements OnInit {
   apiUrl = environment.apiUrl;
   userData: any = null;
   cityCharge: number = 0;
+  paymentMethod: string = 'cash'; // default efectivo
 
   get isCartEmpty(): boolean {
     return this.items.length === 0;
@@ -94,81 +95,86 @@ export class CartComponent implements OnInit {
     this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
   }
 
-  confirmPurchase() {
-    // Verificar si el carrito está vacío
-    if (this.isCartEmpty) {
-      this.utils.showAlert('warning', 'Carrito vacío', 'Debes agregar productos al carrito para poder confirmar una compra.');
-      return;
-    }
 
-    if (!this.userData) { this.utils.showAlert('error', 'Acción no permitida', 'Debes iniciar sesión para confirmar tu compra.'); 
-      this.router.navigate(['UserRegistration/login']);
-      return;
-    }
 
-    const street = this.userData.street || 'Calle no especificada';
-    const streetNumber = this.userData.streetNumber || 'S/N';
-    const fullAddress = `${street} ${streetNumber}`;
-
-    this.utils.showConfirm( '¿Desea enviar la compra a su dirección registrada?', `Dirección registrada: ${fullAddress}`
-    ).then((result) => {
-      if (result.isConfirmed) {
-        this.createOrder(this.items);
-      } else {
-        this.utils.showAlert('info', 'Redirigiendo', 'Por favor, actualice su dirección.');
-        setTimeout(() => {
-          this.router.navigate(['UserInformation']);
-        }, 2000);
-      }
-    });
+confirmPurchase() {
+  if (this.isCartEmpty) {
+    this.utils.showAlert('warning', 'Carrito vacío', 'Debes agregar productos al carrito para poder confirmar una compra.');
+    return;
   }
 
-  createOrder(items: any[]) {
-    let stockErrorProducts: string[] = [];
-    const verifyStockPromises = items.map((item) =>
-      this.productService.verifyStock(item.id, item.quantity).toPromise().catch(() => {
-        stockErrorProducts.push(item.name);
-      })
-    );
+  if (!this.userData) {
+    this.utils.showAlert('error', 'Acción no permitida', 'Debes iniciar sesión para confirmar tu compra.');
+    this.router.navigate(['UserRegistration/login']);
+    return;
+  }
 
-    Promise.all(verifyStockPromises)
-      .then(() => {
-        if (stockErrorProducts.length > 0) {
-          this.utils.showAlert('error', 'Stock insuficiente', `No hay suficiente stock para: ${stockErrorProducts.join(', ')}`);
-          return;
-        }
+  const street = this.userData.street || 'Calle no especificada';
+  const streetNumber = this.userData.streetNumber || 'S/N';
+  const fullAddress = `${street} ${streetNumber}`;
 
-        const orderData = {
-          userId: this.userData.id, 
-          orderItems: this.cartService.getItemsOrder(), 
-          total: this.cartService.calculateTotal(this.cityCharge)
-        };
+  this.utils.showConfirm(
+    '¿Desea enviar la compra a su dirección registrada?',
+    `Dirección registrada: ${fullAddress}`
+  ).then((result) => {
+    if (result.isConfirmed) {
+      this.createOrder(this.items, this.paymentMethod);
+    } else {
+      this.utils.showAlert('info', 'Redirigiendo', 'Por favor, actualice su dirección.');
+      setTimeout(() => {
+        this.router.navigate(['UserInformation']);
+      }, 2000);
+    }
+  });
+}
 
-        this.orderService.create(orderData).subscribe({
-          next: () => {
+createOrder(items: any[], paymentMethod: string) {
+  let stockErrorProducts: string[] = [];
+  const verifyStockPromises = items.map((item) =>
+    this.productService.verifyStock(item.id, item.quantity).toPromise().catch(() => {
+      stockErrorProducts.push(item.name);
+    })
+  );
+
+  Promise.all(verifyStockPromises)
+    .then(() => {
+      if (stockErrorProducts.length > 0) {
+        this.utils.showAlert('error', 'Stock insuficiente', `No hay suficiente stock para: ${stockErrorProducts.join(', ')}`);
+        return;
+      }
+
+      const orderData = {
+        userId: this.userData.id,
+        orderItems: this.cartService.getItemsOrder(),
+        total: this.cartService.calculateTotal(this.cityCharge),
+        paymentMethod: paymentMethod   // 👈 NUEVO
+      };
+
+      this.orderService.create(orderData).subscribe({
+        next: (res) => {
+          if (paymentMethod === 'mercadoPago' && res.data?.init_point) {
+            // Redirigir a Mercado Pago
+            window.location.href = res.data.init_point;
+          } else {
             this.utils.showAlert('success', 'Muchas gracias por su compra', 'La compra se ha concretado con éxito.');
             this.cartService.clearCart();
             this.items = [];
             this.totalAmount = 0;
             this.productService.loadProducts();
             this.router.navigate(['/products']);
-          },
-          error: (err) => {
-            console.error('Error creando la orden:', err);
-            const backendMessage = err.error?.message || '';
-            if (backendMessage.includes('ya no se encuentra a la venta') || backendMessage.includes('no está activo')) {
-              this.utils.showAlert('error', 'Producto no disponible', backendMessage);
-            } else {
-              this.utils.showAlert('error', 'Error', 'Ocurrió un error al procesar la orden.');
-            }
-          },
-        });
-      })
-      .catch((error) => {
-        console.error('Error verificando stock:', error);
-        this.utils.showAlert('error', 'Error', 'Ocurrió un error al verificar el stock.');
+          }
+        },
+        error: (err) => {
+          console.error('Error creando la orden:', err);
+          this.utils.showAlert('error', 'Error', 'Ocurrió un error al procesar la orden.');
+        },
       });
-  }
+    })
+    .catch((error) => {
+      console.error('Error verificando stock:', error);
+      this.utils.showAlert('error', 'Error', 'Ocurrió un error al verificar el stock.');
+    });
+}
 
   loadUserData(): void {
     const user = this.authService.getLoggedUser();
