@@ -6,6 +6,7 @@ import { LoginService } from '../services/login.service';
 import { AuthService } from '../services/auth.service';
 import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.service';
+import { EditGuardService } from '../services/edit-guard.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 
@@ -35,6 +36,7 @@ export class NavbarComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService,
     private authService: AuthService,
+    private editGuardService: EditGuardService
   ) {}
 
   ngOnInit() {
@@ -66,8 +68,14 @@ export class NavbarComponent implements OnInit {
   }
 
   
-  logout(): void {
-    this.authService.logout();
+  async logout(): Promise<void> {
+    // Verificar si hay cambios sin guardar antes de cerrar sesión
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    
+    if (canContinue) {
+      this.authService.logout();
+    }
+    // Si no puede continuar, no hace nada (se queda en la página)
   }
 
   loadCategories(){
