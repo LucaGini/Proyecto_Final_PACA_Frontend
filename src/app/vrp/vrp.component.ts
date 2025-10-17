@@ -3,6 +3,9 @@ import * as L from 'leaflet';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { VrpService, WeeklyRoutesResponse, ProvinceRoutes, Route } from 'src/app/services/vrp.service';
+import { CronService } from '../services/cron.service';
+import { CronConfig } from '../services/cron.service';
+import Swal from 'sweetalert2';
 
 
 
@@ -15,8 +18,14 @@ export class VrpComponent implements OnInit, AfterViewInit {
 
   weeklyRoutes: WeeklyRoutesResponse | null = null;
   private map!: L.Map;
+  cronExpression: string = '';
+  latestCron: CronConfig | null = null;
+  isLoading = false;
 
-  constructor(private vrpService: VrpService) {}
+  constructor(
+    private vrpService: VrpService,
+    private cronService: CronService
+  ) {}
 
   ngOnInit() {
     // Cargar datos guardados en localStorage si existen
@@ -40,6 +49,7 @@ export class VrpComponent implements OnInit, AfterViewInit {
         console.error('Error cargando rutas semanales', err);
       }
     });
+    this.loadLatestCron();
   }
 
   ngAfterViewInit() {
@@ -110,7 +120,33 @@ export class VrpComponent implements OnInit, AfterViewInit {
     }
   }
 
-isLoading = false;
+
+loadLatestCron() {
+    this.cronService.getLatestCron().subscribe({
+      next: (data) => {
+        this.latestCron = data;
+        this.cronExpression = data.expression;
+      },
+      error: () => console.warn('No hay configuración previa de cron')
+    });
+  }
+
+  updateCron() {
+    if (!this.cronExpression.trim()) {
+      Swal.fire('Error', 'Debe ingresar una expresión válida', 'error');
+      return;
+    }
+
+    this.cronService.updateCron(this.cronExpression).subscribe({
+      next: (data) => {
+        this.latestCron = data;
+        Swal.fire('¡Actualizado!', 'El cron se actualizó correctamente', 'success');
+      },
+      error: (err) => {
+        Swal.fire('Error', err.error?.message || 'No se pudo actualizar el cron', 'error');
+      }
+    });
+  }  
 
 downloadPDF() {
   if (!this.weeklyRoutes) return;
