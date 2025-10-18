@@ -56,6 +56,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-width: 200px;
 
       .card-title {
         font-size: 2rem;
@@ -66,7 +67,21 @@
       }
 
       .card-text {
+        display: flex;
+        justify-content: center; /* o flex-start si querés alinearlo a la izquierda */
+        align-items: baseline; /* mantiene la línea del precio alineada con la etiqueta */
+        gap: 0.3rem; /* espacio entre “P. Unit.” y el valor */
         font-size: 1rem;
+
+        .unit-label {
+          font-weight: 500;
+          color: #666; /* más suave que el precio */
+        }
+
+        .unit-value {
+          font-weight: 700;
+          color: #a67c52; /* color del branding para el precio */
+        }
       }
 
       .quantity-control {

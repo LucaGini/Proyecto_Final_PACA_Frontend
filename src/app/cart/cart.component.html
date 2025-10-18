@@ -8,8 +8,10 @@
 
         <div class="item-info">
           <h1 class="card-title truncate">{{ item.name }}</h1>
-          <h2 class="card-text">Precio unitario: {{ item.price | currency }}</h2>
-
+          <h2 class="card-text">
+            <span class="unit-label">P. Unit.</span>
+            <span class="unit-value">{{ item.price | currency }}</span>
+          </h2>
           <div class="quantity-control">
             <button type="button" class="btn-quantity" (click)="verifyStock(item, 'devolucion')">-</button>
             <span>{{ item.quantity }}</span>

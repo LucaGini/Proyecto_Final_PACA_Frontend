@@ -267,7 +267,7 @@ a {
 }
 
 .btn {
-  background-color: #2a50b9;
+  background-color: #a67c52;
   display: block;
   width: auto;
   min-width: 200px;
@@ -289,6 +289,7 @@ a {
 
   &:disabled {
     opacity: 0.4;
+    background-color: #a67c52;
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
