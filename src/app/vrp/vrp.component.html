@@ -3,7 +3,7 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
 
-    <button class="gral-button" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }">
+    <button class="btn" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }">
       <ng-container *ngIf="isLoading; else normalBtn">
         <div class="spinner"></div>
         Descargando...

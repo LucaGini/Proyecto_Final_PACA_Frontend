@@ -10,15 +10,11 @@ import { EditGuardService } from '../services/edit-guard.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
 
-
-
-
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
-
 export class NavbarComponent implements OnInit {
   categories: any[] = [];
 
@@ -28,6 +24,8 @@ export class NavbarComponent implements OnInit {
 
   cartCount: number = 0;
   private cartSub!: Subscription;
+
+  showCart = false;
 
   constructor(
     private router: Router,
@@ -43,7 +41,7 @@ export class NavbarComponent implements OnInit {
     this.loadCategories();
 
     this.categoryService.categories$.subscribe((categories: any[]) => {
-        this.categories = categories;
+      this.categories = categories;
     });
 
     this.authService.isLoggedIn$().subscribe((status) => {
@@ -53,55 +51,62 @@ export class NavbarComponent implements OnInit {
     this.authService.isAdmin$().subscribe((status) => {
       this.isAdmin = status;
     });
-    
+
     this.authService.isDriver$().subscribe((status) => {
       this.isDriver = status;
     });
 
-    this.cartCount = this.cartService.getItems().reduce(
-      (acc, item) => acc + item.quantity, 
-      0
-    );
-    this.cartSub = this.cartService.itemsChanged$.subscribe(items => {
+    this.cartCount = this.cartService.getItems().reduce((acc, item) => acc + item.quantity, 0);
+    this.cartSub = this.cartService.itemsChanged$.subscribe((items) => {
       this.cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
     });
   }
 
-  
+  openCart() {
+    this.showCart = false; // Fuerza destrucción
+    setTimeout(() => (this.showCart = true), 0); // Vuelve a crear
+  }
+
+  navigateToProducts() {
+    this.router.navigate(['/products']);
+  }
+
   async logout(): Promise<void> {
     // Verificar si hay cambios sin guardar antes de cerrar sesión
     const canContinue = await this.editGuardService.handleUnsavedChanges();
-    
+
     if (canContinue) {
       this.authService.logout();
     }
     // Si no puede continuar, no hace nada (se queda en la página)
   }
 
-  loadCategories(){
-    this.categoryService.findAll().subscribe((response: any) => {
-      if (response && Array.isArray(response.data)) {
-        this.categories = response.data;
-      } else {
-        console.error('Expected an array of categories, but got:', response);
+  loadCategories() {
+    this.categoryService.findAll().subscribe(
+      (response: any) => {
+        if (response && Array.isArray(response.data)) {
+          this.categories = response.data;
+        } else {
+          console.error('Expected an array of categories, but got:', response);
+        }
+      },
+      (error) => {
+        console.error('Error fetching categories:', error);
       }
-  }, error => {
-    console.error('Error fetching categories:', error);
-  });
+    );
   }
-  
+
   ngOnDestroy(): void {
     if (this.cartSub) {
       this.cartSub.unsubscribe();
     }
   }
 
-
   Home() {
     this.router.navigate(['about-us']);
   }
 
-  UserRegistration (){
+  UserRegistration() {
     this.router.navigate(['UserRegistration']);
   }
 
@@ -129,7 +134,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['UserList']);
   }
 
-  OrderList(){
+  OrderList() {
     this.router.navigate(['OrderList']);
   }
 
@@ -137,22 +142,22 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['UserInformation']);
   }
 
-  OrdersHistory(){
+  OrdersHistory() {
     this.router.navigate(['OrdersHistory']);
   }
 
-  Route(){
+  Route() {
     this.router.navigate(['vrp']);
   }
 
-  Dashboard(){
+  Dashboard() {
     this.router.navigate(['Dashboard']);
   }
 
-  DeliveryReport(){
+  DeliveryReport() {
     this.router.navigate(['vrp-list']);
   }
-  
+
   onCategoryButtonClick(name: string) {
     this.navbarEventService.emitCategoryButtonClick(name);
     this.router.navigate([`collection/${name}`]);
@@ -161,11 +166,11 @@ export class NavbarComponent implements OnInit {
     this.cartService.setOrderFinished(true);
   }
 
-onSearch(event: Event) {
+  onSearch(event: Event) {
     event.preventDefault();
-    const searchInput = (document.getElementById('search-input') as HTMLInputElement);
+    const searchInput = document.getElementById('search-input') as HTMLInputElement;
     const query = searchInput.value.trim();
-    
+
     if (!query) {
       Swal.fire('Ingrese un término para buscar', '', 'warning');
       return;
@@ -177,10 +182,10 @@ onSearch(event: Event) {
           // Emit the search results event
           this.navbarEventService.emitSearchResults(response.data);
           // Navigate to the products page with the search query
-          this.router.navigate(['/products'], { queryParams: { q: query } }).then(()=>{
+          this.router.navigate(['/products'], { queryParams: { q: query } }).then(() => {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             searchInput.value = ''; // Limpiar el input después de la búsqueda
-          })
+          });
         } else {
           // No se encontraron productos, mostrar array vacío para que aparezca el mensaje visual
           this.navbarEventService.emitSearchResults([]);

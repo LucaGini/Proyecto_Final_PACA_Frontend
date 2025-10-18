@@ -25,17 +25,24 @@
   </div>
 
   <div class="city-charge" *ngIf="cityCharge > 0">
-    <h2>Recargo por domicilio seleccionado: {{ cityCharge }}%</h2>
+    <h2>
+      Recargo por domicilio seleccionado: <span>{{ cityCharge }}%</span>
+    </h2>
   </div>
 
-  <h2 class="total">
-    Total: <span>{{ totalAmount | currency }}</span>
-  </h2>
+  <div class="total" *ngIf="totalAmount > 0">
+    <h2>
+      Total: <span>{{ totalAmount | currency }}</span>
+    </h2>
+  </div>
 
-  <div *ngIf="showConfirmButton && isCartEmpty" class="empty-cart-msg">
+  <div *ngIf="items.length === 0" class="empty-cart-msg">
     <i class="material-icons">shopping_cart</i>
     Agrega productos al carrito para poder confirmar tu compra
   </div>
 
-  <button type="button" class="btn-confirm" [disabled]="isCartEmpty" *ngIf="showConfirmButton" (click)="confirmPurchase()">Confirmar compra</button>
+  <div class="btn-container">
+    <button *ngIf="!isModal && showConfirmButton" class="btn back" (click)="navigateToProducts()">Seguir comprando</button>
+    <button type="button" class="btn confirm" [disabled]="isCartEmpty" *ngIf="!isModal && showConfirmButton" (click)="confirmPurchase()">Confirmar compra</button>
+  </div>
 </div>

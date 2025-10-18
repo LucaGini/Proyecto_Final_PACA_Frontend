@@ -1,3 +1,9 @@
+.btn-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
 .card {
   display: flex;
   flex-direction: row;
@@ -9,8 +15,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  margin: 2rem;
+  gap: 1rem;
+  margin: 3rem 2rem 1rem 2rem;
 
   .cart-items {
     display: flex;
@@ -74,7 +80,7 @@
           margin: 0 5px;
         }
         .btn-quantity {
-          background: linear-gradient(45deg, #e7c633, #ffd700);
+          background: #6B8E23;
           color: white;
           border: none;
           border-radius: 6px;
@@ -95,16 +101,37 @@
     background-color: #f4e3c1;
     border: 1px solid #d4b876;
     border-radius: 5px;
-    padding: 15px;
-    color: #8a6914;
+    padding: 5px;
 
     h2 {
-      font-size: 1.5rem;
+      font-size: 1rem;
+      margin: 0;
+      color: #8a6914;
+      span {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #876921;
+      }
     }
   }
 
   .total {
-    font-size: 1.8rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff6e5;
+    border: 1px solid #d4b876;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
+      span {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #6b8e23;
+      }
+    }
   }
 
   .empty-cart-msg {
@@ -118,33 +145,6 @@
     i {
       vertical-align: middle;
       margin-right: 5px;
-    }
-  }
-
-  .btn-confirm {
-    background: linear-gradient(45deg, #e7c633, #ffd700);
-    color: white;
-    border: none;
-    padding: 0.8rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 500;
-    font-size: 18px;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 15px rgba(231, 198, 51, 0.2);
-    transition: all 0.3s ease;
-
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
-      background: linear-gradient(45deg, #ffd700, #e7c633);
-    }
-
-    &:active:not(:disabled) {
-      transform: translateY(1px);
-    }
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
     }
   }
 }

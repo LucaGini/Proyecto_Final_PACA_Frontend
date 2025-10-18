@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartService } from '../services/cart.service';
 import { ProductService } from '../services/product.service';
@@ -14,14 +14,17 @@ import { UtilsService } from '../services/utils.service';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.scss']
+  styleUrls: ['./cart.component.scss'],
 })
 export class CartComponent implements OnInit {
 
   items: any[] = [];
-  totalAmount: number = 0; 
+  totalAmount: number = 0;
   private destroy$ = new Subject<void>();
-  showConfirmButton: boolean = false;
+
+  @Input() isModal: boolean = false;            // <- esto permite pasar el valor desde el navbar
+  @Input() showConfirmButton: boolean = true;
+
   apiUrl = environment.apiUrl;
   userData: any = null;
   cityCharge: number = 0;
@@ -54,12 +57,10 @@ export class CartComponent implements OnInit {
     this.items = this.cartService.getItems();
     this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
 
-    this.cartService.itemsChanged$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((updatedItems: any[]) => {
-        this.items = updatedItems;
-        this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
-      });
+    this.cartService.itemsChanged$.pipe(takeUntil(this.destroy$)).subscribe((updatedItems: any[]) => {
+      this.items = updatedItems;
+      this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+    });
 
     // Solo mostrar el botón de confirmar compra si estamos en la ruta /cart
     this.showConfirmButton = this.router.url === '/cart';
@@ -72,26 +73,30 @@ export class CartComponent implements OnInit {
   }
 
   verifyStock(item: any, operation: string) {
-    const newQuantity = operation === 'compra' ? item.quantity + 1 : item.quantity - 1; 
+    const newQuantity = operation === 'compra' ? item.quantity + 1 : item.quantity - 1;
     if (newQuantity < 1) {
-      return this.removeItem(item); 
+      return this.removeItem(item);
     }
     this.productService.verifyStock(item.id, newQuantity).subscribe({
       next: () => {
         item.quantity = newQuantity;
         this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
-         this.cartService.updateLocalStorage();
-         this.cartService.notifyItemsChanged();
+        this.cartService.updateLocalStorage();
+        this.cartService.notifyItemsChanged();
       },
       error: () => {
         this.utils.showAlert('error', 'Lo sentimos', `No hay stock suficiente para el producto ${item.name}`);
-      }
+      },
     });
   }
-  
-  removeItem(item: any) {  
+
+  removeItem(item: any) {
     this.cartService.removeFromCart(item);
     this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+  }
+
+  navigateToProducts() {
+    this.router.navigate(['/products']);
   }
 
   confirmPurchase() {
@@ -101,7 +106,8 @@ export class CartComponent implements OnInit {
       return;
     }
 
-    if (!this.userData) { this.utils.showAlert('error', 'Acción no permitida', 'Debes iniciar sesión para confirmar tu compra.'); 
+    if (!this.userData) {
+      this.utils.showAlert('error', 'Acción no permitida', 'Debes iniciar sesión para confirmar tu compra.');
       this.router.navigate(['UserRegistration/login']);
       return;
     }
@@ -110,8 +116,7 @@ export class CartComponent implements OnInit {
     const streetNumber = this.userData.streetNumber || 'S/N';
     const fullAddress = `${street} ${streetNumber}`;
 
-    this.utils.showConfirm( '¿Desea enviar la compra a su dirección registrada?', `Dirección registrada: ${fullAddress}`
-    ).then((result) => {
+    this.utils.showConfirm('¿Desea enviar la compra a su dirección registrada?', `Dirección registrada: ${fullAddress}`).then((result) => {
       if (result.isConfirmed) {
         this.createOrder(this.items);
       } else {
@@ -126,9 +131,12 @@ export class CartComponent implements OnInit {
   createOrder(items: any[]) {
     let stockErrorProducts: string[] = [];
     const verifyStockPromises = items.map((item) =>
-      this.productService.verifyStock(item.id, item.quantity).toPromise().catch(() => {
-        stockErrorProducts.push(item.name);
-      })
+      this.productService
+        .verifyStock(item.id, item.quantity)
+        .toPromise()
+        .catch(() => {
+          stockErrorProducts.push(item.name);
+        })
     );
 
     Promise.all(verifyStockPromises)
@@ -139,9 +147,9 @@ export class CartComponent implements OnInit {
         }
 
         const orderData = {
-          userId: this.userData.id, 
-          orderItems: this.cartService.getItemsOrder(), 
-          total: this.cartService.calculateTotal(this.cityCharge)
+          userId: this.userData.id,
+          orderItems: this.cartService.getItemsOrder(),
+          total: this.cartService.calculateTotal(this.cityCharge),
         };
 
         this.orderService.create(orderData).subscribe({
@@ -179,7 +187,7 @@ export class CartComponent implements OnInit {
           if (response && response.data) {
             this.userData = response.data;
             console.log('🛒 Datos de usuario en cart:', this.userData);
-            
+
             // userData.city contiene el ID de la ciudad, no el nombre
             if (this.userData.city) {
               console.log('🏙️ Buscando ciudad con ID:', this.userData.city);
@@ -191,32 +199,32 @@ export class CartComponent implements OnInit {
                     this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
                     console.log('💰 Surcharge aplicado:', this.cityCharge);
                   } else {
-                    console.error("City no contiene un surcharge válido:", cityResponse);
+                    console.error('City no contiene un surcharge válido:', cityResponse);
                     this.cityCharge = 0; // Valor por defecto
                     this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
                   }
                 },
                 error: (err) => {
-                  console.error("Error cargando datos de la ciudad:", err);
+                  console.error('Error cargando datos de la ciudad:', err);
                   this.cityCharge = 0; // Valor por defecto en caso de error
                   this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
                 },
               });
             } else {
-              console.warn("Usuario no tiene ciudad asignada");
+              console.warn('Usuario no tiene ciudad asignada');
               this.cityCharge = 0;
               this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
             }
           } else {
-            console.error("No se encontraron datos de usuario");
+            console.error('No se encontraron datos de usuario');
           }
         },
         error: (err) => {
-          console.error("Error al buscar usuario por email:", err);
+          console.error('Error al buscar usuario por email:', err);
         },
       });
     } else {
-      console.error("No se encontró un usuario logueado.");
+      console.error('No se encontró un usuario logueado.');
     }
   }
 }
