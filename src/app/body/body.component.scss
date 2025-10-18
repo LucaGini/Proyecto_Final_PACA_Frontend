@@ -51,7 +51,6 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 .product-card:hover {
-  transform: translateY(-5px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 .product-card.out-of-stock {
@@ -98,7 +97,7 @@
 .card-text {
   font-size: 0.9rem;
   color: #555;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
 }
 .price {
   font-size: 1rem;
@@ -110,19 +109,16 @@
 /* Botón */
 .button-container {
   margin-top: auto;
-}
-.btn {
-  display: inline-block;
-  background: #1976d2;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  text-align: center;
-  text-decoration: none;
-  transition: background 0.2s ease;
-}
-.btn:hover {
-  background: #145ea8;
+
+  .btn.info {
+    margin-bottom: 0.5rem;
+  }
+
+  .btn.add,
+  .btn.remove {
+    padding: 0.4rem 0.7rem;
+    width: 100%;
+  }
 }
 
 /* Truncar textos */

@@ -3,7 +3,7 @@
   <div class="image-col">
     <div class="card">
       <div class="image-wrapper">
-        <img class="card-img-top" [src]="getImageUrl(product.image)" alt="{{ product.name }}">
+        <img class="card-img-top" [src]="getImageUrl(product.image)" alt="{{ product.name }}" />
         <div *ngIf="product.stock === 0" class="overlay-text">AGOTADO</div>
       </div>
     </div>
@@ -12,14 +12,24 @@
   <!-- Columna Información -->
   <div class="info-col d-flex align-items-center">
     <div class="card-body">
-      <h1 class="card-title truncate">{{ product.name }}</h1>
-      <h3 class="card-text truncate">{{ product.description }}</h3>
-      <h2 class="price">Precio: ${{ product.price }}</h2>
+      <!-- Título -->
+      <h1 class="card-title">{{ product.name }}</h1>
 
+      <!-- Descripción resumida -->
+      <p class="card-description">{{ product.description }}</p>
+
+      <!-- Total -->
+      <div class="total">
+        <h2>Total: <span>${{ product.price }}</span></h2>
+      </div>
+
+      <!-- Botones -->
       <div class="btn-container">
-        <button type="submit" class="btn-add" *ngIf="showDeleteButton()"
-                (click)="addToCart(product)" [disabled]="product.stock === 0">
+        <button class="btn add" *ngIf="!isInCart(product.id) && showDeleteButton()" (click)="addToCart(product)" [disabled]="product.stock === 0">
           Añadir al carrito
+        </button>
+        <button class="btn remove" *ngIf="isInCart(product.id) && showDeleteButton()" (click)="removeFromCart(product)">
+          Quitar del carrito
         </button>
       </div>
     </div>

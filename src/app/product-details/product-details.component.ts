@@ -9,9 +9,8 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-product-details',
   templateUrl: './product-details.component.html',
-  styleUrls: ['./product-details.component.scss']
+  styleUrls: ['./product-details.component.scss'],
 })
-
 export class ProductDetailsComponent implements OnInit {
   product: any | undefined;
   products: any | undefined;
@@ -26,24 +25,18 @@ export class ProductDetailsComponent implements OnInit {
     return this.apiUrl + imageUrl;
   }
 
-  constructor(
-    private route: ActivatedRoute,
-    private productService: ProductService,
-    private cartService: CartService,
-    private authService: AuthService,
-
-  ) { }
+  constructor(private route: ActivatedRoute, private productService: ProductService, private cartService: CartService, private authService: AuthService) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe((queryParams) => {
       const searchTerm = queryParams['q'];
 
-      this.productService.findActive().subscribe((data:any) => {
-        this.products = data.data;  // dentro de data están los productos
+      this.productService.findActive().subscribe((data: any) => {
+        this.products = data.data; // dentro de data están los productos
 
-        this.buildData()
+        this.buildData();
       });
-    })
+    });
   }
 
   public buildData() {
@@ -66,10 +59,26 @@ export class ProductDetailsComponent implements OnInit {
           title: 'Lo sentimos',
           text: `No hay stock suficiente para el producto ${product.name}`,
         });
-      }
+      },
     });
-  }  
-  showDeleteButton(): Boolean{
+  }
+  showDeleteButton(): Boolean {
     return !this.authService.isAdmin() && !this.authService.isDriver();
-  } 
+  }
+
+  isInCart(productId: number): boolean {
+    const currentCart = this.cartService.getItems();
+    return currentCart.some((item: any) => item.id === productId);
+  }
+
+  removeFromCart(product: any) {
+    this.cartService.removeFromCart(product);
+    Swal.fire({
+      icon: 'info',
+      title: 'Producto quitado',
+      text: `${product.name} fue eliminado del carrito.`,
+      timer: 1500,
+      showConfirmButton: false
+    });
+  }
 }

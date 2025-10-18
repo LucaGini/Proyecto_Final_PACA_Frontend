@@ -288,11 +288,29 @@ a {
   }
 
   &:disabled {
-    background: #ccc;
-    color: #656565;
+    opacity: 0.4;
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
+    color: white;
+  }
+
+  &.add {
+    background-color: #6b8e23;
+  }
+
+  &.remove {
+    background-color: #c94c4c;
+  }
+
+  &.info {
+    min-width: 0px;
+
+    width: 8rem;
+    font-size: 0.8rem;
+    color: rgb(255, 255, 255);
+    padding: 0.2rem 0.4rem;
+    background-color: #2491f090;
   }
 
   &.back {
