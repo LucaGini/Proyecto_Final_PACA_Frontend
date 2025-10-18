@@ -1,3 +1,10 @@
+.card {
+  display: flex;
+  flex-direction: row;
+  border: none;
+  justify-content: space-between;
+}
+
 .cart-container {
   display: flex;
   flex-direction: column;
@@ -7,26 +14,25 @@
 
   .cart-items {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap; /* permite que los items se vayan a la siguiente fila */
     gap: 2rem;
+    justify-content: center; /* centra las filas */
     width: 100%;
-    max-width: 900px;
   }
 
   .cart-item {
-    display: flex;
-    flex-wrap: wrap;
+    flex: 1 1 450px; /* 1 = grow, 1 = shrink, 250px = base width */
+    max-width: 550px; /* opcional, para que no se agrande demasiado */
+    box-sizing: border-box;
     justify-content: center;
     align-items: center;
     gap: 2rem;
     padding: 1.5rem;
     border-radius: 15px;
-    background: rgba(255,255,255,0.95);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease;
-
-    &:hover { transform: translateY(-3px); }
 
     .item-image img {
       width: 180px;
@@ -35,33 +41,46 @@
       border-radius: 12px;
       transition: all 0.3s ease;
 
-      &:hover { transform: scale(1.05); }
+      &:hover {
+        transform: scale(1.05);
+      }
     }
 
     .item-info {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 1rem;
 
-      .card-title, .card-text { font-family: 'Quicksand', sans-serif; }
+      .card-title {
+        font-size: 2rem;
+        margin: 0.5rem 0;
+        line-height: 1.2em;
+        max-height: 2.4em; /* 2 líneas * line-height */
+        overflow: hidden;
+      }
+
+      .card-text {
+        font-size: 1rem;
+      }
 
       .quantity-control {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
 
+        span {
+          font-size: 1.2rem;
+          font-weight: 400;
+          margin: 0 5px;
+        }
         .btn-quantity {
           background: linear-gradient(45deg, #e7c633, #ffd700);
           color: white;
           border: none;
           border-radius: 6px;
-          padding: 0.5rem 1rem;
+          padding: 0.4rem 0.8rem;
           font-weight: 600;
           transition: all 0.3s ease;
-
-          &:hover { transform: translateY(-1px); }
-          &:active { transform: translateY(1px); }
         }
       }
 
@@ -73,29 +92,33 @@
   }
 
   .city-charge {
-    font-family: 'Quicksand', sans-serif;
-    background-color: #F4E3C1;
+    background-color: #f4e3c1;
     border: 1px solid #d4b876;
     border-radius: 5px;
     padding: 15px;
     color: #8a6914;
+
+    h2 {
+      font-size: 1.5rem;
+    }
   }
 
   .total {
-    font-family: 'Quicksand', sans-serif;
     font-size: 1.8rem;
   }
 
   .empty-cart-msg {
-    font-family: 'Quicksand', sans-serif;
     margin: 10px 0;
-    background-color: #F4E3C1;
+    background-color: #f4e3c1;
     border: 1px solid #d4b876;
     border-radius: 5px;
     padding: 15px;
     color: #8a6914;
 
-    i { vertical-align: middle; margin-right: 5px; }
+    i {
+      vertical-align: middle;
+      margin-right: 5px;
+    }
   }
 
   .btn-confirm {
@@ -107,20 +130,27 @@
     font-weight: 500;
     font-size: 18px;
     letter-spacing: 0.5px;
-    box-shadow: 0 4px 15px rgba(231,198,51,0.2);
+    box-shadow: 0 4px 15px rgba(231, 198, 51, 0.2);
     transition: all 0.3s ease;
 
     &:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(231,198,51,0.3);
+      box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
       background: linear-gradient(45deg, #ffd700, #e7c633);
     }
 
-    &:active:not(:disabled) { transform: translateY(1px); }
-    &:disabled { opacity: 0.6; cursor: not-allowed; }
+    &:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
   }
 }
 
 @media (max-width: 768px) {
-  .cart-item { flex-direction: column; }
+  .cart-item {
+    flex-direction: column;
+  }
 }

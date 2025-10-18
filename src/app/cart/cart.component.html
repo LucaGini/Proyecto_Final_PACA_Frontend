@@ -1,23 +1,25 @@
 <div class="cart-container text-center">
   <div class="cart-items">
     <div class="cart-item" *ngFor="let item of items">
-      <div class="item-image">
-        <img class="card-img-top" [src]="getImageUrl(item.image)" alt="{{ item.name }}">
-      </div>
-
-      <div class="item-info">
-        <h1 class="card-title truncate">{{ item.name }}</h1>
-        <h2 class="card-text">Precio unitario: {{ item.price | currency }}</h2>
-
-        <div class="quantity-control">
-          <button type="button" class="btn-quantity" (click)="verifyStock(item,'devolucion')">-</button>
-          <span>{{ item.quantity }}</span>
-          <button type="button" class="btn-quantity" (click)="verifyStock(item,'compra')">+</button>
+      <div class="card">
+        <div class="item-image">
+          <img class="card-img-top" [src]="getImageUrl(item.image)" alt="{{ item.name }}" />
         </div>
 
-        <button mat-icon-button class="btn-delete" (click)="removeItem(item)">
-          <mat-icon>delete</mat-icon>
-        </button>
+        <div class="item-info">
+          <h1 class="card-title truncate">{{ item.name }}</h1>
+          <h2 class="card-text">Precio unitario: {{ item.price | currency }}</h2>
+
+          <div class="quantity-control">
+            <button type="button" class="btn-quantity" (click)="verifyStock(item, 'devolucion')">-</button>
+            <span>{{ item.quantity }}</span>
+            <button type="button" class="btn-quantity" (click)="verifyStock(item, 'compra')">+</button>
+          </div>
+
+          <button mat-icon-button class="btn-delete" (click)="removeItem(item)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -26,20 +28,14 @@
     <h2>Recargo por domicilio seleccionado: {{ cityCharge }}%</h2>
   </div>
 
-  <h2 class="total">Total: <span>{{ totalAmount | currency }}</span></h2>
+  <h2 class="total">
+    Total: <span>{{ totalAmount | currency }}</span>
+  </h2>
 
   <div *ngIf="showConfirmButton && isCartEmpty" class="empty-cart-msg">
     <i class="material-icons">shopping_cart</i>
     Agrega productos al carrito para poder confirmar tu compra
   </div>
 
-  <button
-    type="button"
-    class="btn-confirm"
-    [disabled]="isCartEmpty"
-    *ngIf="showConfirmButton"
-    (click)="confirmPurchase()"
-  >
-    Confirmar compra
-  </button>
+  <button type="button" class="btn-confirm" [disabled]="isCartEmpty" *ngIf="showConfirmButton" (click)="confirmPurchase()">Confirmar compra</button>
 </div>
