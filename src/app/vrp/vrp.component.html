@@ -1,8 +1,14 @@
 <div *ngIf="weeklyRoutes" class="vrp-container">
-  <!-- Encabezado con total de órdenes y botón de exportar -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
 
+  <div class="d-flex gap-2">
+    <!-- Botón abrir modal -->
+    <button class="gral-button secondary" (click)="openCronModal()">
+      <mat-icon>schedule</mat-icon> Configurar Cron
+    </button>
+
+    <!-- Botón de descarga -->
     <button class="gral-button" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }">
       <ng-container *ngIf="isLoading; else normalBtn">
         <div class="spinner"></div>
@@ -13,6 +19,48 @@
       </ng-template>
     </button>
   </div>
+</div>
+
+<div class="cron-modal" *ngIf="showCronModal">
+  <div class="cron-backdrop" (click)="closeCronModal()"></div>
+  
+  <div class="cron-modal-content animate__animated animate__fadeInUp">
+    <div class="modal-header">
+      <h4><mat-icon>schedule</mat-icon> Configuración del Cron</h4>
+      <button class="close-btn" (click)="closeCronModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <label for="cronInput" class="form-label">Expresión cron actual</label>
+      <input
+        id="cronInput"
+        type="text"
+        class="form-control"
+        [(ngModel)]="cronExpression"
+        placeholder="* * * * *"
+      />
+
+      <small class="example">
+        <mat-icon>info</mat-icon>
+        Ejemplo: <code>0 0 * * *</code> ejecuta cada día a medianoche.
+      </small>
+
+      <div class="cron-actions">
+        <button class="cancel-btn" (click)="closeCronModal()">Cancelar</button>
+        <button class="save-btn" (click)="updateCron()">Guardar</button>
+      </div>
+
+      <div class="latest-update" *ngIf="latestCron">
+        <mat-icon>update</mat-icon>
+        Última actualización: {{ latestCron.lastUpdated | date:'short' }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
 
   <!-- Órdenes por provincia -->
   <div *ngFor="let province of getProvinces(); let i = index" class="card shadow-sm" [style.--animation-order]="i">

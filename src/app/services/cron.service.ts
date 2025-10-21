@@ -31,6 +31,6 @@ export class CronService {
 
   /** Crear una nueva configuración de cron */
   updateCron(expression: string): Observable<CronConfig> {
-    return this.http.post<CronConfig>(`${this.apiUrl}/cron/add`, { expression });
+    return this.http.post<CronConfig>(`${this.apiUrl}/cron/createCron`, { expression });
   }
 }
