@@ -16,13 +16,26 @@ export class VrpComponent implements OnInit, AfterViewInit {
   weeklyRoutes: WeeklyRoutesResponse | null = null;
   private map!: L.Map;
 
-  // 🔹 Cron
+  
   cronExpression: string = '';
   latestCron: CronConfig | null = null;
   showCronModal = false;
 
   // 🔹 Estado general
   isLoading = false;
+  selectedDay: number = 1;
+  selectedHour: number = 9;
+  selectedMinute: number = 0;
+
+  days = [
+  { value: 1, label: 'Lunes' },
+  { value: 2, label: 'Martes' },
+  { value: 3, label: 'Miércoles' },
+  { value: 4, label: 'Jueves' },
+  { value: 5, label: 'Viernes' },
+  { value: 6, label: 'Sábado' },
+  { value: 0, label: 'Domingo' },
+];
 
   constructor(
     private vrpService: VrpService,
@@ -130,6 +143,14 @@ export class VrpComponent implements OnInit, AfterViewInit {
   // ==============================
   // 🔹 CRON CONFIG
   // ==============================
+
+  applyCronChange() {
+  const minute = this.selectedMinute.toString();
+  const hour = this.selectedHour.toString();
+  this.cronExpression = `${minute} ${hour} * * ${this.selectedDay}`;
+  this.updateCron();
+}
+
 
   loadLatestCron() {
     this.cronService.getLatestCron().subscribe({
