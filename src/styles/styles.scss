@@ -266,12 +266,13 @@ a {
   box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
 }
 
+
 .btn {
-  background-color: #a67c52;
+  background-color: #a67c52 !important;
   display: block;
   width: auto;
   min-width: 200px;
-  color: white;
+  color: white !important;
   border: none;
   padding: 0.8rem 1.4rem;
   border-radius: 8px;
@@ -282,6 +283,7 @@ a {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 
   &:hover {
+    background-color: #a67c52 !important;
     color: white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     transform: scale(1.01);
@@ -289,7 +291,7 @@ a {
 
   &:disabled {
     opacity: 0.4;
-    background-color: #a67c52;
+    background-color: #a67c52 !important;
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
@@ -297,11 +299,11 @@ a {
   }
 
   &.add {
-    background-color: #6b8e23;
+    background-color: #6b8e23 !important;
   }
 
   &.remove {
-    background-color: #c94c4c;
+    background-color: #c94c4c !important;
   }
 
   &.info {
@@ -311,32 +313,32 @@ a {
     font-size: 0.8rem;
     color: rgb(255, 255, 255);
     padding: 0.2rem 0.4rem;
-    background-color: #2491f090;
+    background-color: #2491f090 !important;
   }
 
   &.back {
-    background-color: #6b8e23;
+    background-color: #6b8e23 !important;
   }
 
   &.confirm {
-    background: #a67c52;
+    background: #a67c52 !important;
   }
 
   &.edit {
-    background: linear-gradient(45deg, #e7c633, #ffd700);
+    background: linear-gradient(45deg, #e7c633, #ffd700) !important;
     border: none;
 
     &:hover {
-      box-shadow: 0 5px 15px rgba(231, 198, 51);
+      box-shadow: 0 5px 15px rgba(231, 198, 51) !important;
     }
   }
 
   &.danger {
-    background: #dc3545;
+    background: #dc3545 !important;
     border: none;
 
     &:hover {
-      box-shadow: 0 5px 15px rgba(220, 53, 69);
+      box-shadow: 0 5px 15px rgba(220, 53, 69) !important;
     }
   }
 
