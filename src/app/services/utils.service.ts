@@ -77,8 +77,8 @@ export class UtilsService {
       text,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#e7c633',
-      cancelButtonColor: '#f76666',
+      confirmButtonColor: '#6B8E23',
+      cancelButtonColor: '#C94C4C',
       confirmButtonText: 'Aceptar',
       cancelButtonText: 'Cancelar',
     });
@@ -93,7 +93,36 @@ export class UtilsService {
       timerProgressBar: true
     });
   }
+
+  // dentro de UtilsService
+askPassword(title = 'Acceso restringido', placeholder = 'Contraseña...'): Promise<string | null> {
+  return Swal.fire({
+    title,
+    input: 'password',
+    inputLabel: 'Ingrese la contraseña de la provincia',
+    inputPlaceholder: placeholder,
+    inputAttributes: {
+      maxlength: '30',
+      autocapitalize: 'off',
+      autocorrect: 'off'
+    },
+    confirmButtonText: 'Ingresar',
+    showCancelButton: true,
+    cancelButtonText: 'Cancelar',
+    confirmButtonColor: '#6B8E23',
+    cancelButtonColor: '#C94C4C',
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    inputValidator: (value) => {
+      if (!value) return 'Debe ingresar una contraseña';
+      return null;
+    }
+  }).then(result => result.value || null);
+}
+
   
 }
+
+
 
 

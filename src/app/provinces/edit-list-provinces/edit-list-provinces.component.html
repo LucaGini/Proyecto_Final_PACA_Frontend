@@ -37,6 +37,24 @@
           </div>
         </div>
 
+        <div *ngIf="province.editing" class="edit-mode">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="province.editPassword"
+              name="name"
+              required
+              #editPasswordInput="ngModel"
+              [ngClass]="{ 'is-invalid': editPasswordInput.invalid && editPasswordInput.touched }"
+            />
+            <div *ngIf="editPasswordInput.invalid && editPasswordInput.touched" class="text-danger">
+              <small>El nombre es obligatorio.</small>
+            </div>
+          </div>
+        </div>
+
         <div *ngIf="!province.editing">
           <h3 class="card-text">Nombre</h3>
           <p>{{ province.name }}</p>

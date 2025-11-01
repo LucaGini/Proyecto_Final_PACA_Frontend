@@ -10,6 +10,8 @@ interface Province {
   name: string;
   editing?: boolean;
   editName?: string;
+  editPassword?: string;
+  password?: string;
 }
 
 @Component({
@@ -145,6 +147,7 @@ export class EditListProvincesComponent implements OnInit, OnDestroy, EditingCom
     }
 
     province.editName = province.name;
+    province.editPassword = province.password;
     province.editing = true;
   }
 
@@ -154,7 +157,10 @@ export class EditListProvincesComponent implements OnInit, OnDestroy, EditingCom
 
   save(province: Province): void {
     const original = { name: province.name };
-    const updated = { name: province.editName };
+    const updated = { 
+      name: province.editName,
+      password: province.editPassword, 
+    };
 
     if (!this.utils.isValid(province.editName ?? '')) {
       this.utils.showAlert('error', 'Error en el registro', 'Debe completar el campo.');
