@@ -35,6 +35,7 @@ export class AuthService {
     private router: Router
   ) {}
 
+  // === Helpers ==============================================================
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem(this.tokenKey);
     return new HttpHeaders({
@@ -71,6 +72,7 @@ export class AuthService {
     }
   }
 
+  // === Estado del usuario ===================================================
   isLoggedIn$(): Observable<boolean> {
     return this.isLoggedInSubject.asObservable();
   }
@@ -107,27 +109,16 @@ export class AuthService {
     }
   }
 
+  // === Auth principal =======================================================
   saveToken(token: string): void {
     localStorage.setItem(this.tokenKey, token);
     this.isLoggedInSubject.next(true);
     this.isAdminInSubject.next(this.checkAdmin());
-    this.checkAdmin();
-    // Verificar si el perfil está completo antes de navegar
-    this.checkProfileCompletionAndNavigate();
     this.isDriverSubject.next(this.checkDriver());
-    this.router.navigate(['/']);
-  }
 
-//  <<<<<<< feature/OAuth-Google
-  //  this.checkAdmin();
-    
-    // Verificar si el perfil está completo antes de navegar
-    //this.checkProfileCompletionAndNavigate();
-=======
-    //this.isDriverSubject.next(this.checkDriver());
-    //this.router.navigate(['/']);
-//>>>>>>> main
-  //}
+    // Verificar perfil y redirigir según rol
+    this.checkProfileCompletionAndNavigate();
+  }
 
   logout(): void {
     localStorage.removeItem(this.tokenKey);
@@ -141,6 +132,7 @@ export class AuthService {
     return localStorage.getItem(this.tokenKey);
   }
 
+  // === Reset password =======================================================
   sendResetPasswordEmail(email: string): Observable<any> {
     const url = `${this.URL}/auth/password/recovery`;
     return this.http.post<any>(url, { email }, { headers: this.getAuthHeaders() }).pipe(
@@ -151,16 +143,18 @@ export class AuthService {
     );
   }
 
-sendRequestToLogin(email: string, password: any, captchaToken: string): Observable<any> {
-  const url = `${this.URL}/auth/login`;
-  return this.http.post<any>(url, { email, password, captchaToken  }, { headers: this.getAuthHeaders() }).pipe(
-    catchError((err) => {
-      console.error('Error en el servicio:', err);
-      return throwError(() => err); 
-    })
-  );
-}
+  // === Login ================================================================
+  sendRequestToLogin(email: string, password: any, captchaToken: string): Observable<any> {
+    const url = `${this.URL}/auth/login`;
+    return this.http.post<any>(url, { email, password, captchaToken }, { headers: this.getAuthHeaders() }).pipe(
+      catchError((err) => {
+        console.error('Error en el servicio:', err);
+        return throwError(() => err);
+      })
+    );
+  }
 
+  // === Update email =========================================================
   updateUserEmail(newEmail: string): void {
     const token = localStorage.getItem(this.tokenKey);
     if (!token) return;
@@ -171,17 +165,13 @@ sendRequestToLogin(email: string, password: any, captchaToken: string): Observab
         ...decodedToken,
         email: newEmail
       };
-
       localStorage.setItem('currentUserEmail', newEmail);
     } catch (error) {
       console.error('Token update failed:', error);
     }
   }
 
-  getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
-  }
-
+  // === Google OAuth =========================================================
   initializeGoogleSignIn(): void {
     if (typeof window !== 'undefined' && window.google) {
       window.google.accounts.id.initialize({
@@ -212,7 +202,6 @@ sendRequestToLogin(email: string, password: any, captchaToken: string): Observab
   renderGoogleButton(elementId: string): void {
     if (typeof window !== 'undefined' && window.google) {
       const isSignUp = elementId.includes('signup');
-      
       window.google.accounts.id.renderButton(
         document.getElementById(elementId),
         {
@@ -228,6 +217,7 @@ sendRequestToLogin(email: string, password: any, captchaToken: string): Observab
     }
   }
 
+  // === Verificación de perfil y navegación por rol =========================
   private checkProfileCompletionAndNavigate(): void {
     const user = this.getLoggedUser();
     if (!user) {
@@ -235,41 +225,36 @@ sendRequestToLogin(email: string, password: any, captchaToken: string): Observab
       return;
     }
 
-    // Solo verificar perfil para usuarios clientes (no administradores)
+    // 🚀 Redirección por rol
     if (user.privilege === 'administrador') {
-      this.router.navigate(['/']);
+      this.router.navigate(['/Dashboard']);
       return;
     }
 
-    // Importar UserService dinámicamente para evitar dependencia circular
-    import('./user.service').then(module => {
-      const userService = new module.UserService(
-        this.http, 
-        this.router
-      );
+    if (user.privilege === 'transportista') {
+      this.router.navigate(['/vrp-list']);
+      return;
+    }
 
+    // 👤 Solo clientes: verificar si completaron perfil
+    import('./user.service').then(module => {
+      const userService = new module.UserService(this.http, this.router);
       userService.findUserByEmail(user.email).subscribe({
         next: (response) => {
           if (response && response.data) {
             const userData = response.data;
-            
-            // Si el perfil no está completo, redirigir a User-Information
             if (!userService.isProfileComplete(userData)) {
               this.router.navigate(['/UserInformation']);
               return;
             }
           }
-          
-          // Perfil completo o no se pudo verificar, ir al home
           this.router.navigate(['/']);
         },
         error: () => {
-          // Error al verificar perfil, ir al home por defecto
           this.router.navigate(['/']);
         }
       });
     }).catch(() => {
-      // Error al cargar UserService, ir al home por defecto
       this.router.navigate(['/']);
     });
   }

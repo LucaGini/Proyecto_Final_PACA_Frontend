@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from "@angular/router";
+import { RouterModule, Routes } from '@angular/router';
+
 import { LoginComponent } from './userRegistration/login/login.component';
 import { BodyComponent } from './body/body.component';
 import { ResetPasswordComponent } from './userRegistration/reset-password/reset-password.component';
@@ -22,8 +23,6 @@ import { EditListCategoriesComponent } from './categories/edit-list-categories/e
 import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cities.component';
 import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
 import { OrdersHistoryComponent } from './orders/orders-history/orders-history.component';
-import { AuthGuard } from './guards/auth.guard';
-import { ProfileCompleteGuard } from './guards/profile-complete.guard';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { VrpComponent } from './vrp/vrp.component';
@@ -31,51 +30,49 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { VrpListComponent } from './vrp-list/vrp-list.component';
 
 const routes: Routes = [
+  // Administración
+  { path: 'AdminProducts', component: AdminProductsComponent },
+  { path: 'AdminProvinces', component: AdminProvincesComponent },
+  { path: 'AdminCategories', component: AdminCategoriesComponent },
+  { path: 'AdminCities', component: AdminCitiesComponent },
+  { path: 'UserList', component: UserListComponent },
+  { path: 'AdminSuppliers', component: AdminSuppliersComponent },
+  { path: 'EditListProducts', component: EditListProductsComponent },
+  { path: 'EditListProvinces', component: EditListProvincesComponent },
+  { path: 'EditListCategories', component: EditListCategoriesComponent },
+  { path: 'EditListCities', component: EditListCitiesComponent },
+  { path: 'EditListSuppliers', component: EditListSuppliersComponent },
+  { path: 'OrderList', component: OrderListComponent },
+  { path: 'vrp', component: VrpComponent },
+  { path: 'Dashboard', component: DashboardComponent },
 
-  // SOLO ADMINISTRADOR
-  { path: 'AdminProducts', component: AdminProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'AdminProvinces', component: AdminProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'AdminCategories', component: AdminCategoriesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'AdminCities', component: AdminCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'UserList', component: UserListComponent , canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'AdminSuppliers', component: AdminSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'EditListProducts', component: EditListProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'EditListProvinces', component: EditListProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'EditListCategories', component: EditListCategoriesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'EditListCities', component: EditListCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'EditListSuppliers', component: EditListSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'OrderList', component: OrderListComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'vrp', component: VrpComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'Dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  
-  // SOLO CLIENTES Y NO LOGUEADOS
-  { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador','transportista'] }},
+  // Clientes
+  { path: 'cart', component: CartComponent },
+  { path: 'UserInformation', component: UserInformationComponent },
+  { path: 'OrdersHistory', component: OrdersHistoryComponent },
 
-  // SOLO CLIENTES
-  { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['cliente'] }},
-  { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate: [AuthGuard, ProfileCompleteGuard], data: { roles: ['cliente'] }},
+  // Transportistas
+  { path: 'vrp-list', component: VrpListComponent },
 
-  // SOLO TRANSPORTISTAS
-  { path: 'vrp-list', component: VrpListComponent, canActivate: [AuthGuard], data: { roles: ['transportista'] }},
+  // Usuarios no logueados
+  { path: 'UserRegistration/new-password', component: NewPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'UserRegistration/login', component: LoginComponent },
+  { path: 'UserRegistration', component: UserRegistrationComponent },
 
-  // SOLO NO LOGUEADOS
-  { path: 'UserRegistration/new-password', component: NewPasswordComponent, canActivate: [AuthGuard], data: { onlyGuest: true } },///
-  { path: 'reset-password', component: ResetPasswordComponent, canActivate: [AuthGuard], data: { onlyGuest: true } },
-  { path: 'UserRegistration/login', component: LoginComponent , canActivate: [AuthGuard], data: { onlyGuest: true } },
-  { path: 'UserRegistration', component: UserRegistrationComponent , canActivate: [AuthGuard], data: { onlyGuest: true } },
-
-  // TODOS
+  // Públicos
   { path: '', redirectTo: 'about-us', pathMatch: 'full' },
-  { path: 'about-us', component: AboutUsComponent, canActivate: [ProfileCompleteGuard] },
-  { path: 'products', component: BodyComponent, canActivate: [ProfileCompleteGuard] },
-  { path: 'product/:productId', component: ProductDetailsComponent, canActivate: [ProfileCompleteGuard] },
-  { path: 'collection/:collection', component: CollectionComponent, canActivate: [ProfileCompleteGuard] },
-  { path: '**', component: NotFoundComponent, data: { hideHeaderFooter: true } },
+  { path: 'about-us', component: AboutUsComponent },
+  { path: 'products', component: BodyComponent },
+  { path: 'product/:productId', component: ProductDetailsComponent },
+  { path: 'collection/:collection', component: CollectionComponent },
 
+  // Página no encontrada
+  { path: '**', component: NotFoundComponent, data: { hideHeaderFooter: true } },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
