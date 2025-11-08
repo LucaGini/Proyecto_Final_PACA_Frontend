@@ -1,8 +1,13 @@
 <div *ngIf="weeklyRoutes" class="vrp-container">
-  <!-- Encabezado con total de órdenes y botón de exportar -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
 
+  <div class="d-flex gap-2">
+    <!-- Botón de cron dinámico -->
+    <button class="btn-cron" (click)="openCronModal()">
+      <mat-icon>local_shipping</mat-icon></button>
+
+    <!-- Botón de descarga -->
     <button class="gral-button" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }">
       <ng-container *ngIf="isLoading; else normalBtn">
         <div class="spinner"></div>
@@ -13,6 +18,59 @@
       </ng-template>
     </button>
   </div>
+</div>
+
+
+<!-- Modal Configuración CRON -->
+<div class="modal-backdrop" *ngIf="showCronModal">
+  <div class="modal-content">
+    <div class="modal-body">
+  <h4>Configurar ejecución automática</h4>
+
+  <div class="cron-form">
+    <!-- Día de la semana -->
+    <label for="daySelect">Día de la semana</label>
+    <select id="daySelect" class="form-select" [(ngModel)]="selectedDay">
+      <option *ngFor="let d of days" [value]="d.value">{{ d.label }}</option>
+    </select>
+
+    <!-- Hora y minutos -->
+    <div class="time-inputs">
+      <div>
+        <label for="hourInput">Hora</label>
+        <input
+          id="hourInput"
+          type="number"
+          min="0"
+          max="23"
+          class="form-control"
+          [(ngModel)]="selectedHour"
+        />
+      </div>
+      <div>
+        <label for="minuteInput">Minuto</label>
+        <input
+          id="minuteInput"
+          type="number"
+          min="0"
+          max="59"
+          class="form-control"
+          [(ngModel)]="selectedMinute"
+        />
+      </div>
+    </div>
+
+    <button class="btn btn-primary mt-3" (click)="applyCronChange()">
+      Guardar configuración
+    </button>
+    <button type="button" class="btn btn-secondary" id="Close" data-bs-dismiss="modal" (click)="closeCronModal()"> 
+      Cerrar
+    </button>
+  </div>
+</div>
+
+    </div>
+</div>
 
   <!-- Órdenes por provincia -->
   <div *ngFor="let province of getProvinces(); let i = index" class="card shadow-sm" [style.--animation-order]="i">
