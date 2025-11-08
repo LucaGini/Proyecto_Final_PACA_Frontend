@@ -20,12 +20,33 @@
     backdrop-filter: blur(10px);
     border-radius: 15px;
     padding: 2rem;
-    box-shadow: 0 10px 30px rgba(231, 198, 51, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 15px 35px rgba(231, 198, 51, 0.15);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .total {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff6e5;
+    border: 1px solid #d4b876;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 0;
+
+      span {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #6b8e23;
+      }
     }
   }
 
@@ -35,7 +56,6 @@
     justify-content: center;
     align-items: center;
     padding: 0.5rem 0;
-
 
     .card-img-top {
       width: 260px;
@@ -55,17 +75,15 @@
 
     .overlay-text {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.6);
+      bottom: 10px;
+      left: 10px;
+      background: rgba(200, 0, 0, 0.8);
       color: #fff;
-      font-weight: 700;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      pointer-events: none;
-      z-index: 2;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      font-weight: bold;
+      text-transform: uppercase;
     }
   }
 
@@ -95,9 +113,20 @@
       }
     }
 
-    .card-text {
+    .card-description {
       color: #666;
+      font-size: 1rem;
+      line-height: 1.4rem;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 3; // máximo 3 líneas
+      line-clamp: 3; // standard property
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin: 0;
     }
+
     .price {
       font-size: 1.8rem;
       font-weight: 600;
@@ -106,33 +135,12 @@
     }
 
     .btn-container {
-      .btn-add {
-        background: linear-gradient(45deg, #e7c633, #ffd700);
-        color: white;
-        border: none;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        font-weight: 550;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(231, 198, 51, 0.2);
+      display: flex;
+      gap: 0.5rem;
 
-        &:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(231, 198, 51, 0.3);
-          background: linear-gradient(45deg, #ffd700, #e7c633);
-        }
-
-        &:active:not(:disabled) {
-          transform: translateY(1px);
-        }
-
-        &:disabled {
-          background: #ccc !important;
-          color: #777 !important;
-          cursor: not-allowed;
-          box-shadow: none;
-        }
+      .btn.add,
+      .btn.remove {
+        padding: 0.4rem 0.7rem;
       }
     }
   }
@@ -149,6 +157,7 @@
     width: 220px;
     height: 220px;
   }
+
   .btn-add {
     width: 100%;
   }

@@ -70,8 +70,8 @@
   </div>
 
   <div class="action-buttons mt-3 d-flex gap-2">
-    <button class="gral-button btn-edit" (click)="edit()"><i class="fas fa-edit"></i> Editar Datos</button>
-    <button class="gral-button btn-danger" (click)="delete()"><i class="fas fa-trash"></i> Dar de baja</button>
+    <button class="btn edit" (click)="edit()"><i class="fas fa-edit"></i> Editar Datos</button>
+    <button class="btn danger" (click)="delete()"><i class="fas fa-trash"></i> Dar de baja</button>
   </div>
 
   <div class="loading-container" *ngIf="!userData && !isEditMode">
@@ -211,8 +211,8 @@
     </div>
 
     <div class="form-actions mt-3 d-flex gap-2">
-      <button type="submit" class="gral-button btn-save" [disabled]="userForm.invalid">Guardar cambios</button>
-      <button type="button" class="gral-button btn-danger" (click)="cancelEdit()">Cancelar</button>
+      <button type="submit" class="btn btn-save" [disabled]="userForm.invalid">Guardar cambios</button>
+      <button type="button" class="btn danger" (click)="cancelEdit()">Cancelar</button>
     </div>
   </form>
 </div>

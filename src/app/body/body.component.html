@@ -1,14 +1,10 @@
-<!-- Mensaje cuando no hay productos -->
-<div *ngIf="products.length === 0" class="no-products-message">
-  <mat-icon>inventory_2_off</mat-icon>
-  <h3>No se encontraron productos</h3>
-  <p *ngIf="isSearching">Intenta con otros términos de búsqueda.</p>
-  <p *ngIf="!isSearching">No hay productos disponibles en este momento.</p>
-</div>
-
 <!-- Contenedor de productos -->
 <div *ngIf="products.length > 0" class="products-container">
-  <div class="product-card" *ngFor="let product of products" [ngClass]="{ 'out-of-stock': product.stock === 0 }">
+  <div
+    class="product-card"
+    *ngFor="let product of products"
+    [ngClass]="{ 'out-of-stock': product.stock === 0 }"
+  >
     <!-- Imagen -->
     <div class="image-wrapper">
       <img [src]="getImageUrl(product.image)" [alt]="product.name" />
@@ -21,8 +17,26 @@
       <p class="card-text truncate">{{ product.description }}</p>
       <p class="price">Precio: ${{ product.price }}</p>
 
+      <!-- Botones -->
       <div class="button-container">
-        <a [routerLink]="['/product', product.id]" class="btn"> Ver producto </a>
+        <a [routerLink]="['/product', product.id]" class="btn info">Ver producto</a>
+
+        <!-- Añadir -->
+        <button
+          *ngIf="!isInCart(product.id) && showAddButton()"
+          class="btn add"
+          (click)="addToCart(product)"
+          [disabled]="product.stock === 0">
+          Añadir al carrito
+        </button>
+
+        <!-- Quitar -->
+        <button
+          *ngIf="isInCart(product.id) && showAddButton()"
+          class="btn remove"
+          (click)="removeFromCart(product)">
+          Quitar del carrito
+        </button>
       </div>
     </div>
   </div>

@@ -381,16 +381,16 @@ mat-accordion {
 }
 
 // icono del boton de descarga
-  .gral-button {
-  display: inline-flex;      
-  align-items: center;       
-  justify-content: center;   
-  gap: 6px;                  
+  .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.gral-button mat-icon {
-  display: inline-flex;      
-  align-items: center;       
-  font-size: 20px;           
-  line-height: 1;            
+.btn mat-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 20px;
+  line-height: 1;
 }

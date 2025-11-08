@@ -8,7 +8,8 @@
       <mat-icon>local_shipping</mat-icon></button>
 
     <!-- Botón de descarga -->
-    <button class="gral-button" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }">
+    <button class="btn" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }">
+
       <ng-container *ngIf="isLoading; else normalBtn">
         <div class="spinner"></div>
         Descargando...

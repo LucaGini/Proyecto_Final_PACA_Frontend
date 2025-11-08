@@ -28,7 +28,7 @@
 
     <!-- BOTÓN DERECHA -->
     <div class="nav-item form-group align-button pr-5">
-      <button class="gral-button" (click)="downloadPDF()"[disabled]="isLoading() || !hasAnyChartDataFlag || isDateRangeEmpty"
+      <button class="btn" (click)="downloadPDF()"[disabled]="isLoading() || !hasAnyChartDataFlag || isDateRangeEmpty"
         [ngClass]="{ 'disabled-btn': isLoading() || !hasAnyChartDataFlag }"
       >
         <ng-container *ngIf="isLoading(); else normalBtn">

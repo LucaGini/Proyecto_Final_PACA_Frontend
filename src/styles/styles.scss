@@ -266,57 +266,79 @@ a {
   box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
 }
 
-.gral-button {
-  background: linear-gradient(45deg, #ca8a4a, #ca8a4a);
-  color: white;
+
+.btn {
+  background-color: #a67c52 !important;
+  display: block;
+  width: auto;
+  min-width: 200px;
+  color: white !important;
   border: none;
-  padding: 1rem 2rem;
+  padding: 0.8rem 1.4rem;
   border-radius: 8px;
   font-weight: 550;
   font-size: 1.1rem;
   letter-spacing: 0.5px;
-  width: auto;
-  min-width: 200px;
-
-  display: block;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 5px #b38558;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 
   &:hover {
-    box-shadow: 0 5px 15px #b38558;
-    transform: scale(1.05);
+    background-color: #a67c52 !important;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    transform: scale(1.01);
   }
 
   &:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-  }
-
-  &:disabled {
-    background: #ccc;
-    color: #777;
+    opacity: 0.4;
+    background-color: #a67c52 !important;
     cursor: not-allowed;
     box-shadow: none;
     transform: none;
+    color: white;
   }
 
-  &.btn-edit {
-    background: linear-gradient(45deg, #e7c633, #ffd700);
+  &.add {
+    background-color: #6b8e23 !important;
+  }
+
+  &.remove {
+    background-color: #c94c4c !important;
+  }
+
+  &.info {
+    min-width: 0px;
+
+    width: 8rem;
+    font-size: 0.8rem;
+    color: rgb(255, 255, 255);
+    padding: 0.2rem 0.4rem;
+    background-color: #2491f090 !important;
+  }
+
+  &.back {
+    background-color: #6b8e23 !important;
+  }
+
+  &.confirm {
+    background: #a67c52 !important;
+  }
+
+  &.edit {
+    background: linear-gradient(45deg, #e7c633, #ffd700) !important;
     border: none;
 
     &:hover {
-      box-shadow: 0 5px 15px rgba(231, 198, 51);
+      box-shadow: 0 5px 15px rgba(231, 198, 51) !important;
     }
   }
 
-  &.btn-danger {
-    background: #dc3545;
+  &.danger {
+    background: #dc3545 !important;
     border: none;
 
     &:hover {
-      box-shadow: 0 5px 15px rgba(220, 53, 69);
+      box-shadow: 0 5px 15px rgba(220, 53, 69) !important;
     }
   }
 
