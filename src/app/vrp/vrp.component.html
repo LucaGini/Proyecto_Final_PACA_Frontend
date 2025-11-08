@@ -3,6 +3,10 @@
   <h3 class="fw-bold">Total de órdenes: {{ weeklyRoutes.totalOrders }}</h3>
 
   <div class="d-flex gap-2">
+    <!-- Botón de cron dinámico -->
+    <button class="btn-cron" (click)="openCronModal()">
+      <mat-icon>local_shipping</mat-icon></button>
+
     <!-- Botón de descarga -->
     <button class="gral-button" (click)="downloadPDF()" [disabled]="isLoading" [ngClass]="{ 'disabled-btn': isLoading }">
       <ng-container *ngIf="isLoading; else normalBtn">
@@ -16,10 +20,6 @@
   </div>
 </div>
 
-<!-- Botón para abrir modal -->
-<button class="btn btn-outline-primary" (click)="openCronModal()">
-  <i class="bi bi-clock-history"></i> Configurar CRON
-</button>
 
 <!-- Modal Configuración CRON -->
 <div class="modal-backdrop" *ngIf="showCronModal">
