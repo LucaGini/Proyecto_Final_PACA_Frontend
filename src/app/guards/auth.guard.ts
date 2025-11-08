@@ -26,36 +26,33 @@ export class AuthGuard implements CanActivate {
     const allowedRoles = route.data['roles'] as string[] | undefined;
     const excludeRoles = route.data['excludeRoles'] as string[] | undefined;
 
-    // No logueados
+    // --- SOLO USUARIOS NO LOGUEADOS ---
     if (route.data['onlyGuest']) {
       if (isLoggedIn) {
         this.denyAccess('Solo usuarios no logueados pueden acceder a esta sección.');
-        return this.router.parseUrl('/');
+        return this.safeRedirect(state);
       }
       return true;
     }
 
-    // Logueados
+    // --- USUARIOS NO LOGUEADOS ---
     if (!isLoggedIn) {
       if (allowedRoles) {
         this.denyAccess('Debés iniciar sesión para acceder a esta sección.');
-        return this.router.parseUrl('/');
+        return this.safeRedirect(state);
       }
-      if (excludeRoles) {
-        return true;
-      }
+      return true;
     }
 
-    // No está logueado pero no hay restriccion 
+    // --- ROLES NO PERMITIDOS ---
     if (allowedRoles && !allowedRoles.includes(userRole)) {
       this.denyAccess('No tiene permiso para acceder a esta sección.');
-      return this.router.parseUrl('/');
+      return this.safeRedirect(state);
     }
 
-    // El rol tiene acceso
     if (excludeRoles && excludeRoles.includes(userRole)) {
       this.denyAccess('No tiene permiso para acceder a esta sección.');
-      return this.router.parseUrl('/');
+      return this.safeRedirect(state);
     }
 
     return true;
@@ -64,7 +61,13 @@ export class AuthGuard implements CanActivate {
   private denyAccess(reason: string): void {
     this.utils.showTimedInfo('Acceso denegado', reason);
   }
-}
-    
 
-  
+  /** Redirige de forma segura evitando bucles infinitos */
+  private safeRedirect(state: RouterStateSnapshot): UrlTree {
+    // Si ya estás en /about-us, no redirige de nuevo
+    if (state.url === '/about-us') {
+      return this.router.parseUrl('/about-us');
+    }
+    return this.router.parseUrl('/about-us');
+  }
+}

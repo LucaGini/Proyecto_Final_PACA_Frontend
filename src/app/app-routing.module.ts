@@ -24,7 +24,7 @@ import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cit
 import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
 import { OrdersHistoryComponent } from './orders/orders-history/orders-history.component';
 import { AuthGuard } from './guards/auth.guard';
-import { ProfileCompleteGuard } from './guards/profile-complete.guard';
+//import { ProfileCompleteGuard } from './guards/profile-complete.guard';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { VrpComponent } from './vrp/vrp.component';
@@ -53,7 +53,7 @@ const routes: Routes = [
 
   // === SOLO USUARIO ===
   { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['usuario'] }},
-  { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate: [AuthGuard, ProfileCompleteGuard], data: { roles: ['usuario'] }},
+  { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate:[AuthGuard], data: { roles: ['usuario'] }},
 
   // === SOLO TRANSPORTISTAS ===
   { path: 'vrp-list', component: VrpListComponent, canActivate: [AuthGuard], data: { roles: ['transportista'] }},
@@ -66,10 +66,10 @@ const routes: Routes = [
 
   // === TODOS ===
   { path: '', redirectTo: 'about-us', pathMatch: 'full' },
-  { path: 'about-us', component: AboutUsComponent, canActivate: [ProfileCompleteGuard] },
-  { path: 'products', component: BodyComponent, canActivate: [ProfileCompleteGuard] },
-  { path: 'product/:productId', component: ProductDetailsComponent, canActivate: [ProfileCompleteGuard] },
-  { path: 'collection/:collection', component: CollectionComponent, canActivate: [ProfileCompleteGuard] },
+  { path: 'about-us', component: AboutUsComponent},
+  { path: 'products', component: BodyComponent},
+  { path: 'product/:productId', component: ProductDetailsComponent},
+  { path: 'collection/:collection', component: CollectionComponent},
   { path: '**', component: NotFoundComponent, data: { hideHeaderFooter: true } },
 ];
 
