@@ -51,9 +51,9 @@ const routes: Routes = [
   // === SOLO CLIENTES Y NO LOGUEADOS ===
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador','transportista'] }},
 
-  // === SOLO USUARIO ===
-  { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['usuario'] }},
-  { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate:[AuthGuard], data: { roles: ['usuario'] }},
+  // === SOLO cliente ===
+  { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['cliente'] }},
+  { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate:[AuthGuard], data: { roles: ['cliente'] }},
 
   // === SOLO TRANSPORTISTAS ===
   { path: 'vrp-list', component: VrpListComponent, canActivate: [AuthGuard], data: { roles: ['transportista'] }},
