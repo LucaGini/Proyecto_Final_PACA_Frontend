@@ -9,23 +9,23 @@
         <li class="nav-item">
           <div class="form-group">
             <div class="filter-header">
-              <h2 style="font-family: 'Quicksand', sans-serif; ">Filtros</h2>
+              <h2 style="font-family: 'Quicksand', sans-serif;">Filtros</h2>
               <button *ngIf="hasActiveFilters()" type="button" class="clear-filters-btn" (click)="clearAllFilters()" matTooltip="Limpiar todos los filtros">
                 <mat-icon>filter_list_off</mat-icon>
               </button>
             </div>
-            <label for="userStatus">Estado del usuario:</label>
-            <select class="form-control" id="userStatus" (change)="onUserStatusChange($event)" [(ngModel)]="selectedUserStatus" name="userStatus" required>
+            <label for="userStatus">Estado del usuario</label>
+            <select class="form-control" id="userStatus" (change)="onUserStatusChange($event)" [(ngModel)]="selectedUserStatus" name="userStatus">
               <option value="">Todos</option>
               <option value="active">Activos</option>
               <option value="inactive">Desactivados</option>
             </select>
-          </div>  
+          </div>
         </li>
       </ul>
     </div>
   </div>
-</nav>  
+</nav>
 
 <!-- Mensaje cuando no hay usuarios -->
 <div *ngIf="users.length === 0" class="no-users-message">
@@ -36,21 +36,25 @@
 </div>
 
 <!-- Contenedor de usuarios cuando hay usuarios disponibles -->
-<div *ngIf="users.length > 0" class="users-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
-  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 py-2 mb-3" *ngFor="let user of users" id="user">
-      <div class="card card-user">
-        <div class="card-body">
-          <button mat-icon-button class="delete-button" *ngIf="user.isActive && user.privilege === 'cliente'" (click)="deleteUser(user)">
-            <span class="material-symbols-outlined">cancel</span>
-          </button>
-          <h3 class="card-text truncate">Nombre: {{ user.firstName }}</h3>
-          <h3 class="card-text truncate">Apellido: {{ user.lastName }}</h3>
-          <h3 class="card-text truncate">Email: {{ user.email }}</h3>
-          <h3 class="card-text truncate">Telefono: {{ user.phone }}</h3>
-          <h3 class="card-text truncate">Calle: {{ user.street }}</h3>
-          <h3 class="card-text truncate">Número: {{ user.streetNumber }}</h3>
-        </div>
+<div *ngIf="users.length > 0" class="users-container">
+  <div class="user-card" *ngFor="let user of users">
+    <div class="card card-user">
+      <!-- Botones de acción en la parte superior -->
+      <div class="card-actions">
+        <button mat-icon-button color="warn" *ngIf="user.isActive && user.privilege === 'cliente'" (click)="deleteUser(user)">
+          <mat-icon>cancel</mat-icon>
+        </button>
+        <!-- Podés agregar más botones aquí si lo necesitás -->
       </div>
+
+      <div class="card-body">
+        <h3 class="card-text truncate">Nombre: {{ user.firstName }}</h3>
+        <h3 class="card-text truncate">Apellido: {{ user.lastName }}</h3>
+        <h3 class="card-text truncate">Email: {{ user.email }}</h3>
+        <h3 class="card-text truncate">Teléfono: {{ user.phone }}</h3>
+        <h3 class="card-text truncate">Calle: {{ user.street }}</h3>
+        <h3 class="card-text truncate">Número: {{ user.streetNumber }}</h3>
+      </div>
+    </div>
   </div>
 </div>
-

@@ -228,7 +228,7 @@ export class ChatbotComponent implements OnInit, OnDestroy, AfterViewChecked {
       { text: '¿Qué es PACA?', icon: 'info' },
       { text: '¿Qué productos ofrecen?', icon: 'eco' },
       { text: '¿Cómo hago un pedido?', icon: 'shopping_cart' },
-      { text: '¿Cuánto stock tienen disponible?', icon: 'inventory' },
+      { text: '¿Cuánto stock de productos tienen disponible?', icon: 'inventory' },
       { text: '¿Los productos son orgánicos?', icon: 'verified' },
       { text: '¿Hacen envíos?', icon: 'local_shipping' },
     ];

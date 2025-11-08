@@ -1,3 +1,4 @@
+/* ------------------ CONTENEDOR PRINCIPAL ------------------ */
 .vrp-container {
   padding: 1.5rem;
   animation: fadeIn 0.6s ease-out;
@@ -13,7 +14,6 @@
     border: none;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    animation: fadeIn 0.6s ease-out;
     transition: all 0.3s ease;
 
     &:hover {
@@ -28,33 +28,54 @@
       font-weight: 600;
 
       &.not-geolocated {
-        background: #C94C4C; // color rojo para no geolocalizadas
+        background: #c94c4c;
       }
     }
 
     .card-body {
       background: white;
 
-      .route-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.8rem 1rem;
+      .table-orders {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
 
-        .order-number {
+        th,
+        td {
+          padding: 0.75rem;
+          border-bottom: 1px solid #eee;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        td.order-number {
+          width: 100px;
+          font-weight: bold;
+          color: #333;
+        }
+
+        td.client {
+          width: 200px;
+          color: #555;
+        }
+
+        td.total {
+          width: 120px;
+          color: #6b8e23;
           font-weight: 600;
-          color: #567518;
+          text-align: right;
         }
 
-        .address {
-          font-size: 0.9rem;
-          color: var(--text-color);
+        td.address {
+          width: 300px;
+          color: #666;
         }
 
-        .reason {
-          font-size: 0.85rem;
-          color: #C94C4C;
-          margin-top: 0.2rem;
+        td.reason {
+          width: 200px;
+          color: #c94c4c;
+          font-weight: 500;
         }
       }
     }
@@ -73,14 +94,6 @@
     text-align: center;
     margin-top: 2rem;
     color: var(--text-color);
-    animation: fadeIn 0.6s ease-out;
-
-    mat-icon {
-      font-size: 3rem;
-      color: #e7c633;
-      display: block;
-      margin: 0 auto 0.6rem auto;
-    }
 
     h3 {
       margin: 0.8rem 0;
@@ -93,17 +106,151 @@
   }
 
   .gral-button {
-  display: inline-flex;      // convierte el botón en un contenedor flexible
-  align-items: center;       // alinea ícono y texto al centro vertical
-  justify-content: center;   // centra el contenido en horizontal
-  gap: 6px;                  // espacio automático entre ícono y texto
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
 }
 
-.gral-button mat-icon {
-  display: inline-flex;      // asegura que el ícono se comporte como flex
-  align-items: center;       // centra el contenido del ícono
-  font-size: 20px;           // tamaño uniforme del ícono
-  line-height: 1;            // evita que quede desfasado por altura de línea
+/* ------------------ MODAL CONFIGURACIÓN CRON ------------------ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-in-out;
+
+  .modal-content {
+    background: #fff;
+    border-radius: 16px;
+    padding: 1.8rem;
+    width: 420px;
+    max-width: 90%;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    animation: slideUp 0.35s ease-out;
+    position: relative;
+
+    h4 {
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      color: #333;
+      text-align: center;
+    }
+
+    .cron-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      label {
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 0.2rem;
+      }
+
+      select.form-select,
+      input.form-control {
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        padding: 0.6rem 0.8rem;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+
+        &:focus {
+          outline: none;
+          border-color: #ca8a4a;
+          box-shadow: 0 0 0 3px rgba(202, 138, 74, 0.2);
+        }
+      }
+
+      .time-inputs {
+        display: flex;
+        gap: 1rem;
+
+        div {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+      button {
+        margin-top: 1rem;
+        background: linear-gradient(45deg, #ca8a4a, #b38558);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s ease;
+
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 3px 10px rgba(202, 138, 74, 0.3);
+        }
+      }
+    }
+  }
 }
 
+/* ------------------ ANIMACIONES ------------------ */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
+.btn-cron {
+  background-color: #ca8a4a; /* Combina con el header */
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background-color 0.2s, transform 0.2s;
+  font-size: 0.95rem;
+
+  mat-icon {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background-color: #b38558;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    transform: none;
+  }
 }

@@ -70,6 +70,6 @@ export class ProductDetailsComponent implements OnInit {
     });
   }  
   showDeleteButton(): Boolean{
-    return !this.authService.isAdmin();
+    return !this.authService.isAdmin() && !this.authService.isDriver();
   } 
 }

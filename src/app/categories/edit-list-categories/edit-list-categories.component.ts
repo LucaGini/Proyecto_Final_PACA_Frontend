@@ -1,26 +1,93 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { CategoryService } from 'src/app/services/category.service';
 import { UtilsService } from 'src/app/services/utils.service';
+import { EditGuardService, EditingComponent } from 'src/app/services/edit-guard.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-list-categories',
   templateUrl: './edit-list-categories.component.html',
   styleUrls: ['./edit-list-categories.component.scss']
 })
-export class EditListCategoriesComponent {
+export class EditListCategoriesComponent implements OnDestroy, EditingComponent {
   categories: any[] = [];
+  
+  // Variables para control de navegación
+  private routerSubscription: Subscription = new Subscription();
+  private allowNavigation = false;
+  
+  // Propiedades de EditingComponent
+  componentName = 'edit-list-categories';
   
   constructor(
     private categoryService: CategoryService,
     private route: ActivatedRoute,
     private router: Router,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private editGuardService: EditGuardService
   ) {}
 
   ngOnInit() {
+    // Registrar este componente en el servicio de guardia
+    this.editGuardService.registerComponent(this);
+    
     this.categoryService.categories$.subscribe((data: any) => {
       this.categories = data;
+    });
+    
+    // Listener para advertir al usuario antes de cerrar/recargar la página si hay ediciones pendientes
+    window.addEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
+    
+    // Interceptar navegación dentro de la SPA
+    this.setupNavigationGuard();
+  }
+
+  ngOnDestroy() {
+    // Desregistrar este componente del servicio de guardia
+    this.editGuardService.unregisterComponent(this.componentName);
+    
+    // Limpiar el listener cuando el componente se destruya
+    window.removeEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
+    // Limpiar suscripción del router
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+
+  private beforeUnloadHandler(event: BeforeUnloadEvent): void {
+    if (this.hasCategoriesInEditMode()) {
+      event.preventDefault();
+      event.returnValue = 'Tienes categorías en edición. Si sales, perderás los cambios no guardados.';
+    }
+  }
+
+  private setupNavigationGuard(): void {
+    this.routerSubscription = this.router.events.subscribe(event => {
+      if (event instanceof NavigationStart && !this.allowNavigation) {
+        if (this.hasCategoriesInEditMode()) {
+          // Prevenir la navegación
+          this.router.navigateByUrl(this.router.url);
+          
+          // Mostrar alerta de confirmación
+          this.utils.showConfirm(
+            'Categoría en edición',
+            'Estás editando una categoría. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+          ).then((result) => {
+            if (result.isConfirmed) {
+              // Cancelar todas las ediciones
+              this.cancelAllEdits();
+              // Permitir la navegación
+              this.allowNavigation = true;
+              // Navegar a la URL que el usuario quería
+              this.router.navigateByUrl(event.url).then(() => {
+                // Resetear la bandera después de la navegación exitosa
+                this.allowNavigation = false;
+              });
+            }
+          });
+        }
+      }
     });
   }
 
@@ -55,6 +122,12 @@ export class EditListCategoriesComponent {
   }
 
   edit(category: any): void {
+    // Verificar si ya hay alguna categoría en edición
+    if (this.hasCategoriesInEditMode()) {
+      this.utils.showAlert('warning', 'Categoría en edición', 'Ya tienes una categoría en modo edición. Debes guardar o cancelar los cambios antes de editar otra categoría.');
+      return;
+    }
+
     category.editName = category.name;
     category.editDescription = category.description;
     category.editing = true;
@@ -107,5 +180,36 @@ export class EditListCategoriesComponent {
     this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en la categoría.');
     category.editing = false;
   }
+}
+
+// Métodos auxiliares para el control de edición
+private hasCategoriesInEditMode(): boolean {
+  return this.categories.some(category => category.editing === true);
+}
+
+private cancelAllEdits(): void {
+  this.categories.forEach(category => {
+    if (category.editing) {
+      this.cancelEdit(category);
+    }
+  });
+}
+
+// Implementación de EditingComponent
+hasUnsavedChanges(): boolean {
+  return this.hasCategoriesInEditMode();
+}
+
+async handleUnsavedChanges(): Promise<boolean> {
+  return this.utils.showConfirm(
+    'Categoría en edición',
+    'Estás editando una categoría. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+  ).then((result) => {
+    if (result.isConfirmed) {
+      this.cancelAllEdits();
+      return true;
+    }
+    return false;
+  });
 }
 }

@@ -1,98 +1,61 @@
+.form-group {
+  margin-bottom: 0.5rem;
+}
+
 .provinces-container {
-    padding: 2rem;
-    background: linear-gradient(45deg, rgba(231, 198, 51, 0.05), rgba(255, 255, 255, 0.1));
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  margin: 2rem 0 2rem 0;
+  min-height: 100%;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
 }
 
 .card-body {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 15px;
-    padding: 2rem;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(231, 198, 51, 0.1);
-    backdrop-filter: blur(10px);
-    width: 100%;
+  padding: 1rem;
 }
 
-.form-group {
-    margin-bottom: 1.5rem;
-
-    label {
-        font-family: 'Quicksand', sans-serif;
-        font-weight: 600;
-        color: #444;
-        margin-bottom: 0.5rem;
-        display: block;
-    }
-
-    .form-control {
-        width: 100%;
-        padding: 0.8rem;
-        border: 2px solid #eee;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-
-        &:focus {
-            outline: none;
-            border-color: #e7c633;
-            box-shadow: 0 0 0 4px rgba(231, 198, 51, 0.15);
-        }
-    }
+.card-body h3 {
+  font-size: 1.1rem;
+  margin: 0.3rem 0;
+  font-weight: 600;
+  color: #333;
 }
 
-.example-button-container {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    display: flex;
-    gap: 0.5rem;
-
-    button {
-        transition: all 0.3s ease;
-
-        &:hover {
-            transform: translateY(-2px);
-        }
-
-        &:active {
-            transform: translateY(1px);
-        }
-    }
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  background-color: rgba(232, 232, 232, 0.503);
 }
 
-.card-text {
-    margin: 0;
-    color: #444;
+.card-actions mat-icon {
+  font-size: 20px;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.yellow-btn {
+  color: #ffc107;
 }
 
-.provinces-container>div {
-    animation: fadeIn 0.6s ease-out;
-    animation-fill-mode: both;
-
-    @for $i from 1 through 20 {
-        &:nth-child(#{$i}) {
-            animation-delay: #{$i * 0.1}s;
-        }
-    }
+button[disabled] {
+  opacity: 0.6;
+  pointer-events: none;
 }
 
-.form-control.is-invalid {
-  border-color: #dc3545 !important;
-  box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
-}
 
-button:disabled, button[disabled] {
-  background: #ccc !important;
-  color: #777 !important;
+::ng-deep .mat-mdc-tab-body-content {
+  overflow: hidden !important;
+  padding-bottom: 3rem;
 }

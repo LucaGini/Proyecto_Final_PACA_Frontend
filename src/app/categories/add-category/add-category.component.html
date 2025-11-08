@@ -2,32 +2,46 @@
   <div class="card-body">
     <form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data" novalidate>
 
+      <!-- Nombre -->
       <div class="form-group">
         <label for="name">Nombre</label>
-        <input type="text" class="form-control" id="name" name="name" ngModel required #nameInput="ngModel"[ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }"/>
-        <div *ngIf="nameInput.invalid && nameInput.touched" class="text-danger">
-          <small *ngIf="nameInput.errors?.['required']">El nombre es obligatorio.</small>
-        </div>
+        <input
+          type="text"
+          class="form-control"
+          id="name"
+          name="name"
+          ngModel
+          required
+          #nameInput="ngModel"
+          [ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }"
+        />
+        <small *ngIf="nameInput.invalid && nameInput.touched" class="error-msg">
+          <span *ngIf="nameInput.errors?.['required']">El nombre es obligatorio.</span>
+        </small>
       </div>
 
+      <!-- Descripción -->
       <div class="form-group">
         <label for="description">Descripción</label>
         <textarea
-          class="form-control" id="description" name="description" ngModel required #descriptionInput="ngModel" [ngClass]="{ 'is-invalid': descriptionInput.invalid && descriptionInput.touched }">
-        </textarea>
-        <div *ngIf="descriptionInput.invalid && descriptionInput.touched" class="text-danger">
-          <small *ngIf="descriptionInput.errors?.['required']">La descripción es obligatoria.</small>
-        </div>
+          class="form-control"
+          id="description"
+          name="description"
+          ngModel
+          required
+          #descriptionInput="ngModel"
+          [ngClass]="{ 'is-invalid': descriptionInput.invalid && descriptionInput.touched }"
+        ></textarea>
+        <small *ngIf="descriptionInput.invalid && descriptionInput.touched" class="error-msg">
+          <span *ngIf="descriptionInput.errors?.['required']">La descripción es obligatoria.</span>
+        </small>
+      </div>
+
+      <!-- Botón centrado -->
+      <div class="d-flex justify-content-center">
+        <button type="submit" class="gral-button" [disabled]="addForm.invalid">Guardar</button>
       </div>
 
     </form>
   </div>
 </div>
-
-<div class="d-flex justify-content-center">
-  <button
-    type="submit"form="addForm"id="Accept"class="btn mx-2"[disabled]="addForm.invalid">Guardar
-  </button>
-</div>
-
-

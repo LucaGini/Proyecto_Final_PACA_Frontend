@@ -88,4 +88,8 @@ findProvinceByName(name: string): Observable<any> {
       })
     );
   }
+
+  findByPassword(password: string): Observable<any> {
+  return this.http.post(`${this.URL}/provinces/findByPassword`, { password });
+}
  }

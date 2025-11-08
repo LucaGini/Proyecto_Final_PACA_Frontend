@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 export interface Route {
+  orderId: string;
   orderNumber?: string;
   firstName?: string;
   lastName?: string;

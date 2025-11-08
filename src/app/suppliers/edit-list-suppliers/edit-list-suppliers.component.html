@@ -1,93 +1,105 @@
-<div class="suppliers-container" style="display: flex; flex-wrap: wrap; gap: 15px;">
-  <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 d-flex"
-       style="flex: 0 0 calc(50% - 15px); margin-bottom: 15px;"
-       *ngFor="let supplier of suppliers">
-    <div class="card-body">
-      <div class="example-button-container" style="display: flex; justify-content: flex-end;">
-        <button mat-icon-button class="btn" *ngIf="!supplier.editing" (click)="edit(supplier)" style="color: #e7c633;">
+<div class="suppliers-container">
+  <div class="supplier-card" *ngFor="let supplier of suppliers">
+    <div class="card">
+      <!-- Acciones -->
+      <div class="card-actions">
+        <button mat-icon-button *ngIf="!supplier.editing" class="yellow-btn" (click)="edit(supplier)">
           <mat-icon>create</mat-icon>
         </button>
-
-        <button mat-icon-button class="btn" *ngIf="supplier.editing" (click)="save(supplier)" style="color: #e7c633;"
-                [disabled]="!supplier.editCuit || !supplier.editBusinessName || !supplier.editEmail || !supplier.editPhone">
-          <mat-icon>save_alt</mat-icon>
-        </button>
-
-        <button mat-icon-button class="btn" *ngIf="supplier.editing" (click)="cancelEdit(supplier)" style="color: #f76666; margin-left: 5px;">
-          <mat-icon>cancel</mat-icon>
-        </button>
-
-        <button mat-icon-button class="btn" *ngIf="!supplier.editing" (click)="delete(supplier)" style="color: #f76666;">
+        <button mat-icon-button *ngIf="!supplier.editing" color="warn" (click)="delete(supplier)">
           <mat-icon>delete</mat-icon>
         </button>
+        <button
+          mat-icon-button
+          *ngIf="supplier.editing"
+          color="primary"
+          (click)="save(supplier)"
+          [disabled]="!supplier.editCuit || !supplier.editBusinessName || !supplier.editEmail || !supplier.editPhone"
+        >
+          <mat-icon>save_alt</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="supplier.editing" color="warn" (click)="cancelEdit(supplier)">
+          <mat-icon>cancel</mat-icon>
+        </button>
       </div>
 
-      <div *ngIf="supplier.editing">
-        <div class="form-group">
-          <label for="cuit">Cuit: </label>
-          <input type="text" class="form-control" id="cuit"
-                 [(ngModel)]="supplier.editCuit" name="cuit" required pattern="^[0-9]{11}$" #cuitInput="ngModel"
-                 [ngClass]="{ 'is-invalid': cuitInput.invalid && cuitInput.touched }" />
-          <div *ngIf="cuitInput.invalid && cuitInput.touched" class="text-danger">
-            <small *ngIf="cuitInput.errors?.['required']">El CUIT es obligatorio.</small>
-            <small *ngIf="cuitInput.errors?.['pattern']">Debe tener exactamente 11 números.</small>
+      <div class="card-body">
+        <!-- Editable -->
+        <div *ngIf="supplier.editing" class="edit-mode">
+          <div class="form-group">
+            <label>CUIT</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="supplier.editCuit"
+              required
+              pattern="^[0-9]{11}$"
+              #cuitInput="ngModel"
+              [ngClass]="{ 'is-invalid': cuitInput.invalid && cuitInput.touched }"
+            />
+            <small *ngIf="cuitInput.invalid && cuitInput.touched" class="error-msg">
+              <span *ngIf="cuitInput.errors?.['required']">El CUIT es obligatorio.</span>
+              <span *ngIf="cuitInput.errors?.['pattern']">Debe tener exactamente 11 números.</span>
+            </small>
           </div>
-        </div>
-      </div>
 
-      <div *ngIf="!supplier.editing">
-        <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">CUIT: {{ supplier.cuit }}</h2>
-      </div>
-
-      <div *ngIf="supplier.editing">
-        <div class="form-group">
-          <label for="businessName">Nombre: </label>
-          <input type="text" class="form-control" id="businessName"
-                 [(ngModel)]="supplier.editBusinessName" name="businessName" required #nameInput="ngModel"
-                 [ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }" />
-          <div *ngIf="nameInput.invalid && nameInput.touched" class="text-danger">
-            <small>El nombre es obligatorio.</small>
+          <div class="form-group">
+            <label>Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="supplier.editBusinessName"
+              required
+              #nameInput="ngModel"
+              [ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }"
+            />
+            <small *ngIf="nameInput.invalid && nameInput.touched" class="error-msg">El nombre es obligatorio.</small>
           </div>
-        </div>
-      </div>
 
-      <div *ngIf="!supplier.editing">
-        <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Nombre: {{ supplier.businessName }}</h2>
-      </div>
-
-      <div *ngIf="supplier.editing">
-      <div class="form-group">
-        <label for="email">Email: </label>
-        <input type="email" class="form-control" id="email"
-              [(ngModel)]="supplier.editEmail" name="email" required email
+          <div class="form-group">
+            <label>Email</label>
+            <input
+              type="email"
+              class="form-control"
+              [(ngModel)]="supplier.editEmail"
+              required
               #emailInput="ngModel"
-              [ngClass]="{ 'is-invalid': emailInput.invalid && emailInput.touched }" />
-        <div *ngIf="emailInput.invalid && emailInput.touched" class="text-danger">
-          <small *ngIf="emailInput.errors?.['required']">El email es obligatorio.</small>
-          <small *ngIf="emailInput.errors?.['email']">El email debe tener un formato válido.</small>
-        </div>
-      </div>
-    </div>
+              [ngClass]="{ 'is-invalid': emailInput.invalid && emailInput.touched }"
+            />
+            <small *ngIf="emailInput.invalid && emailInput.touched" class="error-msg">
+              <span *ngIf="emailInput.errors?.['required']">El email es obligatorio.</span>
+              <span *ngIf="emailInput.errors?.['email']">Formato inválido.</span>
+            </small>
+          </div>
 
-
-      <div *ngIf="!supplier.editing">
-        <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Email: {{ supplier.email }}</h2>
-      </div>
-
-      <div *ngIf="supplier.editing">
-        <div class="form-group">
-          <label for="phone">Teléfono: </label>
-          <input type="text" class="form-control" id="phone"
-                 [(ngModel)]="supplier.editPhone" name="phone" required #phoneInput="ngModel"
-                 [ngClass]="{ 'is-invalid': phoneInput.invalid && phoneInput.touched }" />
-          <div *ngIf="phoneInput.invalid && phoneInput.touched" class="text-danger">
-            <small>El teléfono es obligatorio.</small>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="supplier.editPhone"
+              required
+              #phoneInput="ngModel"
+              [ngClass]="{ 'is-invalid': phoneInput.invalid && phoneInput.touched }"
+            />
+            <small *ngIf="phoneInput.invalid && phoneInput.touched" class="error-msg">El teléfono es obligatorio.</small>
           </div>
         </div>
-      </div>
 
-      <div *ngIf="!supplier.editing">
-        <h2 class="card-text" style="font-family: 'Quicksand', sans-serif;">Teléfono: {{ supplier.phone }}</h2>
+        <!-- No editable -->
+        <div *ngIf="!supplier.editing">
+          <h3 class="card-text">CUIT</h3>
+          <p class="truncate">{{ supplier.cuit }}</p>
+
+          <h3 class="card-text">Nombre</h3>
+          <p class="truncate">{{ supplier.businessName }}</p>
+
+          <h3 class="card-text">Email</h3>
+          <p class="truncate">{{ supplier.email }}</p>
+
+          <h3 class="card-text">Teléfono</h3>
+          <p>{{ supplier.phone }}</p>
+        </div>
       </div>
     </div>
   </div>
