@@ -18,4 +18,82 @@
   }
 }
 
+// Estilos personalizados para el botón de Google
+#google-signin-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  
+  // Personalizar el botón de Google
+  div[role="button"] {
+    border-radius: 8px !important;
+    border: 2px solid #e5e5e5 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease !important;
+    width: 100% !important;
+    max-width: 300px !important;
+    height: 48px !important;
+    
+    &:hover {
+      border-color: #567518 !important;
+      box-shadow: 0 4px 12px rgba(86, 117, 24, 0.15) !important;
+      transform: translateY(-1px) !important;
+    }
+    
+    &:active {
+      transform: translateY(0) !important;
+      box-shadow: 0 2px 6px rgba(86, 117, 24, 0.2) !important;
+    }
+  }
+  
+  // Mejorar el texto del botón
+  span {
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    color: #3c4043 !important;
+  }
+}
+
+// Contenedor del separador "o"
+.separator-container {
+  position: relative;
+  text-align: center;
+  margin: 1.5rem 0;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #e5e5e5, transparent);
+    z-index: 1;
+  }
+  
+  .separator-text {
+    background: white;
+    padding: 0 1rem;
+    color: #6c757d;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+  }
+}
+
+// Estilos adicionales para mejorar la apariencia general
+.google-signin-section {
+  margin-top: 1rem;
+  padding: 0 1rem;
+  
+  .google-signin-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+}
+
 

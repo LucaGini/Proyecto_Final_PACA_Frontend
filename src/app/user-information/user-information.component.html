@@ -1,4 +1,14 @@
 <div class="form-container" *ngIf="!isEditMode && userData">
+  <!-- Mensaje de perfil incompleto -->
+  <div class="alert alert-warning mb-3" *ngIf="!isProfileComplete">
+    <h4><i class="fas fa-exclamation-triangle"></i> Perfil Incompleto</h4>
+    <p>Para continuar usando la plataforma, debe completar los siguientes campos obligatorios:</p>
+    <ul>
+      <li *ngFor="let field of missingFields">{{ field }}</li>
+    </ul>
+    <p><strong>Por favor, haga clic en "Editar Datos" para completar su información.</strong></p>
+  </div>
+
   <h2>Información de Usuario</h2>
 
   <div class="row">
