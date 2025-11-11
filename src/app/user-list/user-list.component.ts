@@ -55,7 +55,7 @@ export class UserListComponent {
     } else if (this.selectedUserStatus === 'inactive') {
       isActive = false;
     }
-    this.userService.getUsers(isActive, searchTerm).subscribe((data: any) => {
+    this.userService.getUsers('cliente', isActive, searchTerm).subscribe((data: any) => {
       this.users = data.data || data;
     });
   }

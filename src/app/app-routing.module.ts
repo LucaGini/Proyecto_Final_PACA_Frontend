@@ -30,6 +30,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { VrpComponent } from './vrp/vrp.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { VrpListComponent } from './vrp-list/vrp-list.component';
+import { DriverComponent } from './driver/add-driver/add-driver.component';
+import { EditListDriverComponent } from './driver/edit-list-driver/edit-list-driver.component';
 
 const routes: Routes = [
   // === SOLO ADMINISTRADOR ===
@@ -67,6 +69,9 @@ const routes: Routes = [
   // === TODOS ===
   { path: '', redirectTo: 'about-us', pathMatch: 'full' },
   { path: 'about-us', component: AboutUsComponent},
+  { path: 'driver', component:DriverComponent },
+  { path: 'a', component: EditListDriverComponent },
+  //{ path: 'EditListDriver', component: EditListDriverComponent },
   { path: 'products', component: BodyComponent},
   { path: 'product/:productId', component: ProductDetailsComponent},
   { path: 'collection/:collection', component: CollectionComponent},

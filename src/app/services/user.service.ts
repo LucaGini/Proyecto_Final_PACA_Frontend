@@ -19,8 +19,6 @@ export class UserService {
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('access_token'); // Usar la misma clave que AuthService
-    console.log('🔑 Token obtenido:', token ? 'Token presente' : 'No hay token');
-    console.log('🔑 Token completo:', token);
     return new HttpHeaders({
       'Authorization': token ? `Bearer ${token}` : ''
     });
@@ -102,24 +100,23 @@ update(user: any): Observable<any> {
     })
   );
 }
-getUsers(isActive: boolean | null, searchTerm?: string): Observable<User[]> {
-    let params = new HttpParams();
+getUsers(privilege: string, isActive: boolean | null, searchTerm?: string): Observable<User[]> {
+  let params = new HttpParams();
 
-    if (isActive !== null) {
-      params = params.set('isActive', isActive.toString());
-    }
-
-    if (searchTerm && searchTerm.trim() !== '') {
-      params = params.set('q', searchTerm.trim());
-    }
-
-    return this.http.get<User[]>(`${this.URL}/users`, { params });
+  if (privilege) {
+    params = params.set('privilege', privilege);
   }
 
-  /**
-   * Verifica si el perfil del usuario está completo
-   * Un perfil se considera incompleto si faltan campos obligatorios para usuarios registrados con OAuth
-   */
+  if (isActive !== null) {
+    params = params.set('isActive', isActive.toString());
+  }
+
+  if (searchTerm && searchTerm.trim() !== '') {
+    params = params.set('q', searchTerm.trim());
+  }
+
+  return this.http.get<User[]>(`${this.URL}/users`, { params });
+}
   isProfileComplete(user: any): boolean {
     if (!user) return false;
     

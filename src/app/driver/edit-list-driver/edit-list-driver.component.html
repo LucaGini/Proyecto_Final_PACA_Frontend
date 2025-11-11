@@ -1,0 +1,61 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <div class="form-group">
+            <div class="filter-header">
+              <h2 style="font-family: 'Quicksand', sans-serif;">Filtros</h2>
+              <button *ngIf="hasActiveFilters()" type="button" class="clear-filters-btn" (click)="clearAllFilters()" matTooltip="Limpiar todos los filtros">
+                <mat-icon>filter_list_off</mat-icon>
+              </button>
+            </div>
+            <label for="userStatus">Estado del usuario</label>
+            <select class="form-control" id="userStatus" (change)="onUserStatusChange($event)" [(ngModel)]="selectedUserStatus" name="userStatus">
+              <option value="">Todos</option>
+              <option value="active">Activos</option>
+              <option value="inactive">Desactivados</option>
+            </select>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Mensaje cuando no hay transportistas -->
+<div *ngIf="users.length === 0" class="no-users-message">
+  <mat-icon>group_off</mat-icon>
+  <h3>No hay traspostistas disponibles</h3>
+  <p *ngIf="hasActiveFilters()">No se encontraron transportistas con los filtros aplicados. Intenta ajustar los criterios de búsqueda.</p>
+  <p *ngIf="!hasActiveFilters()">No hay transportistas registrados en el sistema en este momento.</p>
+</div>
+
+<!-- Contenedor de transportistas cuando hay transportistas disponibles -->
+<div *ngIf="users.length > 0" class="users-container">
+  <div class="user-card" *ngFor="let user of users">
+    <div class="card card-user">
+      <!-- Botones de acción en la parte superior -->
+      <div class="card-actions">
+        <button mat-icon-button color="warn" *ngIf="user.isActive && user.privilege === 'transportista'" (click)="deleteUser(user)">
+          <mat-icon>cancel</mat-icon>
+        </button>
+        <!-- Podés agregar más botones aquí si lo necesitás -->
+      </div>
+
+      <div class="card-body">
+        <h3 class="card-text truncate">Nombre: {{ user.firstName }}</h3>
+        <h3 class="card-text truncate">Apellido: {{ user.lastName }}</h3>
+        <h3 class="card-text truncate">Email: {{ user.email }}</h3>
+        <h3 class="card-text truncate">Teléfono: {{ user.phone }}</h3>
+        <h3 class="card-text truncate">Calle: {{ user.street }}</h3>
+        <h3 class="card-text truncate">Número: {{ user.streetNumber }}</h3>
+      </div>
+    </div>
+  </div>
+</div>
+
