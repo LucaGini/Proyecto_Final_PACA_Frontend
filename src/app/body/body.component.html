@@ -41,3 +41,12 @@
     </div>
   </div>
 </div>
+
+<!-- Pagination Component (only for regular product browsing, not search) -->
+<app-pagination 
+  *ngIf="pagination && !isSearching"
+  [pagination]="pagination" 
+  [currentPage]="currentPage" 
+  (pageChange)="onPageChange($event)" 
+  (pageSizeChange)="onPageSizeChange($event)">
+</app-pagination>

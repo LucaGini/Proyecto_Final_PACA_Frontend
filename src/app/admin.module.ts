@@ -44,6 +44,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { VrpComponent } from './vrp/vrp.component';
 import { VrpListComponent } from './vrp-list/vrp-list.component';
 
+// Import SharedModule from the correct path
+import { SharedModule } from './shared/shared.module';
+
 @NgModule({
   declarations: [
     AdminProductsComponent,
@@ -82,7 +85,8 @@ import { VrpListComponent } from './vrp-list/vrp-list.component';
     MatMenuModule,
     MatTabsModule,
     NgChartsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    SharedModule
   ],
 })
 export class AdminModule { }

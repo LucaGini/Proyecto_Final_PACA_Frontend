@@ -10,6 +10,7 @@ import { UtilsService } from 'src/app/services/utils.service';
 import { EditGuardService, EditingComponent } from 'src/app/services/edit-guard.service';
 import Swal from 'sweetalert2';
 import { Subscription } from 'rxjs';
+import { PaginationMetadata } from '../../models/pagination.interface';
 
 @Component({
   selector: 'app-edit-list-products',
@@ -27,6 +28,11 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   selectedSupplierCuit: number | string = '';
   selectedCategoryName: string = '';
   selectedStatus: boolean | string = '';
+  
+  // Pagination properties
+  pagination: PaginationMetadata | null = null;
+  currentPage = 1;
+  pageSize = 20;
   
   // Variables para control de navegación
   private routerSubscription: Subscription = new Subscription();
@@ -63,22 +69,19 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
     // Registrar este componente en el servicio de guardia
     this.editGuardService.registerComponent(this);
     
-    // Cargar todos los productos inicialmente
-    this.productService.products$.subscribe((data: any) => {
-      this.allProducts = data;
-      this.applyFilters(); // Aplicar filtros cada vez que se actualicen los productos
-    });
+    // Load products with pagination
+    this.loadProducts();
 
     // Escuchar cambios en el filtro de proveedor
     this.filterProductsSupplierService.supplierSelected$.subscribe((cuit: number) => {
       this.selectedSupplierCuit = cuit;
-      this.applyFilters();
+      this.loadProducts(1); // Reset to first page when filtering
     });
 
     // Escuchar cambios en el filtro de categoría
     this.filterProductsCategoryService.categorySelected$.subscribe((categoryName: string) => {
       this.selectedCategoryName = categoryName;
-      this.applyFilters();
+      this.loadProducts(1); // Reset to first page when filtering
     });
 
     // Listener para advertir al usuario antes de cerrar/recargar la página si hay ediciones pendientes
@@ -312,6 +315,22 @@ save(product: any): void {
     });
   }
 
+  // Load products with pagination
+  loadProducts(page: number = 1, limit: number = this.pageSize) {
+    this.productService.getProductsPaginated(page, limit).subscribe({
+      next: (response) => {
+        this.products = response.data;
+        this.allProducts = response.data; // Keep for local filtering if needed
+        this.pagination = response.pagination;
+        this.currentPage = page;
+      },
+      error: (error) => {
+        console.error('Error loading products:', error);
+        this.utils.showAlert('error', 'Error', 'No se pudieron cargar los productos.');
+      }
+    });
+  }
+
   // Método para aplicar filtros combinados
   applyFilters() {
     let filteredProducts = [...this.allProducts];
@@ -486,6 +505,17 @@ async handleUnsavedChanges(): Promise<boolean> {
     }
     return false;
   });
+}
+
+// Pagination handlers
+onPageChange(page: number): void {
+  this.loadProducts(page, this.pageSize);
+}
+
+onPageSizeChange(newSize: number): void {
+  this.pageSize = newSize;
+  this.currentPage = 1; // Reset to first page when changing page size
+  this.loadProducts(1, newSize);
 }
 
 }

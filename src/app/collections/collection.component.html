@@ -30,3 +30,12 @@
     </div>
   </div>
 </div>
+
+<!-- Pagination Component -->
+<app-pagination 
+  *ngIf="pagination && products.length > 0"
+  [pagination]="pagination" 
+  [currentPage]="currentPage" 
+  (pageChange)="onPageChange($event)" 
+  (pageSizeChange)="onPageSizeChange($event)">
+</app-pagination>

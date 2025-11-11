@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable , of, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap, map} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { PaginatedResponse } from '../models/pagination.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -41,6 +42,14 @@ loadProducts() {
 
   findActive(): Observable<any[]> {
     return this.http.get<any[]>(`${this.URL}/products/active-products`); 
+  }
+
+  getProductsPaginated(page: number = 1, limit: number = 20): Observable<PaginatedResponse<any>> {
+    return this.http.get<PaginatedResponse<any>>(`${this.URL}/products/paginated?page=${page}&limit=${limit}`);
+  }
+
+  getActiveProductsPaginated(page: number = 1, limit: number = 20): Observable<PaginatedResponse<any>> {
+    return this.http.get<PaginatedResponse<any>>(`${this.URL}/products/active-products/paginated?page=${page}&limit=${limit}`);
   }
 
   delete(productId: string): Observable<any> {

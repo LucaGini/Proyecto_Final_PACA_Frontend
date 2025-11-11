@@ -4,6 +4,7 @@ import { Observable, of, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap, map} from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { PaginationMetadata } from '../models/pagination.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -70,6 +71,35 @@ export class CategoryService {
 
   findActiveProductsByCategory(name: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.URL}/categories/${name}/products/active-products`);
+  }
+
+  // For pagination, we'll use a hybrid approach with active products and client-side filtering
+  // This is a temporary solution until backend implements category-specific pagination
+  findActiveProductsByCategoryPaginated(name: string, page: number = 1, limit: number = 12): Observable<{data: any[], pagination: PaginationMetadata}> {
+    // First, try to use the existing endpoint and create pagination client-side
+    return this.findActiveProductsByCategory(name).pipe(
+      map((response: any) => {
+        const products = response.data || response;
+        const totalItems = products.length;
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+        const paginatedProducts = products.slice(startIndex, endIndex);
+        
+        const pagination: PaginationMetadata = {
+          currentPage: page,
+          totalPages: Math.ceil(totalItems / limit),
+          totalItems: totalItems,
+          itemsPerPage: limit,
+          hasNextPage: page < Math.ceil(totalItems / limit),
+          hasPrevPage: page > 1
+        };
+
+        return {
+          data: paginatedProducts,
+          pagination: pagination
+        };
+      })
+    );
   }
 
  findCategoryByName(name: string): Observable<any | null> {

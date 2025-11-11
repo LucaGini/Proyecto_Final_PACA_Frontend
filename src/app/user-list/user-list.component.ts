@@ -5,6 +5,7 @@ import { environment} from '../../environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { PaginationMetadata } from '../models/pagination.interface';
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
@@ -15,6 +16,11 @@ export class UserListComponent {
   users: any[] = [];
   selectedUserStatus: string = '';
   apiUrl = environment.apiUrl;
+
+  // Pagination properties
+  pagination: PaginationMetadata | null = null;
+  currentPage = 1;
+  pageSize = 20;
 
 
   constructor(
@@ -44,10 +50,10 @@ export class UserListComponent {
     }
 
     // Recargar usuarios con nuevo filtro
-    this.loadUsers();
+    this.loadUsers(undefined, 1); // Reset to page 1 when filtering
   }
 
-  loadUsers(searchTerm?: string) {
+  loadUsers(searchTerm?: string, page: number = 1, limit: number = this.pageSize) {
     let isActive: boolean | null = null;
     console.log('Selected User Status:', this.selectedUserStatus);
     if (this.selectedUserStatus === 'active') {
@@ -55,8 +61,20 @@ export class UserListComponent {
     } else if (this.selectedUserStatus === 'inactive') {
       isActive = false;
     }
-    this.userService.getUsers(isActive, searchTerm).subscribe((data: any) => {
-      this.users = data.data || data;
+    
+    this.userService.getUsersPaginated(page, limit).subscribe({
+      next: (response) => {
+        this.users = response.data;
+        this.pagination = response.pagination;
+        this.currentPage = page;
+      },
+      error: (error) => {
+        console.error('Error loading users:', error);
+        // Fallback to old method if pagination fails
+        this.userService.getUsers(isActive, searchTerm).subscribe((data: any) => {
+          this.users = data.data || data;
+        });
+      }
     });
   }
 
@@ -85,11 +103,22 @@ deleteUser(user: any): void {
       this.userService.delete(user.id).subscribe({
         next: () => {
           this.utils.showAlert('success', 'Usuario eliminado correctamente');
-          this.loadUsers();
+          this.loadUsers(undefined, this.currentPage); // Stay on current page
         },
         error: () => this.handleError('Error eliminando la cuenta')
       });
     }
   });
+}
+
+// Pagination handlers
+onPageChange(page: number): void {
+  this.loadUsers(undefined, page, this.pageSize);
+}
+
+onPageSizeChange(newSize: number): void {
+  this.pageSize = newSize;
+  this.currentPage = 1; // Reset to first page when changing page size
+  this.loadUsers(undefined, 1, newSize);
 }
 }
