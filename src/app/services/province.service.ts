@@ -58,9 +58,13 @@ export class ProvinceService {
       );
   }
   update(province: any): Observable<any> {
-    const updateUrl = `${this.URL}/provinces/${province.id}`;
-    return this.http.patch<any>(updateUrl, province, { headers: this.getAuthHeaders() }); 
-  }
+  const updateUrl = `${this.URL}/provinces/${province.id}`;
+  return this.http.patch<any>(updateUrl, province, { headers: this.getAuthHeaders() })
+    .pipe(
+      tap(() => this.loadProvinces())
+    );
+}
+
   
 findProvinceByName(name: string): Observable<any> {
   const url =`${this.URL}/provinces/${name}`;
