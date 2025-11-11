@@ -1,5 +1,4 @@
 <div class="container mt-4">
-  <h3>Alta de Transportista</h3>
   <hr />
 
   <form #signUpForm="ngForm" (ngSubmit)="signUp(signUpForm)">
@@ -119,32 +118,6 @@
       <small *ngIf="password2Input.invalid && password2Input.touched" class="text-danger">
         Debe verificar la contraseña.
       </small>
-    </div>
-
-    <!-- Dirección -->
-    <div class="row">
-      <div class="col-md-6 mb-3">
-        <label>Calle</label>
-        <input
-          type="text"
-          class="form-control"
-          name="street"
-          ngModel
-          required
-        />
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label>Número</label>
-        <input
-          type="number"
-          class="form-control"
-          name="streetNumber"
-          ngModel
-          required
-          min="1"
-        />
-      </div>
     </div>
 
     <!-- Provincia -->

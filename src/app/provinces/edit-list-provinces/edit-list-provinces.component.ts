@@ -10,9 +10,6 @@ interface Province {
   name: string;
   editing?: boolean;
   editName?: string;
-  editPassword?: string;
-  password?: string;
-  showPassword?: boolean;
 }
 
 @Component({
@@ -148,15 +145,12 @@ export class EditListProvincesComponent implements OnInit, OnDestroy, EditingCom
     }
 
     province.editName = province.name;
-    province.editPassword = province.password;
     province.editing = true;
   }
 
   cancelEdit(province: Province): void {
   province.editing = true;
   province.editName = province.name;
-  province.editPassword = ''; // Por seguridad, no mostrar la contraseña real
-  province.showPassword = false; // Por defecto oculto
 }
 
 
@@ -164,7 +158,6 @@ export class EditListProvincesComponent implements OnInit, OnDestroy, EditingCom
     const original = { name: province.name };
     const updated = { 
       name: province.editName,
-      password: province.editPassword, 
     };
 
     if (!this.utils.isValid(province.editName ?? '')) {
@@ -233,11 +226,6 @@ export class EditListProvincesComponent implements OnInit, OnDestroy, EditingCom
       return false;
     });
   }
-
-  togglePasswordVisibility(province: any) {
-  province.showPassword = !province.showPassword;
-}
-
 }
 
 

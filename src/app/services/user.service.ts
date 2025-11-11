@@ -28,7 +28,7 @@ export class UserService {
   }
 
   signUp(userData: any): Observable<any> { 
-    return this.http.post<any>(this.URL + '/users', userData,{ headers: this.getAuthHeaders() });
+    return this.http.post<any>(this.URL + '/users', userData);
   }
 
 findUserByEmail(email: string): Observable<any> {
@@ -42,12 +42,11 @@ findUserByEmail(email: string): Observable<any> {
       return response;
     }),
     catchError((error: any) => {
-      console.error('❌ Error en findUserByEmail:', error);
+      console.error(' Error en findUserByEmail:', error);
       if (error.status === 404) {
-        console.log('🔍 Usuario no encontrado (404)');
         return of(null); // Usuario no encontrado → null
       } else {
-        console.error('💥 Error en la solicitud:', error);
+        console.error('Error en la solicitud:', error);
         return throwError(() => error);
       }
     })

@@ -6,14 +6,6 @@
       <span *ngIf="nameInput.errors?.['required']">El nombre es obligatorio.</span>
     </small>
   </div>
-
-  <div class="form-group">
-    <label for="password">Contraseña de ingreso conductor</label>
-    <input type="text" class="form-control" id="password" name="password" ngModel required #passwordInput="ngModel" [ngClass]="{ 'is-invalid': passwordInput.invalid && passwordInput.touched }" />
-    <small *ngIf="passwordInput.invalid && passwordInput.touched" class="error-msg">
-      <span *ngIf="passwordInput.errors?.['required']">La contraseña es obligatorio.</span>
-    </small>
-  </div>
   <div class="d-flex justify-content-center">
     <button type="submit" class="btn" form="addForm" [disabled]="addForm.invalid">Guardar</button>
   </div>

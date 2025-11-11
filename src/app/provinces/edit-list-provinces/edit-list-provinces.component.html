@@ -36,31 +36,6 @@
             </div>
           </div>
         </div>
-
-        <div *ngIf="province.editing" class="edit-mode">
-          <div class="form-group">
-            <label>Contraseña conductor</label>
-            <div class="input-group">
-              <input
-                [type]="province.showPassword ? 'text' : 'password'"
-                class="form-control"
-                [(ngModel)]="province.editPassword"
-                name="password"
-                required
-                #editPasswordInput="ngModel"
-                [ngClass]="{ 'is-invalid': editPasswordInput.invalid && editPasswordInput.touched }"
-              />
-              <span class="input-group-text" (click)="togglePasswordVisibility(province)" style="cursor: pointer">
-                <mat-icon>{{ province.showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-              </span>
-            </div>
-            <div *ngIf="editPasswordInput.invalid && editPasswordInput.touched" class="text-danger">
-              <small>La contraseña es obligatoria.</small>
-            </div>
-          </div>
-        </div>
-
-
         <div *ngIf="!province.editing">
           <h3 class="card-text">Nombre</h3>
           <p>{{ province.name }}</p>

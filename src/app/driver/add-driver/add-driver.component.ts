@@ -65,7 +65,7 @@ export class DriverComponent implements OnInit {
           return;
         }
 
-        console.log('Creating user:', newUser);
+        
         this.userService.signUp(newUser).subscribe({
           next: () => {
             this.utils.showAlert('success', 'Transportista creado con éxito', '');

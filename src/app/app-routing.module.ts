@@ -17,11 +17,11 @@ import { UserInformationComponent } from './user-information/user-information.co
 import { CollectionComponent } from './collections/collection.component';
 import { NewPasswordComponent } from './userRegistration/new-password/new-password.component';
 import { OrderListComponent } from './orders/order-list/order-list.component';
-import { EditListProductsComponent } from './products/edit-list-products/edit-list-products.component';
-import { EditListProvincesComponent } from './provinces/edit-list-provinces/edit-list-provinces.component';
-import { EditListCategoriesComponent } from './categories/edit-list-categories/edit-list-categories.component';
-import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cities.component';
-import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
+// import { EditListProductsComponent } from './products/edit-list-products/edit-list-products.component';
+// import { EditListProvincesComponent } from './provinces/edit-list-provinces/edit-list-provinces.component';
+// import { EditListCategoriesComponent } from './categories/edit-list-categories/edit-list-categories.component';
+// import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cities.component';
+// import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
 import { OrdersHistoryComponent } from './orders/orders-history/orders-history.component';
 import { AuthGuard } from './guards/auth.guard';
 //import { ProfileCompleteGuard } from './guards/profile-complete.guard';
@@ -30,8 +30,9 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { VrpComponent } from './vrp/vrp.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { VrpListComponent } from './vrp-list/vrp-list.component';
-import { DriverComponent } from './driver/add-driver/add-driver.component';
-import { EditListDriverComponent } from './driver/edit-list-driver/edit-list-driver.component';
+// import { DriverComponent } from './driver/add-driver/add-driver.component';
+// import { EditListDriverComponent } from './driver/edit-list-driver/edit-list-driver.component';
+import { AdminDriverComponent } from './driver/admin-driver/admin-driver.component';
 
 const routes: Routes = [
   // === SOLO ADMINISTRADOR ===
@@ -41,11 +42,12 @@ const routes: Routes = [
   { path: 'AdminCities', component: AdminCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'UserList', component: UserListComponent , canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'AdminSuppliers', component: AdminSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'EditListProducts', component: EditListProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'EditListProvinces', component: EditListProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'EditListCategories', component: EditListCategoriesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'EditListCities', component: EditListCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  { path: 'EditListSuppliers', component: EditListSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  { path: 'AdminDrivers', component: AdminDriverComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  // { path: 'EditListProducts', component: EditListProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  // { path: 'EditListProvinces', component: EditListProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  // { path: 'EditListCategories', component: EditListCategoriesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  // { path: 'EditListCities', component: EditListCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  // { path: 'EditListSuppliers', component: EditListSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'OrderList', component: OrderListComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'vrp', component: VrpComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'Dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
@@ -69,9 +71,6 @@ const routes: Routes = [
   // === TODOS ===
   { path: '', redirectTo: 'about-us', pathMatch: 'full' },
   { path: 'about-us', component: AboutUsComponent},
-  { path: 'driver', component:DriverComponent },
-  { path: 'a', component: EditListDriverComponent },
-  //{ path: 'EditListDriver', component: EditListDriverComponent },
   { path: 'products', component: BodyComponent},
   { path: 'product/:productId', component: ProductDetailsComponent},
   { path: 'collection/:collection', component: CollectionComponent},

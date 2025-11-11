@@ -25,7 +25,7 @@ export class AddProvinceComponent {
       return;
     }
 
-    if (!this.utils.areValidFields([newProvince.name, newProvince.password])) {
+    if (!this.utils.areValidFields([newProvince.name])) {
       this.utils.showAlert('error', 'Error', 'Debe completar todos los campos.');
       return;
     }

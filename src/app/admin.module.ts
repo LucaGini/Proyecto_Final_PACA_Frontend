@@ -45,6 +45,7 @@ import { VrpComponent } from './vrp/vrp.component';
 import { VrpListComponent } from './vrp-list/vrp-list.component';
 import { DriverComponent } from './driver/add-driver/add-driver.component';
 import { EditListDriverComponent } from './driver/edit-list-driver/edit-list-driver.component';
+import { AdminDriverComponent } from './driver/admin-driver/admin-driver.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { EditListDriverComponent } from './driver/edit-list-driver/edit-list-dri
     DashboardComponent,
     VrpListComponent,
     DriverComponent,
-    EditListDriverComponent
+    EditListDriverComponent,
+    AdminDriverComponent
   ],
   imports: [
     //BrowserModule,
