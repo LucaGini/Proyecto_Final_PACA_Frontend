@@ -118,6 +118,7 @@ export class EditListProvincesComponent implements OnInit, OnDestroy, EditingCom
                   next: () => {
                     this.provinces = this.provinces.filter(p => p.id !== id);
                     this.utils.showAlert('success', 'Eliminado!', 'La provincia ha sido eliminada.');
+                    this.router.navigate(['AdminProvinces']);
                   },
                   error: (error) => {
                     console.error('Error deleting province:', error);

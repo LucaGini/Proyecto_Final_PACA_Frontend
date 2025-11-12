@@ -30,23 +30,25 @@ export class AddProvinceComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.provinceService.findAll().subscribe({
-      next: (data: any[]) => {
-        this.registeredProvinces = data.map(p => this.utils.capitalize(p.name));
-        this.filterAvailableProvinces();
-      },
-      error: (err) => console.error('Error cargando provincias registradas', err)
-    });
-  }
+  this.provinceService.provinces$.subscribe({
+    next: (data: any[]) => {
+      this.registeredProvinces = data.map(p => p.name.toLowerCase());
+      this.filterAvailableProvinces();
+    },
+    error: (err) => console.error('Error cargando provincias registradas', err)
+  });
+}
 
-  filterAvailableProvinces() {
+
+
+  filterAvailableProvinces(): void {
+    // Filtramos las provincias que aún no están registradas
     this.availableProvinces = this.provinces.filter(
-      p => !this.registeredProvinces.includes(p)
+      p => !this.registeredProvinces.includes(p.toLowerCase())
     );
-
   }
 
-  add(addForm: NgForm) {
+  add(addForm: NgForm): void {
     const newProvince = addForm.value;
 
     if (!this.utils.isValid(newProvince.name)) {
@@ -62,12 +64,9 @@ export class AddProvinceComponent implements OnInit {
           this.provinceService.add(newProvince).subscribe({
             next: () => {
               this.utils.showAlert('success', 'Provincia registrada con éxito!!');
-              addForm.resetForm();
+              addForm.resetForm({ name: '' });
 
-              // Recargar provincias disponibles
-              this.registeredProvinces.push(newProvince.name);
-              this.filterAvailableProvinces();
-
+              // Navegamos si querés mantener ese comportamiento
               this.router.navigate(['AdminProvinces']);
             },
             error: (err: any) => {

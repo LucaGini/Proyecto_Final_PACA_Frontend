@@ -18,7 +18,7 @@ import { CollectionComponent } from './collections/collection.component';
 import { NewPasswordComponent } from './userRegistration/new-password/new-password.component';
 import { OrderListComponent } from './orders/order-list/order-list.component';
 // import { EditListProductsComponent } from './products/edit-list-products/edit-list-products.component';
-// import { EditListProvincesComponent } from './provinces/edit-list-provinces/edit-list-provinces.component';
+ //import { EditListProvincesComponent } from './provinces/edit-list-provinces/edit-list-provinces.component';
 // import { EditListCategoriesComponent } from './categories/edit-list-categories/edit-list-categories.component';
 // import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cities.component';
 // import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
@@ -44,7 +44,7 @@ const routes: Routes = [
   { path: 'AdminSuppliers', component: AdminSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'AdminDrivers', component: AdminDriverComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   // { path: 'EditListProducts', component: EditListProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
-  // { path: 'EditListProvinces', component: EditListProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+   //{ path: 'EditListProvinces', component: EditListProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   // { path: 'EditListCategories', component: EditListCategoriesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   // { path: 'EditListCities', component: EditListCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   // { path: 'EditListSuppliers', component: EditListSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
