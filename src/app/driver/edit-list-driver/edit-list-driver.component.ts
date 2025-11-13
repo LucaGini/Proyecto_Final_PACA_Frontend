@@ -58,6 +58,7 @@ export class EditListDriverComponent {
     }
     this.userService.getUsers('transportista', isActive, searchTerm).subscribe((data: any) => {
       this.users = data.data || data;
+      console.log('Loaded Users:', this.users);
     });
   }
 

@@ -52,6 +52,7 @@
         <h3 class="card-text truncate">Apellido: {{ user.lastName }}</h3>
         <h3 class="card-text truncate">Email: {{ user.email }}</h3>
         <h3 class="card-text truncate">Teléfono: {{ user.phone }}</h3>
+        <h3 class="card-text truncate">Provincia: {{ user.province?.name || "Fuera de servicio"}}</h3>
       </div>
     </div>
   </div>
