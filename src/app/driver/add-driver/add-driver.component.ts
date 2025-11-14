@@ -69,6 +69,7 @@ export class DriverComponent implements OnInit {
         this.userService.signUp(newUser).subscribe({
           next: () => {
             this.utils.showAlert('success', 'Transportista creado con éxito', '');
+             this.userService.notifyUsersUpdated();
             signUpForm.resetForm();
           },
           error: (err) => {

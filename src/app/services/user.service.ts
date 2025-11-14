@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http'; // Asegúrate de incluir esto
 import { Router } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap, map} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from './userInterface'; // Asegúrate de que la ruta sea correcta
@@ -16,6 +16,13 @@ export class UserService {
     private http: HttpClient,
     private router: Router
   ) {}
+
+  private usersUpdated = new BehaviorSubject<boolean>(false);
+  usersUpdated$ = this.usersUpdated.asObservable();
+  
+  notifyUsersUpdated() {
+    this.usersUpdated.next(true);
+  }
 
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('access_token'); // Usar la misma clave que AuthService
@@ -89,6 +96,7 @@ update(user: any): Observable<any> {
     streetNumber: user.streetNumber,
     city: user.city,
     email: user.email,
+    province: user.province,
     ...(user.password ? { password: user.password } : {})
   };
   return this.http.put<any>(updateUrl, userData, { headers: this.getAuthHeaders() }).pipe(

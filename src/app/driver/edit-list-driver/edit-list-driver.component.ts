@@ -27,11 +27,19 @@ export class EditListDriverComponent {
   ) {}
 
   ngOnInit() {
-  this.route.queryParams.subscribe((queryParams) => {
-    const searchTerm = queryParams['q'];
-    this.loadUsers(searchTerm);
-  });
-}
+
+    // cargar al inicio
+    this.route.queryParams.subscribe((queryParams) => {
+      const searchTerm = queryParams['q'];
+      this.loadUsers(searchTerm);
+    });
+
+    // escuchar cuando se crean o eliminan usuarios
+    this.userService.usersUpdated$.subscribe(() => {
+      this.loadUsers();
+    });
+  }
+
   
   onUserStatusChange(event: any): void {
     const value = event.target.value;
@@ -88,6 +96,7 @@ deleteUser(user: any): void {
         next: () => {
           this.utils.showAlert('success', 'Usuario eliminado correctamente');
           this.loadUsers();
+          this.userService.notifyUsersUpdated(); 
         },
         error: () => this.handleError('Error eliminando la cuenta')
       });
