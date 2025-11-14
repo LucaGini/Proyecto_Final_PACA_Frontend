@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-
+import { ProvinceService } from 'src/app/services/province.service';
 import { UserService } from 'src/app/services/user.service';
 import { environment} from 'src/environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
@@ -16,6 +16,11 @@ export class EditListDriverComponent {
   users: any[] = [];
   selectedUserStatus: string = '';
   apiUrl = environment.apiUrl;
+  driverData: any = null;
+  isEditMode: boolean = false;
+  selectedProvince: string = '';
+  provinces: any[] = [];
+
 
 
   constructor(
@@ -24,19 +29,18 @@ export class EditListDriverComponent {
     private utils: UtilsService,
     private authService: AuthService,
     private router: Router,
+    private provinceService: ProvinceService
   ) {}
 
   ngOnInit() {
-
-    // cargar al inicio
     this.route.queryParams.subscribe((queryParams) => {
       const searchTerm = queryParams['q'];
       this.loadUsers(searchTerm);
     });
 
-    // escuchar cuando se crean o eliminan usuarios
     this.userService.usersUpdated$.subscribe(() => {
       this.loadUsers();
+      this.loadProvinces();
     });
   }
 
@@ -69,6 +73,18 @@ export class EditListDriverComponent {
       console.log('Loaded Users:', this.users);
     });
   }
+
+  loadProvinces(): void {
+  this.provinceService.findAll().subscribe({
+    next: (resp) => {
+      this.provinces = Array.isArray(resp) ? resp : [];
+    },
+    error: () => {
+      console.error('Error al cargar provincias');
+    },
+  });
+}
+
 
   // Método para verificar si hay filtros activos
   hasActiveFilters(): boolean {
@@ -103,4 +119,34 @@ deleteUser(user: any): void {
     }
   });
 }
+
+edit(driver: any) {
+  driver.editing = true;
+  driver.editProvince = driver.province?.name || '';
+}
+
+cancelEdit(driver: any) {
+  driver.editing = false;
+  driver.editProvince = '';
+}
+
+save(driver: any) {
+  const updated = {
+    ...driver,
+    province: { id: driver.editProvince }
+  };
+
+  this.userService.update(updated).subscribe({
+    next: () => {
+      this.utils.showAlert('success', 'Provincia actualizada');
+      driver.editing = false;
+      this.userService.notifyUsersUpdated();
+      this.loadUsers();
+    },
+    error: (err) => {
+      this.utils.showAlert('error', 'Error', err.message);
+    }
+  });
+}
+
 }

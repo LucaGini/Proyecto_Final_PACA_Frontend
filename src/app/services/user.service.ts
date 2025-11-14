@@ -19,7 +19,7 @@ export class UserService {
 
   private usersUpdated = new BehaviorSubject<boolean>(false);
   usersUpdated$ = this.usersUpdated.asObservable();
-  
+
   notifyUsersUpdated() {
     this.usersUpdated.next(true);
   }
@@ -99,7 +99,7 @@ update(user: any): Observable<any> {
     province: user.province,
     ...(user.password ? { password: user.password } : {})
   };
-  return this.http.put<any>(updateUrl, userData, { headers: this.getAuthHeaders() }).pipe(
+  return this.http.put<any>(updateUrl, userData).pipe(
     tap(response => console.log('Backend response:', response)),
     catchError(error => {
       console.error('Service error:', error);
