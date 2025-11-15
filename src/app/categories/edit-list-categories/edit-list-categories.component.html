@@ -1,4 +1,4 @@
-<div class="categories-container">
+<div *ngIf="categories.length > 0" class="categories-container">
   <div class="category-card" *ngFor="let category of categories">
     <div class="card">
       <!-- Contenido editable -->
@@ -57,4 +57,10 @@
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="categories.length === 0" class="no-items-message">
+  <mat-icon>category</mat-icon>
+  <h3>No hay categorias disponibles</h3>
+  <p>No hay categorias cargadas en el sistema en este momento.</p>
 </div>

@@ -36,48 +36,44 @@
         table-layout: fixed; // columnas fijas
         word-wrap: break-word;
 
-        th, td {
+        th,
+        td {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
         }
 
-        th:nth-child(1), td:nth-child(1) { width: 30px; }   // checkbox
-        th:nth-child(2), td:nth-child(2) { width: 80px; }   // número de orden
-        th:nth-child(3), td:nth-child(3) { width: 180px; }  // cliente
-        th:nth-child(4), td:nth-child(4) { width: 100px; }  // total
-        th:nth-child(5), td:nth-child(5) { width: 250px; }  // dirección
-        th:nth-child(6), td:nth-child(6) { width: 120px; }  // estado
+        th:nth-child(1),
+        td:nth-child(1) {
+          width: 30px;
+        } // checkbox
+        th:nth-child(2),
+        td:nth-child(2) {
+          width: 80px;
+        } // número de orden
+        th:nth-child(3),
+        td:nth-child(3) {
+          width: 180px;
+        } // cliente
+        th:nth-child(4),
+        td:nth-child(4) {
+          width: 100px;
+        } // total
+        th:nth-child(5),
+        td:nth-child(5) {
+          width: 250px;
+        } // dirección
+        th:nth-child(6),
+        td:nth-child(6) {
+          width: 120px;
+        } // estado
       }
-    }
-  }
-
-  .no-orders-message {
-    text-align: center;
-    margin-top: 2rem;
-    color: var(--text-color);
-    animation: fadeIn 0.6s ease-out;
-
-    mat-icon {
-      font-size: 3rem;
-      color: #e7c633;
-      display: block;
-      margin: 0 auto 0.6rem auto;
-    }
-
-    h3 {
-      margin: 0.8rem 0;
-      font-weight: 600;
-    }
-
-    p {
-      color: #666;
     }
   }
 }
 
 .btn-completed {
-  background-color: #6b8e23; 
+  background-color: #6b8e23;
   margin-right: 10px;
   color: white;
   border: none;
@@ -89,7 +85,7 @@
 }
 
 .btn-completed:hover {
-  background-color:  #6b8e23;
+  background-color: #6b8e23;
   transform: translateY(-2px);
 }
 
@@ -120,8 +116,8 @@ button:disabled {
 }
 
 td.total {
-  text-align: right;  
-  padding-right: 1.2rem; 
+  text-align: right;
+  padding-right: 1.2rem;
   font-weight: 600;
-  color: #2e7d32; 
+  color: #2e7d32;
 }

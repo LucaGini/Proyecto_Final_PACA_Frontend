@@ -1,4 +1,4 @@
-<div class="suppliers-container">
+<div *ngIf="suppliers.length > 0" class="suppliers-container">
   <div class="supplier-card" *ngFor="let supplier of suppliers">
     <div class="card">
       <!-- Acciones -->
@@ -103,4 +103,11 @@
       </div>
     </div>
   </div>
+</div>
+
+
+<div *ngIf="suppliers.length === 0" class="no-items-message">
+  <mat-icon>business</mat-icon>
+  <h3>No hay proveedores disponibles</h3>
+  <p>No hay proveedores cargados en el sistema en este momento.</p>
 </div>

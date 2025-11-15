@@ -32,7 +32,7 @@
 </nav>
 
 <!-- MENSAJE CUANDO NO HAY CIUDADES -->
-<div *ngIf="cities.length === 0" class="no-cities-message text-center mt-4">
+<div *ngIf="cities.length === 0" class="no-items-message">
   <mat-icon>location_city</mat-icon>
   <h3>No hay ciudades disponibles</h3>
   <p *ngIf="hasActiveFilters()">No se encontraron ciudades con los filtros aplicados. Intenta ajustar los criterios de búsqueda.</p>

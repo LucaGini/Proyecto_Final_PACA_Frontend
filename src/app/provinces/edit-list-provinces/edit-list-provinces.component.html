@@ -1,4 +1,4 @@
-<div class="provinces-container">
+<div *ngIf="provinces.length > 0" class="provinces-container">
   <div class="province-card" *ngFor="let province of provinces">
     <div class="card">
       <!-- Acciones -->
@@ -60,7 +60,6 @@
           </div>
         </div>
 
-
         <div *ngIf="!province.editing">
           <h3 class="card-text">Nombre</h3>
           <p>{{ province.name }}</p>
@@ -68,4 +67,10 @@
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="provinces.length === 0" class="no-items-message">
+  <mat-icon>public</mat-icon>
+  <h3>No hay provincias disponibles</h3>
+  <p>No hay provincias cargadas en el sistema en este momento.</p>
 </div>

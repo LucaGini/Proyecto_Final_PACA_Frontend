@@ -28,8 +28,8 @@
 </nav>
 
 <!-- Mensaje cuando no hay usuarios -->
-<div *ngIf="users.length === 0" class="no-users-message">
-  <mat-icon>group_off</mat-icon>
+<div *ngIf="users.length === 0" class="no-items-message">
+  <mat-icon>group</mat-icon>
   <h3>No hay usuarios disponibles</h3>
   <p *ngIf="hasActiveFilters()">No se encontraron usuarios con los filtros aplicados. Intenta ajustar los criterios de búsqueda.</p>
   <p *ngIf="!hasActiveFilters()">No hay usuarios registrados en el sistema en este momento.</p>

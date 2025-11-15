@@ -54,7 +54,7 @@
 </nav>
 
 <!-- Mensaje cuando no hay productos -->
-<div *ngIf="products.length === 0" class="no-products-message">
+<div *ngIf="products.length === 0" class="no-items-message">
   <mat-icon>inventory_2</mat-icon>
   <h3>No hay productos disponibles</h3>
   <p *ngIf="hasActiveFilters()">No se encontraron productos con los filtros aplicados. Intenta ajustar los criterios de búsqueda.</p>
