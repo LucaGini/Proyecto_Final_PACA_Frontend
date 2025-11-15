@@ -42,6 +42,8 @@
 
 /* Tarjeta de producto */
 .product-card {
+  max-width: 340px;
+  margin: 0 auto;
   background: #fff;
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -61,7 +63,8 @@
 .image-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1; /* cuadrada */
+  height: 300px;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
 }
 .image-wrapper img {
