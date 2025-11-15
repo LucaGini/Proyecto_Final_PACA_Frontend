@@ -5,6 +5,7 @@
   max-width: 1200px;
   margin: 0 auto;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  place-items: center;
 }
 
 @media (max-width: 992px) {
@@ -30,8 +31,8 @@
   display: flex;
   flex-direction: column;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  max-width: 340px; /* <-- evita que se estiren de más */
-  margin: 0 auto; /* <-- centra cuando hay pocas */
+  width: 100%;
+  max-width: 340px; 
 }
 
 .product-card:hover {

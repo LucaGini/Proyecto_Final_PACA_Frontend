@@ -11,7 +11,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-body',
   templateUrl: './body.component.html',
-  styleUrls: ['./body.component.scss']
+  styleUrls: ['./body.component.scss'],
 })
 export class BodyComponent implements OnInit {
   products: any[] = [];
@@ -52,7 +52,7 @@ export class BodyComponent implements OnInit {
 
     // 🛒 Escuchar cambios del carrito (reactivo)
     this.cartItems = this.cartService.getItems();
-    this.cartService.itemsChanged$.subscribe(items => {
+    this.cartService.itemsChanged$.subscribe((items) => {
       this.cartItems = items;
     });
   }
@@ -67,7 +67,7 @@ export class BodyComponent implements OnInit {
 
   // 🛒 Lógica carrito
   isInCart(productId: number): boolean {
-    return this.cartItems.some(item => item.id === productId);
+    return this.cartItems.some((item) => item.id === productId);
   }
 
   addToCart(product: any) {
@@ -79,7 +79,7 @@ export class BodyComponent implements OnInit {
           title: 'Sin stock',
           text: `No hay stock suficiente para ${product.name}.`,
         });
-      }
+      },
     });
   }
 
@@ -90,11 +90,16 @@ export class BodyComponent implements OnInit {
       title: 'Producto quitado',
       text: `${product.name} fue eliminado del carrito.`,
       timer: 1500,
-      showConfirmButton: false
+      showConfirmButton: false,
     });
   }
 
   showAddButton(): boolean {
     return !this.authService.isAdmin() && !this.authService.isDriver();
+  }
+
+  clearSearch() {
+    // Navega a /products sin parámetros
+    window.location.href = '/products';
   }
 }

@@ -24,6 +24,8 @@
   max-width: 1200px;
   margin: 0 auto;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    place-items: center;
+
 }
 
 @media (max-width: 992px) {
@@ -42,8 +44,8 @@
 
 /* Tarjeta de producto */
 .product-card {
+  width: 100%;
   max-width: 340px;
-  margin: 0 auto;
   background: #fff;
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -129,4 +131,32 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+
+
+.back-btn {
+  position: absolute;
+  top: 7rem;
+  left: 4rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+
+  z-index: 1000;
+
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: .4rem .9rem;
+  border-radius: 999px;
+
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.back-btn:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transform: translateX(-2px);
 }

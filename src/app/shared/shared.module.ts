@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormErrorComponent } from './form-error.component';
+import { BackButtonComponent } from './back-button/back-button.component';
 
 @NgModule({
-  declarations: [FormErrorComponent],
-  imports: [CommonModule],
-  exports: [FormErrorComponent]
+  declarations: [
+    BackButtonComponent
+  ],
+  imports: [
+    CommonModule
+  ],
+  exports: [
+    BackButtonComponent
+  ]
 })
 export class SharedModule {}

@@ -9,6 +9,7 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 })
 export class AppComponent {
   showHeaderFooter = true;
+  showBackButton = true;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     this.router.events.pipe(
@@ -23,6 +24,7 @@ export class AppComponent {
       mergeMap(route => route.data)
     ).subscribe((data: Data) => {
       this.showHeaderFooter = !data['hideHeaderFooter'];
+      this.showBackButton = !data['hideBackButton'];
     });
   }
 }

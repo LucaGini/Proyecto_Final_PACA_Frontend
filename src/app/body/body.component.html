@@ -1,5 +1,13 @@
 <!-- Contenedor de productos -->
 <div *ngIf="products.length > 0" class="products-container">
+
+
+<button *ngIf="isSearching"
+        class="back-btn"
+        (click)="clearSearch()">
+  ← Ver todos
+</button>
+
   <div
     class="product-card"
     *ngFor="let product of products"
