@@ -47,3 +47,7 @@ package-lock.json
 # pnpm
 .pnpm-debug.log
 shrinkwrap.yaml
+
+# environment files
+src/environments/
+.env
