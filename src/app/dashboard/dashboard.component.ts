@@ -236,6 +236,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             {
               label: `Ventas en ${province}`,
               data: data.map((d: any) => d.totalSales),
+              backgroundColor: '#b38558',
+              borderColor: '#b38558',
+              borderWidth: 1
             },
           ],
         };
@@ -268,6 +271,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
             {
               label: `Productos en ${category}`,
               data: data.map((d: any) => d.totalSold),
+              backgroundColor: '#b38558',
+              borderColor: '#b38558',
+              borderWidth: 1
             },
           ],
         };
@@ -367,6 +373,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           {
             label: 'Ventas por Provincia',
             data: data.map((d) => d.totalSales),
+            backgroundColor: '#6b8e23', 
+            borderColor: '#6b8e23',
+            borderWidth: 1
           },
         ],
       };
@@ -382,6 +391,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           {
             label: 'Ventas por Categoría',
             data: data.map((d: any) => d.totalSales),
+            backgroundColor: '#F4E3C1',
+            borderColor: '#F4E3C1',
+            borderWidth: 1
           },
         ],
       };
@@ -425,6 +437,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           {
             label: 'Unidades Vendidas',
             data: data.map((d) => d.totalSold),
+            backgroundColor: '#F4E3C1',
+            borderColor: '#F4E3C1',
+            borderWidth: 1
           },
         ],
       };
@@ -440,6 +455,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           {
             label: 'Unidades Vendidas',
             data: data.map((d) => d.totalSold),
+            backgroundColor: '#c94c4c',
+            borderColor: '#c94c4c',
+            borderWidth: 1
           },
         ],
       };
@@ -455,6 +473,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           {
             label: 'Total compra cliente',
             data: data.map((d) => d.totalSpent),
+            backgroundColor: '#F4E3C1',
+            borderColor: '#F4E3C1',
+            borderWidth: 1
           },
         ],
       };
@@ -470,6 +491,9 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           {
             label: 'Total de órdenes canceladas',
             data: data.map((d) => d.totalCancelled),
+            backgroundColor: '#b38558',
+            borderColor: '#b38558',
+            borderWidth: 1
           },
         ],
       };
@@ -489,6 +513,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
               summary.cancelled ?? 0,
               summary.rescheduled ?? 0,
             ],
+            backgroundColor: [
+              '#6b8e23',  // Completadas
+              '#ffd700', // Pendientes
+              '#c94c4c', // Canceladas
+              'orange',  // Reenviadas
+            ]
           },
         ],
       };
@@ -538,7 +568,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
               data: data.map((d: any) => d.count ?? 0),
               tension: 0.2,
               borderWidth: 2,
-              fill: false
+              fill: false,
+              borderColor: '#c94c4c'
             }
           ]
         };
