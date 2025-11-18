@@ -12,6 +12,10 @@ export class ProductService {
   private URL = `${environment.apiUrl}api`; 
   private productsSubject = new BehaviorSubject<any[]>([]);
   products$ = this.productsSubject.asObservable();
+  
+  // New behavior subject for pagination refresh
+  private paginationRefreshSubject = new BehaviorSubject<boolean>(false);
+  paginationRefresh$ = this.paginationRefreshSubject.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -25,6 +29,11 @@ loadProducts() {
       this.productsSubject.next(response.data);});
   }
 
+  // Trigger pagination refresh
+  triggerPaginationRefresh() {
+    this.paginationRefreshSubject.next(true);
+  }
+
   private getAuthHeaders(): HttpHeaders {
       const token = localStorage.getItem('access_token');
       return new HttpHeaders({
@@ -33,7 +42,12 @@ loadProducts() {
     }
 
   add(productData: FormData): Observable<any> { 
-    return this.http.post<any>(`${this.URL}/products`, productData, { headers: this.getAuthHeaders() }).pipe(tap(() => this.loadProducts()));
+    return this.http.post<any>(`${this.URL}/products`, productData, { headers: this.getAuthHeaders() }).pipe(
+      tap(() => {
+        this.loadProducts();
+        this.triggerPaginationRefresh();
+      })
+    );
   }
 
   findAll(): Observable<any[]> {
@@ -56,7 +70,8 @@ loadProducts() {
     const url =  this.http.delete(`${this.URL}/products/${productId}`, { headers: this.getAuthHeaders() })
     return url.pipe(
     tap(() => {
-      this.loadProducts(); 
+      this.loadProducts();
+      this.triggerPaginationRefresh();
     }),
     catchError((error: any) => {
       console.error('Error deletinting product:', error);
@@ -70,7 +85,12 @@ loadProducts() {
     const productId = product instanceof FormData ? product.get('id') : product.id;
     
     return this.http.put(`${this.URL}/products/${productId}`, product, { headers: this.getAuthHeaders() })
-    .pipe(catchError((error: any) => {
+    .pipe(
+      tap(() => {
+        this.loadProducts();
+        this.triggerPaginationRefresh();
+      }),
+      catchError((error: any) => {
         console.error('Error en la solicitud de actualización:', error);
         return throwError(error); 
       })
@@ -92,7 +112,10 @@ loadProducts() {
     
     return this.http.put(`${this.URL}/products/${product.id}`, formData, { headers: this.getAuthHeaders() })
     .pipe(
-      tap(() => this.loadProducts()),
+      tap(() => {
+        this.loadProducts();
+        this.triggerPaginationRefresh();
+      }),
       catchError((error: any) => {
         console.error('Error en la solicitud de actualización con imagen:', error);
         return throwError(error); 
@@ -143,7 +166,8 @@ reactivateProduct(productId: string) {
   const url = this.http.put(`${this.URL}/products/${productId}/reactivate`, { headers: this.getAuthHeaders()  });
   return url.pipe(
     tap(() => {
-      this.loadProducts(); 
+      this.loadProducts();
+      this.triggerPaginationRefresh();
     }),
     catchError((error: any) => {
       console.error('Error reactivating product:', error);

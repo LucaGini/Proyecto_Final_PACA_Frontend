@@ -19,3 +19,24 @@ export interface PaginationQuery {
   page?: number;
   limit?: number;
 }
+
+// Product-specific filters
+export interface ProductFilters {
+  search?: string;
+  supplier?: string;
+  category?: string;
+  status?: string | boolean;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+// Order-specific filters
+export interface OrderFilters {
+  search?: string;
+  orderStatus?: string;
+  userEmail?: string;
+  startDate?: string;
+  endDate?: string;
+  minTotal?: number;
+  maxTotal?: number;
+}
