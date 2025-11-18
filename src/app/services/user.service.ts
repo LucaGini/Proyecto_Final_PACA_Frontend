@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams  } from '@angular/common/http'; // Asegúrate de incluir esto
 import { Router } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap, map} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from './userInterface'; // Asegúrate de que la ruta sea correcta
@@ -17,10 +17,15 @@ export class UserService {
     private router: Router
   ) {}
 
+  private usersUpdated = new BehaviorSubject<boolean>(false);
+  usersUpdated$ = this.usersUpdated.asObservable();
+
+  notifyUsersUpdated() {
+    this.usersUpdated.next(true);
+  }
+
   private getAuthHeaders(): HttpHeaders {
     const token = localStorage.getItem('access_token'); // Usar la misma clave que AuthService
-    console.log('🔑 Token obtenido:', token ? 'Token presente' : 'No hay token');
-    console.log('🔑 Token completo:', token);
     return new HttpHeaders({
       'Authorization': token ? `Bearer ${token}` : ''
     });
@@ -30,7 +35,7 @@ export class UserService {
   }
 
   signUp(userData: any): Observable<any> { 
-    return this.http.post<any>(this.URL + '/users', userData,{ headers: this.getAuthHeaders() });
+    return this.http.post<any>(this.URL + '/users', userData);
   }
 
 findUserByEmail(email: string): Observable<any> {
@@ -44,12 +49,11 @@ findUserByEmail(email: string): Observable<any> {
       return response;
     }),
     catchError((error: any) => {
-      console.error('❌ Error en findUserByEmail:', error);
+      console.error(' Error en findUserByEmail:', error);
       if (error.status === 404) {
-        console.log('🔍 Usuario no encontrado (404)');
         return of(null); // Usuario no encontrado → null
       } else {
-        console.error('💥 Error en la solicitud:', error);
+        console.error('Error en la solicitud:', error);
         return throwError(() => error);
       }
     })
@@ -92,9 +96,10 @@ update(user: any): Observable<any> {
     streetNumber: user.streetNumber,
     city: user.city,
     email: user.email,
+    province: user.province,
     ...(user.password ? { password: user.password } : {})
   };
-  return this.http.put<any>(updateUrl, userData, { headers: this.getAuthHeaders() }).pipe(
+  return this.http.put<any>(updateUrl, userData).pipe(
     tap(response => console.log('Backend response:', response)),
     catchError(error => {
       console.error('Service error:', error);
@@ -102,24 +107,23 @@ update(user: any): Observable<any> {
     })
   );
 }
-getUsers(isActive: boolean | null, searchTerm?: string): Observable<User[]> {
-    let params = new HttpParams();
+getUsers(privilege: string, isActive: boolean | null, searchTerm?: string): Observable<User[]> {
+  let params = new HttpParams();
 
-    if (isActive !== null) {
-      params = params.set('isActive', isActive.toString());
-    }
-
-    if (searchTerm && searchTerm.trim() !== '') {
-      params = params.set('q', searchTerm.trim());
-    }
-
-    return this.http.get<User[]>(`${this.URL}/users`, { params });
+  if (privilege) {
+    params = params.set('privilege', privilege);
   }
 
-  /**
-   * Verifica si el perfil del usuario está completo
-   * Un perfil se considera incompleto si faltan campos obligatorios para usuarios registrados con OAuth
-   */
+  if (isActive !== null) {
+    params = params.set('isActive', isActive.toString());
+  }
+
+  if (searchTerm && searchTerm.trim() !== '') {
+    params = params.set('q', searchTerm.trim());
+  }
+
+  return this.http.get<User[]>(`${this.URL}/users`, { params });
+}
   isProfileComplete(user: any): boolean {
     if (!user) return false;
     

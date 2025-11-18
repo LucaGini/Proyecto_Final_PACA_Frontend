@@ -1,20 +1,36 @@
-<form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)" enctype="multipart/form-data">
+<form #addForm="ngForm" id="addForm" (ngSubmit)="add(addForm)">
+  
   <div class="form-group">
-    <label for="name">Nombre</label>
-    <input type="text" class="form-control" id="name" name="name" ngModel required #nameInput="ngModel" [ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }" />
+    <label for="name">Provincia</label>
+
+    <select class="form-control"
+            id="name"
+            name="name"
+            ngModel
+            required
+            #nameInput="ngModel"
+            [disabled]="availableProvinces.length === 0"
+            [ngClass]="{ 'is-invalid': nameInput.invalid && nameInput.touched }">
+
+      <option value="" disabled selected>Seleccione una provincia</option>
+      <option *ngFor="let province of availableProvinces" [value]="province">
+        {{ province }}
+      </option>
+    </select>
+
     <small *ngIf="nameInput.invalid && nameInput.touched" class="error-msg">
-      <span *ngIf="nameInput.errors?.['required']">El nombre es obligatorio.</span>
+      Debe seleccionar una provincia.
+    </small>
+
+    <small *ngIf="availableProvinces.length === 0" class="text-info">
+      Todas las provincias ya están registradas.
     </small>
   </div>
 
-  <div class="form-group">
-    <label for="password">Contraseña de ingreso conductor</label>
-    <input type="text" class="form-control" id="password" name="password" ngModel required #passwordInput="ngModel" [ngClass]="{ 'is-invalid': passwordInput.invalid && passwordInput.touched }" />
-    <small *ngIf="passwordInput.invalid && passwordInput.touched" class="error-msg">
-      <span *ngIf="passwordInput.errors?.['required']">La contraseña es obligatorio.</span>
-    </small>
+  <div class="d-flex justify-content-center mt-3">
+    <button type="submit" class="btn btn-primary" [disabled]="addForm.invalid || availableProvinces.length === 0">
+      Guardar
+    </button>
   </div>
-  <div class="d-flex justify-content-center">
-    <button type="submit" class="btn" form="addForm" [disabled]="addForm.invalid">Guardar</button>
-  </div>
+
 </form>
