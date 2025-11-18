@@ -28,8 +28,8 @@
 
     <!-- BOTÓN DERECHA -->
     <div class="nav-item form-group align-button pr-5">
-      <button class="btn" (click)="downloadPDF()"[disabled]="isLoading() || !hasAnyChartDataFlag || isDateRangeEmpty"
-        [ngClass]="{ 'disabled-btn': isLoading() || !hasAnyChartDataFlag }"
+      <button class="btn" (click)="downloadPDF()" [disabled]="isLoading() || !hasAnyChartData || isDateRangeEmpty"
+        [ngClass]="{ 'disabled-btn': isLoading() || !hasAnyChartData }"
       >
         <ng-container *ngIf="isLoading(); else normalBtn">
           <div class="spinner"></div>
@@ -65,14 +65,14 @@
         <!-- Top Productos y Peores Productos -->
         <div class="row g-3 mb-4">
           <div class="col-12 col-md-6">
-            <div class="chart-card">
+            <div class="chart-card" #chartCard>
               <h3>Top 5 Productos más vendidos</h3>
               <canvas baseChart [data]="topProductsChartData" [options]="topProductsChartOptions" [type]="'bar'"> </canvas>
             </div>
           </div>
 
           <div class="col-12 col-md-6">
-            <div class="chart-card">
+            <div class="chart-card" #chartCard>
               <h3>Top 5 Peores Productos</h3>
               <canvas baseChart [data]="worstProductsChartData" [options]="worstProductsChartOptions" [type]="'bar'"> </canvas>
             </div>
@@ -80,33 +80,29 @@
         </div>
 
         <!-- Evolución de Ganancias + Total Ganado -->
-      <div class="row g-3 mb-4 align-items-center">
-        
-        <!-- Gráfico -->
-        <div class="col-12 col-lg-8">
-          <div class="chart-card line-container">
-            <h3>Evolución de Ganancias</h3>
-            <canvas baseChart [data]="revenueChartData" [options]="revenueChartOptions" [type]="'line'"> </canvas>
+        <div class="row g-3 mb-4 align-items-center">
+          <!-- Gráfico -->
+          <div class="col-12 col-lg-8">
+            <div class="chart-card line-container" #chartCard>
+              <h3>Evolución de Ganancias</h3>
+              <canvas baseChart [data]="revenueChartData" [options]="revenueChartOptions" [type]="'line'"> </canvas>
+            </div>
+          </div>
+
+          <!-- Tarjeta del total -->
+          <div class="col-12 col-lg-4">
+            <div class="summary-card h-100 d-flex flex-column justify-content-center">
+              <h3>Total</h3>
+              <p class="value">$ {{ totalRevenue | number:'1.0-2' }}</p>
+            </div>
           </div>
         </div>
-
-        <!-- Tarjeta del total -->
-        <div class="col-12 col-lg-4">
-          <div class="summary-card h-100 d-flex flex-column justify-content-center">
-            <h3>Total</h3>
-            <p class="value">$ {{ totalRevenue | number:'1.0-2' }}</p>
-          </div>
-        </div>
-
-      </div>
-
-
 
         <!-- Ventas por Provincia y detalle por Ciudad -->
         <div class="row g-3 p-4">
           <!-- Gráfico general: Provincias -->
           <div class="col-12 col-md-6">
-            <div class="chart-card">
+            <div class="chart-card" #chartCard>
               <h3>Ventas por Provincia</h3>
               <canvas baseChart [data]="salesChartData" [options]="salesChartOptions" [type]="'bar'" (chartClick)="onProvinceClick($event)"> </canvas>
             </div>
@@ -114,11 +110,11 @@
 
           <!-- Gráfico detalle: Ciudades -->
           <div class="col-12 col-md-6 d-flex align-items-center justify-content-center" *ngIf="!citiesChartData.labels?.length">
-            <div class="alert alert-info p-3 rounded">ℹ️ Selecciona una categoría para ver los productos en detalle.</div>
+            <div class="alert alert-info p-3 rounded">ℹ️ Selecciona una provincia para ver las ciudades en detalle.</div>
           </div>
 
           <div class="col-12 col-md-6" *ngIf="citiesChartData.labels?.length">
-            <div class="chart-card">
+            <div class="chart-card" #chartCard>
               <h3>Ventas por Ciudad en {{ selectedProvince }}</h3>
               <canvas baseChart [data]="citiesChartData" [options]="citiesChartOptions" [type]="'bar'"> </canvas>
             </div>
@@ -129,7 +125,7 @@
         <div class="row g-3 p-4">
           <!-- Gráfico general: Categorías -->
           <div class="col-12 col-md-6">
-            <div class="chart-card">
+            <div class="chart-card" #chartCard>
               <h3>Ventas por Categoría</h3>
               <canvas baseChart [data]="categoriesChartData" [options]="categoriesChartOptions" [type]="'bar'" (chartClick)="onCategoryClick($event)"> </canvas>
             </div>
@@ -141,7 +137,7 @@
           </div>
 
           <div class="col-12 col-md-6" *ngIf="productsByCategoryChartData.labels?.length">
-            <div class="chart-card">
+            <div class="chart-card" #chartCard>
               <h3>Productos en {{ selectedCategory }}</h3>
               <canvas baseChart [data]="productsByCategoryChartData" [options]="productsByCategoryChartOptions" [type]="'bar'"> </canvas>
             </div>
@@ -157,9 +153,24 @@
       <div *ngIf="!noChartDataOrdenes">
         <div class="row g-3 mb-4 justify-content-center">
           <div class="col-12 col-md-6 col-lg-4">
-            <div class="chart-card doughnut-container mx-auto">
+            <div class="chart-card doughnut-container mx-auto" #chartCard>
               <h3 class="text-center">Órdenes por Estado</h3>
               <canvas baseChart [data]="orderStatusChartData" [options]="orderStatusChartOptions" [type]="'doughnut'"> </canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Órdenes por día (nuevo KPI) -->
+        <div class="row g-3 mb-4">
+          <div class="col-12">
+            <div class="chart-card" #chartCard>
+              <h3>Órdenes generadas por día</h3>
+              <canvas 
+                baseChart
+                [data]="ordersPerDayChartData"
+                [options]="ordersPerDayChartOptions"
+                [type]="'line'">
+              </canvas>
             </div>
           </div>
         </div>
@@ -173,13 +184,13 @@
       <div *ngIf="!noChartDataClientes">
         <div class="row g-3 mb-4">
           <div class="col-12 col-md-6">
-            <div class="chart-card">
+            <div class="chart-card" #chartCard>
               <h3>Top 5 Clientes</h3>
               <canvas baseChart [data]="topCustomersChartData" [options]="topCustomersChartOptions" [type]="'bar'"> </canvas>
             </div>
           </div>
           <div class="col-12 col-md-6">
-            <div class="chart-card">
+            <div class="chart-card" #chartCard>
               <h3>Peores clientes (más cancelaciones)</h3>
               <canvas baseChart [data]="worstCustomersChartData" [options]="worstCustomersChartOptions" [type]="'bar'"> </canvas>
             </div>
