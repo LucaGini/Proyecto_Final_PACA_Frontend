@@ -394,3 +394,17 @@ mat-accordion {
   font-size: 20px;
   line-height: 1;
 }
+
+.summary-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  text-align: center;
+}
+.summary-card .value {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #b38558;
+}

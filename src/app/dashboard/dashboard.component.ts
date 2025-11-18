@@ -16,6 +16,8 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   selectedSection: 'ventas' | 'ordenes' | 'clientes' = 'ventas';
   isLoading = signal(false);
+  totalRevenue: number = 0;
+
 
   ngAfterViewInit(): void {
     // No-op, pero necesario para que panels esté disponible
@@ -567,5 +569,9 @@ async downloadPDF() {
     this.cdr.markForCheck();
   });
 
+  this.dashboardService.getRevenue(start, end).subscribe(res => {
+  this.totalRevenue = res.data;
+});
+  
   }
 }

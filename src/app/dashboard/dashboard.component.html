@@ -79,15 +79,28 @@
           </div>
         </div>
 
-        <!-- Evolución de Ganancias -->
-        <div class="row g-3 mb-4">
-          <div class="col-12">
-            <div class="chart-card line-container">
-              <h3>Evolución de Ganancias</h3>
-              <canvas baseChart [data]="revenueChartData" [options]="revenueChartOptions" [type]="'line'"> </canvas>
-            </div>
+        <!-- Evolución de Ganancias + Total Ganado -->
+      <div class="row g-3 mb-4 align-items-center">
+        
+        <!-- Gráfico -->
+        <div class="col-12 col-lg-8">
+          <div class="chart-card line-container">
+            <h3>Evolución de Ganancias</h3>
+            <canvas baseChart [data]="revenueChartData" [options]="revenueChartOptions" [type]="'line'"> </canvas>
           </div>
         </div>
+
+        <!-- Tarjeta del total -->
+        <div class="col-12 col-lg-4">
+          <div class="summary-card h-100 d-flex flex-column justify-content-center">
+            <h3>Total</h3>
+            <p class="value">$ {{ totalRevenue | number:'1.0-2' }}</p>
+          </div>
+        </div>
+
+      </div>
+
+
 
         <!-- Ventas por Provincia y detalle por Ciudad -->
         <div class="row g-3 p-4">
