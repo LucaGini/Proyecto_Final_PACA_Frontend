@@ -134,18 +134,5 @@ export class DashboardService {
     { params: { startDate: start, endDate: end } }
   );
 }
-  getOrdersCountByDay(start?: string, end?: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/orders-count-by-day`, {
-      headers: this.getAuthHeaders(),
-      params: this.buildParams(start, end)
-    });
-  }
-
-  getOrderStatusByDay(start?: string, end?: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/orders-status-per-day`, {
-      headers: this.getAuthHeaders(),
-      params: this.buildParams(start, end)
-    });
-  }
 
 }

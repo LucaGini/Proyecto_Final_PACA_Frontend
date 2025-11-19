@@ -41,10 +41,7 @@
   </div>
 </nav>
 
-<!-- dashboard.component.html -->
 <div class="dashboard-wrapper position-relative">
-  <!-- Sidebar -->
-
   <div *ngIf="isDateRangeEmpty" class="alert alert-warning p-3 my-3 rounded">⚠️ Por favor, selecciona un rango de fechas completo para mostrar los gráficos.</div>
 
   <div *ngIf="noChartData" class="alert alert-info p-3 my-3 rounded">ℹ️ No hay registros relevantes en estas fechas.</div>
@@ -55,14 +52,12 @@
     <button type="button" class="list-group-item list-group-item-action" [class.active]="selectedSection === 'clientes'" (click)="selectedSection = 'clientes'">Clientes</button>
   </div>
 
-  <!-- Contenido -->
   <div *ngIf="!isDateRangeEmpty && !noChartData" class="dashboard-content p-4 rounded-3">
-    <!-- Ventas -->
+    <!-- Ventas (igual que antes) -->
     <div *ngIf="selectedSection === 'ventas'">
       <div *ngIf="noChartDataVentas" class="alert alert-info p-3 my-3 mx-5 rounded">ℹ️ No hay registros de ventas relevantes en estas fechas.</div>
 
       <div *ngIf="!noChartDataVentas">
-        <!-- Top Productos y Peores Productos -->
         <div class="row g-3 mb-4">
           <div class="col-12 col-md-6">
             <div class="chart-card" #chartCard>
@@ -79,9 +74,7 @@
           </div>
         </div>
 
-        <!-- Evolución de Ganancias + Total Ganado -->
         <div class="row g-3 mb-4 align-items-center">
-          <!-- Gráfico -->
           <div class="col-12 col-lg-8">
             <div class="chart-card line-container" #chartCard>
               <h3>Evolución de Ganancias</h3>
@@ -89,7 +82,6 @@
             </div>
           </div>
 
-          <!-- Tarjeta del total -->
           <div class="col-12 col-lg-4">
             <div class="summary-card h-100 d-flex flex-column justify-content-center">
               <h3>Total</h3>
@@ -98,9 +90,7 @@
           </div>
         </div>
 
-        <!-- Ventas por Provincia y detalle por Ciudad -->
         <div class="row g-3 p-4">
-          <!-- Gráfico general: Provincias -->
           <div class="col-12 col-md-6">
             <div class="chart-card" #chartCard>
               <h3>Ventas por Provincia</h3>
@@ -108,7 +98,6 @@
             </div>
           </div>
 
-          <!-- Gráfico detalle: Ciudades -->
           <div class="col-12 col-md-6 d-flex align-items-center justify-content-center" *ngIf="!citiesChartData.labels?.length">
             <div class="alert alert-info p-3 rounded">ℹ️ Selecciona una provincia para ver las ciudades en detalle.</div>
           </div>
@@ -121,9 +110,7 @@
           </div>
         </div>
 
-        <!-- Ventas por Categoría y detalle por Producto -->
         <div class="row g-3 p-4">
-          <!-- Gráfico general: Categorías -->
           <div class="col-12 col-md-6">
             <div class="chart-card" #chartCard>
               <h3>Ventas por Categoría</h3>
@@ -131,7 +118,6 @@
             </div>
           </div>
 
-          <!-- Gráfico detalle: Productos por categoría -->
           <div class="col-12 col-md-6 d-flex align-items-center justify-content-center" *ngIf="!productsByCategoryChartData.labels?.length">
             <div class="alert alert-info p-3 rounded">ℹ️ Selecciona una categoría para ver los productos en detalle.</div>
           </div>
@@ -156,21 +142,6 @@
             <div class="chart-card doughnut-container mx-auto" #chartCard>
               <h3 class="text-center">Órdenes por Estado</h3>
               <canvas baseChart [data]="orderStatusChartData" [options]="orderStatusChartOptions" [type]="'doughnut'"> </canvas>
-            </div>
-          </div>
-        </div>
-
-        <!-- Órdenes por día (nuevo KPI) -->
-        <div class="row g-3 mb-4">
-          <div class="col-12">
-            <div class="chart-card" #chartCard>
-              <h3>Órdenes generadas por día</h3>
-              <canvas 
-                baseChart
-                [data]="ordersPerDayChartData"
-                [options]="ordersPerDayChartOptions"
-                [type]="'line'">
-              </canvas>
             </div>
           </div>
         </div>
