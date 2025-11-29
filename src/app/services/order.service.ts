@@ -130,9 +130,6 @@ delete(orderId: string): Observable<any> {
 
     bulkUpdateStatus(orderIds: string[], status: string): Observable<any> {
     const url = `${this.URL}/orders/bulk-status`;
-    console.log("ESTOY EN EL SERVICIO")
-    console.log('Updating orders:', orderIds, 'to status:', status);
-    console.log('PUT URL:', url);
     return this.http.put(url, { orderIds, status }).pipe(
       catchError((error: any) => {
         console.error('Error in bulkUpdateStatus:', error);
@@ -141,9 +138,10 @@ delete(orderId: string): Observable<any> {
     );
   }
 
-findInDistribution(provinceId: string) {
-  return this.http.get(`${this.URL}/orders/in-distribution/${provinceId}`);
-}
+  getOrdersForDriver() {
+    const url = `${this.URL}/orders/driver/orders`;
+    return this.http.get(url, { headers: this.getAuthHeaders() });
+  }
 
 }
 

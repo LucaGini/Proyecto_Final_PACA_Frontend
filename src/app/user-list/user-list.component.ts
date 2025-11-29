@@ -71,7 +71,7 @@ export class UserListComponent {
       error: (error) => {
         console.error('Error loading users:', error);
         // Fallback to old method if pagination fails
-        this.userService.getUsers(isActive, searchTerm).subscribe((data: any) => {
+        this.userService.getUsers('cliente', isActive, searchTerm).subscribe((data: any) => {
           this.users = data.data || data;
         });
       }

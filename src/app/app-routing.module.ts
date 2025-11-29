@@ -18,7 +18,7 @@ import { CollectionComponent } from './collections/collection.component';
 import { NewPasswordComponent } from './userRegistration/new-password/new-password.component';
 import { OrderListComponent } from './orders/order-list/order-list.component';
 import { EditListProductsComponent } from './products/edit-list-products/edit-list-products.component';
-import { EditListProvincesComponent } from './provinces/edit-list-provinces/edit-list-provinces.component';
+ import { EditListProvincesComponent } from './provinces/edit-list-provinces/edit-list-provinces.component';
 import { EditListCategoriesComponent } from './categories/edit-list-categories/edit-list-categories.component';
 import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cities.component';
 import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
@@ -30,6 +30,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { VrpComponent } from './vrp/vrp.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { VrpListComponent } from './vrp-list/vrp-list.component';
+import { AdminDriverComponent } from './driver/admin-driver/admin-driver.component';
 
 const routes: Routes = [
   // === SOLO ADMINISTRADOR ===
@@ -39,6 +40,7 @@ const routes: Routes = [
   { path: 'AdminCities', component: AdminCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'UserList', component: UserListComponent , canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'AdminSuppliers', component: AdminSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+  { path: 'AdminDrivers', component: AdminDriverComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'EditListProducts', component: EditListProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'EditListProvinces', component: EditListProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'EditListCategories', component: EditListCategoriesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
@@ -47,6 +49,7 @@ const routes: Routes = [
   { path: 'OrderList', component: OrderListComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'vrp', component: VrpComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
   { path: 'Dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ['administrador'] }},
+
 
   // === SOLO CLIENTES Y NO LOGUEADOS ===
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador','transportista'] }},

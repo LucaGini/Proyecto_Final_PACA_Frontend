@@ -158,6 +158,10 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['vrp-list']);
   }
 
+  AdminDrivers() {
+    this.router.navigate(['AdminDrivers']);
+  }
+
   onCategoryButtonClick(name: string) {
     this.navbarEventService.emitCategoryButtonClick(name);
     this.router.navigate([`collection/${name}`]);

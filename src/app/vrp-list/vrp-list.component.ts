@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from 'src/app/services/order.service';
 import { UtilsService } from 'src/app/services/utils.service';
-import { ProvinceService } from 'src/app/services/province.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -13,41 +12,25 @@ export class VrpListComponent implements OnInit {
   ordersInDistribution: any[] = [];
   routesByProvince: { [province: string]: any[] } = {};
   selectedOrderNumbers: Set<string> = new Set();
-  provinceId: string | null = null;
 
   constructor(
     private orderService: OrderService,
-    private provinceService: ProvinceService,
     private utils: UtilsService
   ) {}
 
-  async ngOnInit() {
-    await this.requestPasswordAndLoadOrders();
+  ngOnInit() {
+    this.loadOrdersForDriver();
   }
 
-  private async requestPasswordAndLoadOrders(): Promise<void> {
-  const password = await this.utils.askPassword(); 
-  if (!password) return;
-
-  this.provinceService.findByPassword(password).subscribe({
-    next: (res: any) => {
-      this.provinceId = res.data.id;
-      this.loadOrdersInDistribution(this.provinceId!);
-    },
-    error: (err: any) => {
-      this.utils.showAlert('error', 'Contraseña incorrecta', err.error?.message || 'Intente nuevamente');
-      this.requestPasswordAndLoadOrders(); 
-    }
-  });
-}
-  private loadOrdersInDistribution(provinceId: string) {
-    this.orderService.findInDistribution(provinceId).subscribe({
+  private loadOrdersForDriver() {
+    this.orderService.getOrdersForDriver().subscribe({
       next: (res: any) => {
         this.ordersInDistribution = res.data;
         this.routesByProvince = this.groupByProvince(this.ordersInDistribution);
       },
-      error: () => {
-        this.utils.showAlert('error', 'Error', 'No se pudieron cargar las órdenes');
+      error: (err: any) => {
+        console.error(err);
+        this.utils.showAlert('error', 'Error', err.error?.message || 'No se pudieron cargar las órdenes');
       }
     });
   }

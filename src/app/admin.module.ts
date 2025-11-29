@@ -43,6 +43,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { VrpComponent } from './vrp/vrp.component';
 import { VrpListComponent } from './vrp-list/vrp-list.component';
+import { DriverComponent } from './driver/add-driver/add-driver.component';
+import { EditListDriverComponent } from './driver/edit-list-driver/edit-list-driver.component';
+import { AdminDriverComponent } from './driver/admin-driver/admin-driver.component';
 
 // Import SharedModule from the correct path
 import { SharedModule } from './shared/shared.module';
@@ -66,7 +69,10 @@ import { SharedModule } from './shared/shared.module';
     EditListSuppliersComponent,
     VrpComponent,
     DashboardComponent,
-    VrpListComponent
+    VrpListComponent,
+    DriverComponent,
+    EditListDriverComponent,
+    AdminDriverComponent
   ],
   imports: [
     //BrowserModule,
