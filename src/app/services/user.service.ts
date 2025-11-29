@@ -5,6 +5,7 @@ import { Observable, of, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, tap, map} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from './userInterface'; // Asegúrate de que la ruta sea correcta
+import { PaginatedResponse } from '../models/pagination.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,10 @@ export class UserService {
   }
   findAll(): Observable<any[]> {
     return this.http.get<any[]>(this.URL + '/users');
+  }
+
+  getUsersPaginated(page: number = 1, limit: number = 20): Observable<PaginatedResponse<any>> {
+    return this.http.get<PaginatedResponse<any>>(`${this.URL}/users/paginated?page=${page}&limit=${limit}`);
   }
 
   signUp(userData: any): Observable<any> { 

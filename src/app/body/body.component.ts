@@ -7,6 +7,7 @@ import { CartService } from '../services/cart.service';
 import { AuthService } from '../services/auth.service';
 import { environment } from '../../environments/environment';
 import Swal from 'sweetalert2';
+import { PaginationMetadata } from '../models/pagination.interface';
 
 @Component({
   selector: 'app-body',
@@ -18,6 +19,11 @@ export class BodyComponent implements OnInit {
   cartItems: any[] = [];
   apiUrl = environment.apiUrl;
   isSearching: boolean = false;
+
+  // Pagination properties
+  pagination: PaginationMetadata | null = null;
+  currentPage = 1;
+  pageSize = 12; // Good size for product display
 
   constructor(
     private route: ActivatedRoute,
@@ -34,14 +40,10 @@ export class BodyComponent implements OnInit {
       const searchTerm = queryParams['q'];
       if (searchTerm) {
         this.isSearching = true;
-        this.productService.searchProducts(searchTerm).subscribe((response: any) => {
-          this.products = response.message === 'found products' ? response.data : [];
-        });
+        this.searchProducts(searchTerm);
       } else {
         this.isSearching = false;
-        this.productService.findActive().subscribe((data: any) => {
-          this.products = data.data;
-        });
+        this.loadActiveProducts();
       }
     });
 
@@ -96,5 +98,50 @@ export class BodyComponent implements OnInit {
 
   showAddButton(): boolean {
     return !this.authService.isAdmin() && !this.authService.isDriver();
+  }
+
+  // Load active products with pagination
+  loadActiveProducts(page: number = 1, limit: number = this.pageSize) {
+    this.productService.getActiveProductsPaginated(page, limit).subscribe({
+      next: (response) => {
+        this.products = response.data;
+        this.pagination = response.pagination;
+        this.currentPage = page;
+      },
+      error: (error) => {
+        console.error('Error loading active products:', error);
+        // Fallback to original method
+        this.productService.findActive().subscribe((data: any) => {
+          this.products = data.data || [];
+        });
+      }
+    });
+  }
+
+  // Search products (still using non-paginated search since backend search might not be paginated)
+  searchProducts(searchTerm: string) {
+    this.productService.searchProducts(searchTerm).subscribe((response: any) => {
+      this.products = response.message === 'found products' ? response.data : [];
+      // Reset pagination for search results
+      this.pagination = null;
+    });
+  }
+
+  // Pagination handlers
+  onPageChange(page: number): void {
+    if (this.isSearching) {
+      // For search, we might want to implement paginated search in the future
+      return;
+    }
+    this.loadActiveProducts(page, this.pageSize);
+  }
+
+  onPageSizeChange(newSize: number): void {
+    this.pageSize = newSize;
+    this.currentPage = 1;
+    if (this.isSearching) {
+      return;
+    }
+    this.loadActiveProducts(1, newSize);
   }
 }

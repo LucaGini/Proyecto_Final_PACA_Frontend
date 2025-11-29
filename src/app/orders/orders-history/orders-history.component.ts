@@ -6,6 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { UtilsService } from '../../services/utils.service';
+import { PaginationMetadata } from '../../models/pagination.interface';
 
 interface OrderItem {
   product: {
@@ -46,6 +47,11 @@ export class OrdersHistoryComponent implements OnInit {
   selectedStatus: string = '';
   searchTerm: string = '';
 
+  // Pagination properties
+  pagination: PaginationMetadata | null = null;
+  currentPage = 1;
+  pageSize = 10; // Smaller page size for user orders
+
   constructor(
     private orderService: OrderService,
     private productService: ProductService,
@@ -57,16 +63,30 @@ export class OrdersHistoryComponent implements OnInit {
     this.loadOrders();
   }
 
-loadOrders() {
+loadOrders(page: number = 1, limit: number = this.pageSize) {
   const user = this.authService.getLoggedUser();
   if (!user?.email) {
     this.utils.showAlert('error', 'Error', 'Sesión no iniciada');
     return;
   }
 
-  this.orderService.getOrdersByEmail(user.email).subscribe({
-    next: (response: any) => {
-      const orderPromises = response.data.map((order: any) => {
+  // Try to use paginated orders first, fallback to email-specific if needed
+  this.orderService.getOrdersPaginated(page, limit).subscribe({
+    next: (response) => {
+      // Filter orders for the current user
+      const userOrders = response.data.filter(order => 
+        order.user?.email === user.email
+      );
+      
+      // Update pagination metadata to reflect filtered results
+      this.pagination = {
+        ...response.pagination,
+        totalItems: userOrders.length,
+        totalPages: Math.ceil(userOrders.length / limit)
+      };
+      this.currentPage = page;
+
+      const orderPromises = userOrders.map((order: any) => {
         const productPromises = order.orderItems.map((item: any) => {
           return this.productService.findOne(item.productId).toPromise()
             .then(product => {
@@ -79,7 +99,7 @@ loadOrders() {
             ...order,
             orderItems: order.orderItems.map((item: any, idx: number) => ({
               ...item,
-              product: products[idx]?.data || products[idx], // Handle both data wrapper and direct product
+              product: products[idx]?.data || products[idx],
               subtotal: item.quantity * item.unitPrice
             }))
           };
@@ -93,9 +113,42 @@ loadOrders() {
         this.applyFilters();
       });
     },
-    error: (error) => {
-      console.error('Error loading orders:', error);
-      this.utils.showAlert('error', 'Error', 'No se pudieron cargar las órdenes');
+    error: () => {
+      // Fallback to the original email-based method
+      this.orderService.getOrdersByEmail(user.email).subscribe({
+        next: (response: any) => {
+          const orderPromises = response.data.map((order: any) => {
+            const productPromises = order.orderItems.map((item: any) => {
+              return this.productService.findOne(item.productId).toPromise()
+                .then(product => {
+                  return product;
+                });
+            });
+
+            return Promise.all(productPromises).then(products => {
+              return {
+                ...order,
+                orderItems: order.orderItems.map((item: any, idx: number) => ({
+                  ...item,
+                  product: products[idx]?.data || products[idx],
+                  subtotal: item.quantity * item.unitPrice
+                }))
+              };
+            });
+          });
+
+          Promise.all(orderPromises).then(processedOrders => {
+            processedOrders.sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
+            this.orders = processedOrders;
+            this.filteredOrders = [...this.orders];
+            this.applyFilters();
+          });
+        },
+        error: (error: any) => {
+          console.error('Error loading user orders by email:', error);
+          this.utils.showAlert('error', 'Error', 'No se pudieron cargar las órdenes');
+        }
+      });
     }
   });
 }
@@ -251,5 +304,16 @@ loadOrders() {
         });
       }
     });
+  }
+
+  // Pagination handlers
+  onPageChange(page: number): void {
+    this.loadOrders(page, this.pageSize);
+  }
+
+  onPageSizeChange(newSize: number): void {
+    this.pageSize = newSize;
+    this.currentPage = 1; // Reset to first page when changing page size
+    this.loadOrders(1, newSize);
   }
 }

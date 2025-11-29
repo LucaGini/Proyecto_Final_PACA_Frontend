@@ -47,6 +47,9 @@ import { DriverComponent } from './driver/add-driver/add-driver.component';
 import { EditListDriverComponent } from './driver/edit-list-driver/edit-list-driver.component';
 import { AdminDriverComponent } from './driver/admin-driver/admin-driver.component';
 
+// Import SharedModule from the correct path
+import { SharedModule } from './shared/shared.module';
+
 @NgModule({
   declarations: [
     AdminProductsComponent,
@@ -88,7 +91,8 @@ import { AdminDriverComponent } from './driver/admin-driver/admin-driver.compone
     MatMenuModule,
     MatTabsModule,
     NgChartsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    SharedModule
   ],
 })
 export class AdminModule { }

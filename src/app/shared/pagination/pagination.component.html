@@ -1,0 +1,66 @@
+<nav class="pagination-nav" *ngIf="pagination">
+  <ul class="pagination">
+    <!-- Previous button -->
+    <li class="page-item" [class.disabled]="!pagination.hasPrevPage">
+      <button 
+        class="page-link" 
+        (click)="onPageChange(currentPage - 1)" 
+        [disabled]="!pagination.hasPrevPage"
+        aria-label="Previous page">
+        <mat-icon>chevron_left</mat-icon>
+        Anterior
+      </button>
+    </li>
+
+    <!-- First page if not in view -->
+    <li class="page-item" *ngIf="shouldShowFirstPage()">
+      <button class="page-link" (click)="onPageChange(1)">1</button>
+    </li>
+    <li class="page-item" *ngIf="shouldShowFirstPage() && getPageNumbers()[0] > 2">
+      <span class="page-link dots">...</span>
+    </li>
+    
+    <!-- Page numbers -->
+    <li class="page-item" *ngFor="let page of getPageNumbers()" [class.active]="page === currentPage">
+      <button class="page-link" (click)="onPageChange(page)">{{ page }}</button>
+    </li>
+    
+    <!-- Last page if not in view -->
+    <li class="page-item" *ngIf="shouldShowLastPage() && getPageNumbers()[getPageNumbers().length - 1] < pagination.totalPages - 1">
+      <span class="page-link dots">...</span>
+    </li>
+    <li class="page-item" *ngIf="shouldShowLastPage()">
+      <button class="page-link" (click)="onPageChange(pagination.totalPages)">{{ pagination.totalPages }}</button>
+    </li>
+    
+    <!-- Next button -->
+    <li class="page-item" [class.disabled]="!pagination.hasNextPage">
+      <button 
+        class="page-link" 
+        (click)="onPageChange(currentPage + 1)" 
+        [disabled]="!pagination.hasNextPage"
+        aria-label="Next page">
+        Siguiente
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </li>
+  </ul>
+  
+  <!-- Pagination info -->
+  <div class="pagination-info">
+    Mostrando {{ (currentPage - 1) * pagination.itemsPerPage + 1 }} a 
+    {{ Math.min(currentPage * pagination.itemsPerPage, pagination.totalItems) }} 
+    de {{ pagination.totalItems }} elementos
+  </div>
+
+  <!-- Page size selector -->
+  <div class="page-size-selector">
+    <label for="pageSize">Elementos por página:</label>
+    <select id="pageSize" class="form-control-sm" [value]="pagination.itemsPerPage" (change)="onPageSizeChange($event)">
+      <option [value]="10">10</option>
+      <option [value]="20">20</option>
+      <option [value]="50">50</option>
+      <option [value]="100">100</option>
+    </select>
+  </div>
+</nav>
