@@ -3,22 +3,22 @@
     <div class="card">
       <!-- Acciones -->
       <div class="card-actions">
-        <button mat-icon-button *ngIf="!supplier.editing" class="yellow-btn" (click)="edit(supplier)">
+        <button mat-icon-button *ngIf="!supplier.editing" class="icon-btn edit" (click)="edit(supplier)">
           <mat-icon>create</mat-icon>
         </button>
-        <button mat-icon-button *ngIf="!supplier.editing" color="warn" (click)="delete(supplier)">
+        <button mat-icon-button *ngIf="!supplier.editing" class="icon-btn delete" (click)="delete(supplier)">
           <mat-icon>delete</mat-icon>
         </button>
         <button
           mat-icon-button
           *ngIf="supplier.editing"
-          color="primary"
+          class="icon-btn save"
           (click)="save(supplier)"
           [disabled]="!supplier.editCuit || !supplier.editBusinessName || !supplier.editEmail || !supplier.editPhone"
         >
           <mat-icon>save_alt</mat-icon>
         </button>
-        <button mat-icon-button *ngIf="supplier.editing" color="warn" (click)="cancelEdit(supplier)">
+        <button mat-icon-button *ngIf="supplier.editing" class="icon-btn cancel" (click)="cancelEdit(supplier)">
           <mat-icon>cancel</mat-icon>
         </button>
       </div>

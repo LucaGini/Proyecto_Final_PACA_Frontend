@@ -1,11 +1,4 @@
-<div class="products-container">
-
-  <!-- Mensaje sin productos -->
-  <div *ngIf="products.length === 0" class="no-products-message">
-    <mat-icon>inventory_2_off</mat-icon>
-    <h3>No hay productos en esta categoría</h3>
-    <p>La categoría "{{categoryName}}" no tiene productos disponibles en este momento.</p>
-  </div>
+<div *ngIf="products.length > 0" class="products-container">
 
   <!-- Cards -->
   <div
@@ -35,3 +28,10 @@
 
   </div>
 </div>
+
+  <!-- Mensaje sin productos -->
+  <div *ngIf="products.length === 0" class="no-items-message">
+    <mat-icon>inventory_2_off</mat-icon>
+    <h3>No hay productos en esta categoría</h3>
+    <p>La categoría "{{categoryName}}" no tiene productos disponibles en este momento.</p>
+  </div>

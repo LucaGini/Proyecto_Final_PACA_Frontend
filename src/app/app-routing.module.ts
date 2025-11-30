@@ -52,7 +52,7 @@ const routes: Routes = [
   { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador', 'transportista'], hideBackButton: true } },
 
   // === SOLO cliente ===
-  { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['cliente'], hideBackButton: true } },
+  { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['cliente'], hideBackButton: false } },
   { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate: [AuthGuard], data: { roles: ['cliente'], hideBackButton: true } },
 
   // === SOLO TRANSPORTISTAS ===

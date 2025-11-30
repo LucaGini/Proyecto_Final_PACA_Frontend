@@ -266,7 +266,6 @@ a {
   box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
 }
 
-
 .btn {
   background-color: #a67c52 !important;
   display: block;
@@ -350,7 +349,7 @@ a {
 // Estilos globales para botón de Google Sign-In
 .google-signin-button-global {
   // Asegurar que los estilos se apliquen globalmente
-  div[role="button"] {
+  div[role='button'] {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
 
     &:hover {
@@ -365,8 +364,42 @@ a {
   }
 }
 
+.icon-btn {
+  &.save {
+    color: #6b8e23;
+
+    &:hover {
+      background-color: rgba(107, 142, 35, 0.15);
+    }
+  }
+
+  &.edit {
+    color: #a67c52;
+
+    &:hover {
+      background-color: rgba(166, 124, 82, 0.15);
+    }
+  }
+
+  &.delete {
+    color: #dc3545;
+
+    &:hover {
+      background-color: rgba(220, 53, 69, 0.15);
+    }
+  }
+
+  &.cancel {
+    color: #888;
+
+    &:hover {
+      background-color: rgba(136, 136, 136, 0.15);
+    }
+  }
+}
+
 // Mejorar los estilos del iframe de Google
-iframe[src*="accounts.google.com"] {
+iframe[src*='accounts.google.com'] {
   border-radius: 8px !important;
 }
 
@@ -460,4 +493,3 @@ iframe[src*="accounts.google.com"] {
     margin-bottom: 0.5rem;
   }
 }
-
