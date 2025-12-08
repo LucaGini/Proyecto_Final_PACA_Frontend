@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { FormsModule } from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule, HttpClient,} from '@angular/common/http'; // CUIDADO CON EL HTTPCLIENT no lo veo en los exports o imports
 import { CommonModule } from '@angular/common';
@@ -10,7 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { ResetPasswordComponent } from './userRegistration/reset-password/reset-password.component';
-import { CarouselComponent } from './carousel/carousel.component';
 import { BodyComponent } from './body/body.component';
 import { FooterComponent } from './footer/footer.component';
 import { CartComponent } from './cart/cart.component';
@@ -60,7 +58,6 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
     NavbarComponent,
     BodyComponent,
     LoginComponent,
-    CarouselComponent,
     FooterComponent,
     ResetPasswordComponent,
     SignUpComponent,
@@ -91,7 +88,6 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
     MatFormFieldModule,
     MatInputModule,
     MatRadioModule,
-    CarouselModule,
     FormsModule,
     ReactiveFormsModule,
     MatMenuModule,
