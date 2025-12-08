@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UserService } from '../services/user.service';
-import { environment} from '../../environments/environment';
+import { environment} from 'src/environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
@@ -19,7 +19,7 @@ export class UserListComponent {
 
   constructor(
     private userService: UserService,
-    private route: ActivatedRoute, 
+    private route: ActivatedRoute,
     private utils: UtilsService,
     private authService: AuthService,
     private router: Router,
@@ -31,7 +31,7 @@ export class UserListComponent {
     this.loadUsers(searchTerm);
   });
 }
-  
+
   onUserStatusChange(event: any): void {
     const value = event.target.value;
 
@@ -70,7 +70,7 @@ export class UserListComponent {
     // Limpiar la propiedad del componente
     // Con [(ngModel)] el DOM se actualiza automáticamente
     this.selectedUserStatus = '';
-    
+
     // Recargar todos los usuarios
     this.loadUsers();
   }
@@ -78,7 +78,7 @@ export class UserListComponent {
 private handleError(message: string): void {
   console.error(message);
   this.utils.showAlert('error', 'Error', 'Error al deshabilitar la cuenta');
-  } 
+  }
 deleteUser(user: any): void {
   this.utils.showConfirm('¿Estás seguro?', 'Esta acción es permanente').then((result) => {
     if (result.isConfirmed) {

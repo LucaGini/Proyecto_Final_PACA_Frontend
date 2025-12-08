@@ -97,7 +97,6 @@
 
     .card-title {
       font-size: 2rem;
-      font-family: 'Quicksand', sans-serif;
       position: relative;
 
       &::after {
@@ -105,7 +104,7 @@
         display: block;
         width: 50px;
         height: 2px;
-        background: linear-gradient(45deg, #e7c633, #ffd700);
+        background: linear-gradient(90deg, #498620, #016405);
         margin: 0.5rem 0;
         border-radius: 2px;
         transition: width 0.3s ease;

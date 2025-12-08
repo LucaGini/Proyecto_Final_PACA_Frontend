@@ -10,19 +10,23 @@ import { UserService } from '../services/user.service';
 import { CityService } from '../services/city.service';
 import { OrderService } from '../services/order.service';
 import { UtilsService } from '../services/utils.service';
-
+import { ProvinceService } from '../services/province.service';
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.scss'],
 })
 export class CartComponent implements OnInit {
-
   items: any[] = [];
   totalAmount: number = 0;
   private destroy$ = new Subject<void>();
 
-  @Input() isModal: boolean = false;            // <- esto permite pasar el valor desde el navbar
+  provinces: any[] = [];
+  cities: any[] = [];
+  selectedProvince: string = '';
+  selectedCity: string = '';
+
+  @Input() isModal: boolean = false; // <- esto permite pasar el valor desde el navbar
   @Input() showConfirmButton: boolean = true;
 
   apiUrl = environment.apiUrl;
@@ -50,23 +54,121 @@ export class CartComponent implements OnInit {
     private userService: UserService,
     private cityService: CityService,
     private orderService: OrderService,
-    private utils: UtilsService
+    private utils: UtilsService,
+    private provinceService: ProvinceService
   ) {}
 
   ngOnInit() {
+    // Cargar provincia y ciudad desde CartService o localStorage
+    this.selectedProvince = this.cartService.selectedProvince || localStorage.getItem('selectedProvince') || '';
+    this.selectedCity = this.cartService.selectedCity || localStorage.getItem('selectedCity') || '';
+
+    // Cargar items del carrito y calcular total
     this.items = this.cartService.getItems();
     this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
 
+    // Suscribirse a cambios del carrito
     this.cartService.itemsChanged$.pipe(takeUntil(this.destroy$)).subscribe((updatedItems: any[]) => {
       this.items = updatedItems;
       this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
     });
 
-    // Solo mostrar el botón de confirmar compra si estamos en la ruta /cart
+    // Mostrar botón de confirmar solo en la página /cart
     this.showConfirmButton = this.router.url === '/cart';
+
+    // Cargar datos del usuario
     this.loadUserData();
+
+    // Si no hay usuario logueado, cargar provincias
+    if (!this.userData) {
+      this.loadProvinces();
+    }
+
+    // Si ya había provincia seleccionada, cargar sus ciudades
+    if (this.selectedProvince) {
+      this.provinceService.findCitiesByProvince(this.selectedProvince).subscribe({
+        next: (data: any[]) => {
+          this.cities = Array.isArray(data) ? data : [];
+        },
+        error: (err) => {
+          console.error('Error cargando ciudades', err);
+          this.cities = [];
+        },
+      });
+    }
+
+    // Si ya había ciudad seleccionada, cargar recargo
+    if (this.selectedCity) {
+      this.cityService.findCityById(this.selectedCity).subscribe({
+        next: (res) => {
+          this.cityCharge = res?.data?.surcharge ?? 0;
+          this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+        },
+        error: (err) => {
+          console.error('Error cargando recargo de ciudad', err);
+          this.cityCharge = 0;
+          this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+        },
+      });
+    }
   }
 
+  loadProvinces() {
+    this.provinceService.findAll().subscribe({
+      next: (data: any[]) => {
+        this.provinces = Array.isArray(data) ? data : [];
+      },
+      error: (err) => {
+        console.error('Error cargando provincias', err);
+        this.provinces = [];
+      },
+    });
+  }
+
+  onProvinceChange() {
+    if (this.selectedProvince) {
+      this.cartService.selectedProvince = this.selectedProvince;
+      localStorage.setItem('selectedProvince', this.selectedProvince || '');
+
+      this.provinceService.findCitiesByProvince(this.selectedProvince).subscribe({
+        next: (data: any[]) => {
+          this.cities = Array.isArray(data) ? data : [];
+          this.selectedCity = ''; // resetear selección
+          this.cityCharge = 0;
+          this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+        },
+        error: (err) => {
+          console.error('Error cargando ciudades', err);
+          this.cities = [];
+        },
+      });
+    } else {
+      this.cities = [];
+      this.selectedCity = '';
+    }
+  }
+
+  onCityChange() {
+    if (this.selectedCity) {
+      this.cartService.selectedCity = this.selectedCity;
+      localStorage.setItem('selectedCity', this.selectedCity || '');
+
+      this.cityService.findCityById(this.selectedCity).subscribe({
+        next: (res) => {
+          this.cityCharge = res?.data?.surcharge ?? 0;
+          this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+        },
+        error: (err) => {
+          console.error('Error cargando recargo de ciudad', err);
+          this.cityCharge = 0;
+          this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+        },
+      });
+    } else {
+      this.cityCharge = 0;
+      this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
+    }
+  }
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
@@ -101,13 +203,19 @@ export class CartComponent implements OnInit {
 
   confirmPurchase() {
     // Verificar si el carrito está vacío
+    localStorage.removeItem('selectedProvince');
+    localStorage.removeItem('selectedCity');
     if (this.isCartEmpty) {
       this.utils.showAlert('warning', 'Carrito vacío', 'Debes agregar productos al carrito para poder confirmar una compra.');
       return;
     }
 
     if (!this.userData) {
-      this.utils.showAlert('error', 'Acción no permitida', 'Debes iniciar sesión para confirmar tu compra.');
+      if (!this.selectedCity) {
+        this.utils.showAlert('error', 'Ciudad requerida', 'Debes seleccionar una ciudad para calcular el total.');
+        return;
+      }
+      this.utils.showAlert('info', 'Inicia sesión', 'Debes iniciar sesión para confirmar tu compra.');
       this.router.navigate(['UserRegistration/login']);
       return;
     }

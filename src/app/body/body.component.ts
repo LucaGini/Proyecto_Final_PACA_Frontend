@@ -5,7 +5,7 @@ import { NavBarEventService } from '../services/nav-bar-event.service';
 import { CategoryService } from '../services/category.service';
 import { CartService } from '../services/cart.service';
 import { AuthService } from '../services/auth.service';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
 @Component({

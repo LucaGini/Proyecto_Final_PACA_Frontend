@@ -17,6 +17,7 @@
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease;
+  overflow: hidden;  // <-- hace que se note el borde redondo
 
   &:hover {
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -24,7 +25,8 @@
 }
 
 .card-body {
-  padding: 1rem;
+  padding: 1rem;  background-color: #fffefd;
+
 }
 
 .card-body h3 {
@@ -34,26 +36,10 @@
   color: #333;
 }
 
-.card-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-  background-color: rgba(232, 232, 232, 0.503);
-}
-
-.card-actions mat-icon {
-  font-size: 20px;
-}
-
-.yellow-btn {
-  color: #ffc107;
-}
-
 button[disabled] {
   opacity: 0.6;
   pointer-events: none;
 }
-
 
 ::ng-deep .mat-mdc-tab-body-content {
   overflow: hidden !important;

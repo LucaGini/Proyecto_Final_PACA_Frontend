@@ -65,6 +65,7 @@
             <form (submit)="onOrderSearch($event)">
               <div class="search-input-container">
                 <input
+                  id="order-search-input"
                   type="text"
                   style="all: unset; display: inline-block"
                   placeholder="Ej: 202509000063"
@@ -73,6 +74,9 @@
                   inputmode="numeric"
                   (keypress)="onlyNumbers($event)"
                   (paste)="onPaste($event)"
+                  [(ngModel)]="searchTerm"
+                  name="searchTerm"
+                  (ngModelChange)="applyFilters()"
                 />
 
                 <button type="submit" class="search-button" matTooltip="Buscar orden">
@@ -151,6 +155,7 @@
           <p><strong>Email:</strong> {{ order.user?.email }}</p>
           <p><strong>Dirección:</strong> {{ order.user?.street }} {{ order.user?.streetNumber }}, {{ order.user?.cityName }}</p>
         </div>
+        
         <div class="col-md-6">
           <h4>Información del Pedido</h4>
           <p><strong>Fecha de Orden:</strong> {{ order.orderDate | date : 'dd/MM/yyyy HH:mm' }}</p>

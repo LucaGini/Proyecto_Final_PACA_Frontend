@@ -1,82 +1,150 @@
-/* Valores */
-.valores-grid {
-  margin-top: 2rem;
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.valor-card-wrapper {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  border-radius: 20px;
-  overflow: visible;
-  display: inline-block;
-}
-
-.valor-card {
-  width: 280px;
-  height: 350px;
-  border-radius: 20px;
-  padding: 20px;
-  color: white;
-  display: flex;
-  align-items: flex-end;
+/* Hero */
+.hero-section {
+  background-image: url('/assets/img/about-us/hero-bg.jpg');
   background-size: cover;
   background-position: center;
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.values-list {
-  list-style: none;
-  padding: 0;
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  border-bottom: 2px solid #a67c52;
 }
 
-.values-list li {
-  background-color: #eee;
-  padding: 1rem 2rem;
-  border-radius: 6px;
-  min-width: 200px;
+.hero-content {
+  position: relative;
+  color: var(--text-color);
+  text-align: center;
+  padding: 2.5rem;
+  border: 4px double #a67c52;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15), 0 0 20px rgba(255, 255, 255, 0.25);
+  border-radius: 15px;
+  max-width: 700px;
+  animation: fadeIn 1s ease-out;
+  overflow: hidden;
+  background-color: #b7997a;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/pattern.jpg');
+    background-repeat: repeat;
+    background-size: 750px;
+    opacity: 0.6;
+    filter: brightness(1.1) blur(1px);
+
+    z-index: 0;
+  }
+
+  h1,
+  p,
+  .hero-button {
+    position: relative;
+    z-index: 1;
+  }
+
+  h1 {
+    font-family: 'Lora', serif;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+    color: #333;
+  }
+
+  .hero-button {
+    display: inline-block;
+    background-color: var(--a67c52, #a67c52);
+    color: white;
+    font-weight: 550;
+    border-radius: 8px;
+    padding: 0.7rem 1.5rem;
+    margin: 0 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+  }
 }
 
-.hero-button:hover {
-  animation: pulse 0.6s ease-in-out;
+/* Secciones generales */
+.section-card {
+  position: relative;
+  border: 3px double #a67c52;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 2.5rem;
+  margin: 2rem auto;
+  max-width: 1100px;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/assets/pattern.jpg');
+    background-repeat: repeat;
+    background-size: 450px;
+    opacity: 0.1;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 }
 
-.valor-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+.section {
+  padding: 3rem 1rem;
+  text-align: center;
 }
 
-.trabajo {
-  background-image: url("/assets/img/about-us/valor-3.jpg");
-  background-position: left center;
-  background-size: cover;
+.section.alt {
+  background-color: rgba(224, 229, 223, 0.3);
 }
 
-.sustentabilidad {
-  background-image: url("/assets/img/about-us/valor-1.jpg");
+.section h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  font-family: 'Lora', serif;
+  color: #333;
 }
 
-.compromiso {
-  background-image: url("/assets/img/about-us/valor-4.jpg");
+.section p {
+  max-width: 800px;
+  margin: 0 auto 1rem;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #333;
 }
 
-.transparencia {
-  background-image: url("/assets/img/about-us/valor-2.jpg");
-}
-
+/* Misión y Visión */
 .mision-vision {
   display: flex;
-  justify-content: center;
-  gap: 4rem;
   flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
   text-align: left;
 
   div {
@@ -85,162 +153,85 @@
   }
 }
 
-/* Hero */
-#mision-vision {
-  scroll-margin-top: 50px;
-  background-color: #f5f5f5;
-}
+/* Valores */
+.valores-section {
+  h2 {
+    margin-bottom: 2rem;
+  }
 
-.hero-section {
-  height: calc(100vh - 65px);
-  background-image: url("/assets/img/about-us/hero-bg.jpg");
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-content {
-  background-color: rgba(0, 0, 0, 0.8);
-  color: #fff;
-  text-align: center;
-  padding: 2rem;
-  border-radius: 10px;
-  max-width: 700px;
-  animation: fadeIn 1s ease-out;
-}
-
-.hero-content h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.hero-content p {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-}
-
-.hero-button {
-  display: inline-block;
-  background-color: #fff;
-  color: #000;
-  padding: 0.7rem 1.5rem;
-  border-radius: 5px;
-  text-decoration: none;
-  font-size: 16px;
-  font-weight: bold;
-  margin: 0 1rem;
-
-  transition: all 0.4s ease;
-  cursor: pointer;
-}
-
-.hero-button:hover {
-  animation: pulse 0.6s ease-in-out;
-  transform: scale(1.1);
-}
-
-/* Generales */
-.section {
-  padding: 3rem 1rem;
-  text-align: center;
-  background-color: #fff;
-}
-
-.section.alt {
-  background-color: #f5f5f5;
-}
-
-.section h2 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
-}
-
-.section p {
-  max-width: 800px;
-  margin: 0 auto;
-  line-height: 1.6;
-  font-size: 1.1rem;
-  color: #444;
-}
-
-.historia-section {
-  display: flex;
-  justify-content: center;
-
-  .historia-content {
+  .valores-grid {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    gap: 20px;
     justify-content: center;
-    gap: 2rem;
-    max-width: 1100px;
-    margin: 0 auto;
   }
 
-  .historia-text {
-    flex: 1;
-    min-width: 300px;
-    text-align: left;
+  .valor-card {
+    width: 280px;
+    height: 350px;
+    border-radius: 15px;
+    color: white;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 1.5rem;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 
-    h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+    &:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
     }
 
-    p {
-      max-width: 100%;
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-      color: #444;
+    .card-title {
+      display: inline-block;
+      margin-bottom: 0;
+      padding: 0.3rem 0.8rem;
+      font-weight: 500;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
     }
   }
 
-  .historia-img {
-    flex: 1;
-    min-width: 300px;
-    text-align: center;
-
-    img {
-      width: 100%;
-      max-width: 400px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
+  .trabajo {
+    background-image: url('/assets/img/about-us/valor-3.jpg');
+    background-position: 20% center;
+    background-size: cover;
+  }
+  .sustentabilidad {
+    background-image: url('/assets/img/about-us/valor-1.jpg');
+  }
+  .compromiso {
+    background-image: url('/assets/img/about-us/valor-4.jpg');
+  }
+  .transparencia {
+    background-image: url('/assets/img/about-us/valor-2.jpg');
   }
 }
 
+/* Historia y Qué ofrecemos */
+.historia-section,
 .que-ofrecemos-section {
   display: flex;
   justify-content: center;
 
+  .historia-content,
   .ofrecemos-content {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
     gap: 2rem;
     max-width: 1100px;
     margin: 0 auto;
+    align-items: center;
+    justify-content: center;
   }
 
-  .ofrecemos-img {
-    flex: 1;
-    min-width: 300px;
-    text-align: center;
-
-    img {
-      width: 100%;
-      max-width: 400px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-  }
-
+  .historia-text,
   .ofrecemos-text {
     flex: 1;
     min-width: 300px;
@@ -253,10 +244,23 @@
     }
 
     p {
-      max-width: 100%;
-      margin-bottom: 1rem;
       font-size: 1.1rem;
       color: #444;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .historia-img,
+  .ofrecemos-img {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+
+    img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     }
   }
 }

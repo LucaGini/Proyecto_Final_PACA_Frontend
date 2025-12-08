@@ -1,6 +1,14 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
       <span class="navbar-toggler-icon"></span>
     </button>
 
@@ -9,7 +17,7 @@
         <li class="nav-item">
           <div class="form-group">
             <div class="filter-header">
-              <h2 style="font-family: 'Quicksand', sans-serif;">Filtros</h2>
+              <h2 style="font-family: 'Quicksand', sans-serif">Filtros</h2>
               <button *ngIf="hasActiveFilters()" type="button" class="clear-filters-btn" (click)="clearAllFilters()" matTooltip="Limpiar todos los filtros">
                 <mat-icon>filter_list_off</mat-icon>
               </button>
@@ -39,12 +47,17 @@
 <div *ngIf="users.length > 0" class="users-container">
   <div class="user-card" *ngFor="let user of users">
     <div class="card card-user">
-      <!-- Botones de acción en la parte superior -->
       <div class="card-actions">
-        <button mat-icon-button color="warn" *ngIf="user.isActive && user.privilege === 'cliente'" (click)="deleteUser(user)">
-          <mat-icon>cancel</mat-icon>
+        <button
+          mat-icon-button
+          class="icon-btn delete"
+          [disabled]="!user.isActive || user.privilege !== 'cliente'"
+          [ngStyle]="{ color: !user.isActive || user.privilege !== 'cliente' ? '#bbb' : '' }"
+          (click)="deleteUser(user)"
+          matTooltip="Eliminar usuario"
+        >
+          <mat-icon>delete</mat-icon>
         </button>
-        <!-- Podés agregar más botones aquí si lo necesitás -->
       </div>
 
       <div class="card-body">

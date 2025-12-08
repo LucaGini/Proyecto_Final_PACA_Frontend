@@ -3,31 +3,29 @@
 }
 
 .navbar {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px);
+  background: #ffffff87 !important;
+  backdrop-filter: blur(2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   .navbar-nav {
     display: flex;
     align-items: flex-end;
     gap: 2rem;
   }
-
   .nav-item {
     display: flex;
     flex-direction: column;
 
     h2 {
       color: #333;
-      margin-bottom: 0.5rem;
       position: relative;
+      margin-bottom: 0.5rem;
 
       &::after {
         content: '';
         display: block;
         width: 50px;
         height: 2px;
-        background: linear-gradient(45deg, #e7c633, #ffd700);
-        margin: 0.5rem 0;
+        background: linear-gradient(90deg, #498620, #016405);
         transition: width 0.3s ease;
       }
 
@@ -44,7 +42,6 @@
   border: none;
   transition: all 0.3s ease;
 }
-
 
 .products-container {
   display: grid;
@@ -75,7 +72,8 @@
 }
 
 .card-body {
-  padding: 1rem;
+  padding: 1rem;  background-color: #fffefd;
+
 }
 
 .card-body h3 {
@@ -90,30 +88,13 @@
   color: #666;
   margin-bottom: 0.6rem;
 }
-
-.card-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-  background-color: rgba(232, 232, 232, 0.503);
-}
-
-.card-actions mat-icon {
-  font-size: 20px;
-}
-
-.card-actions .warning {
-  color: #f76666;
-}
-
 .card-actions .sent {
   display: flex;
   align-items: center;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: #4caf50;
   gap: 4px;
 }
-
 .edit-mode {
   padding: 0rem 0.5rem;
   display: flex;
@@ -146,6 +127,3 @@
   opacity: 0.8;
 }
 
-.yellow-btn {
-  color: #ffc107; // Amarillo bootstrap
-}

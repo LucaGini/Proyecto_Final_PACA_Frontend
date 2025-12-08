@@ -20,7 +20,9 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  transition: all 0.3s ease;height: 100%; 
+  transition: all 0.3s ease;
+  height: 100%;
+  overflow: hidden; // <-- hace que se note el borde redondo
 }
 
 .card:hover {
@@ -29,6 +31,7 @@
 
 .card-body {
   width: 100%; /* importante para que el truncamiento funcione */
+  background-color: #fffefd;
 }
 
 .card-body h3 {
@@ -40,25 +43,8 @@
 .truncate {
   word-wrap: break-word; /* permite que la palabra larga se divida */
   word-break: break-word; /* soporte moderno */
-  white-space: normal;    /* respeta el ancho del contenedor */
-  overflow: visible;      /* muestra todo el contenido */
-}
-
-
-.card-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-  background-color: rgba(232, 232, 232, 0.503);
-  padding: 0.5rem;
-}
-
-.card-actions mat-icon {
-  font-size: 20px;
-}
-
-.yellow-btn {
-  color: #ffc107;
+  white-space: normal; /* respeta el ancho del contenedor */
+  overflow: visible; /* muestra todo el contenido */
 }
 
 button[disabled] {

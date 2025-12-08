@@ -10,7 +10,7 @@ import { forkJoin, Subscription } from 'rxjs';
 @Component({
   selector: 'app-order-list',
   templateUrl: './order-list.component.html',
-  styleUrls: ['./order-list.component.scss']
+  styleUrls: ['./order-list.component.scss'],
 })
 export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   orders: any[] = [];
@@ -25,7 +25,7 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   // Variables para control de navegación
   private routerSubscription: Subscription = new Subscription();
   private allowNavigation = false;
-  
+
   // Propiedades de EditingComponent
   componentName = 'order-list';
 
@@ -41,13 +41,13 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   ngOnInit() {
     // Registrar este componente en el servicio de guardia
     this.editGuardService.registerComponent(this);
-    
+
     this.loadOrders();
     this.loadCities();
-    
+
     // Listener para advertir al usuario antes de cerrar/recargar la página si hay ediciones pendientes
     window.addEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
-    
+
     // Interceptar navegación dentro de la SPA
     this.setupNavigationGuard();
   }
@@ -55,7 +55,7 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   ngOnDestroy() {
     // Desregistrar este componente del servicio de guardia
     this.editGuardService.unregisterComponent(this.componentName);
-    
+
     // Limpiar el listener cuando el componente se destruya
     window.removeEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
     // Limpiar suscripción del router
@@ -72,17 +72,14 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   }
 
   private setupNavigationGuard(): void {
-    this.routerSubscription = this.router.events.subscribe(event => {
+    this.routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart && !this.allowNavigation) {
         if (this.hasOrdersInEditMode()) {
           // Prevenir la navegación
           this.router.navigateByUrl(this.router.url);
-          
+
           // Mostrar alerta de confirmación
-          this.utils.showConfirm(
-            'Orden en edición',
-            'Estás editando una orden. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
-          ).then((result) => {
+          this.utils.showConfirm('Orden en edición', 'Estás editando una orden. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?').then((result) => {
             if (result.isConfirmed) {
               // Cancelar todas las ediciones
               this.cancelAllEdits();
@@ -108,29 +105,27 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
             return this.productService.findOne(item.productId).toPromise();
           });
 
-          const cityPromise = order.user?.city 
-            ? this.cityService.findOne(order.user.city).toPromise()
-            : Promise.resolve(null);
+          const cityPromise = order.user?.city ? this.cityService.findOne(order.user.city).toPromise() : Promise.resolve(null);
 
-          return Promise.all([...productPromises, cityPromise]).then(results => {
+          return Promise.all([...productPromises, cityPromise]).then((results) => {
             const products = results.slice(0, -1);
             const city = results[results.length - 1];
             return {
               ...order,
               user: {
                 ...order.user,
-                cityName: city?.data?.name || city?.name || 'N/A'
+                cityName: city?.data?.name || city?.name || 'N/A',
               },
               orderItems: order.orderItems.map((item: any, idx: number) => ({
                 ...item,
                 product: products[idx],
-                subtotal: item.quantity * item.unitPrice
-              }))
+                subtotal: item.quantity * item.unitPrice,
+              })),
             };
           });
         });
 
-        Promise.all(orderPromises).then(processedOrders => {
+        Promise.all(orderPromises).then((processedOrders) => {
           processedOrders.sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime());
           this.orders = processedOrders;
           this.filteredOrders = [...this.orders];
@@ -139,7 +134,7 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
       },
       error: () => {
         this.utils.showAlert('error', 'Error', 'No se pudieron cargar las órdenes');
-      }
+      },
     });
   }
 
@@ -156,11 +151,11 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
     let filtered = [...this.orders];
 
     if (this.selectedStatus) {
-      filtered = filtered.filter(order => order.status === this.selectedStatus);
+      filtered = filtered.filter((order) => order.status === this.selectedStatus);
     }
 
     if (this.selectedCity) {
-      filtered = filtered.filter(order => order.user?.cityName === this.selectedCity);
+      filtered = filtered.filter((order) => order.user?.cityName === this.selectedCity);
     }
 
     if (this.startDate && this.endDate) {
@@ -170,7 +165,7 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
       start.setTime(start.getTime() + start.getTimezoneOffset() * 60 * 1000);
       end.setTime(end.getTime() + end.getTimezoneOffset() * 60 * 1000);
 
-      filtered = filtered.filter(order => {
+      filtered = filtered.filter((order) => {
         const orderDate = new Date(order.orderDate);
         return orderDate >= start && orderDate <= end;
       });
@@ -178,10 +173,7 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
 
     // Filtro de búsqueda por número de orden
     if (this.searchTerm) {
-      filtered = filtered.filter(order => 
-        order.orderNumber && 
-        order.orderNumber.toString().toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter((order) => order.orderNumber && order.orderNumber.toString().toLowerCase().includes(this.searchTerm.toLowerCase()));
     }
 
     this.filteredOrders = filtered;
@@ -190,21 +182,19 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   // Método para búsqueda de órdenes por número
   onOrderSearch(event: Event): void {
     event.preventDefault();
-    
-    // Verificar si hay órdenes en edición antes de permitir búsqueda
+
     if (this.hasOrdersInEditMode()) {
       this.utils.showAlert('warning', 'Orden en edición', 'No puedes buscar mientras hay órdenes en modo edición. Guarda o cancela los cambios primero.');
       return;
     }
-    
-    const searchInput = (document.getElementById('order-search-input') as HTMLInputElement);
-    const query = searchInput.value.trim();
-    
+
+    const query = this.searchTerm.trim();
+
     if (!query) {
       this.utils.showAlert('warning', 'Búsqueda', 'Ingrese un número de orden para buscar');
       return;
     }
-    
+
     this.searchTerm = query;
     this.applyFilters();
   }
@@ -228,7 +218,7 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   onPaste(event: ClipboardEvent): void {
     event.preventDefault();
     const paste = (event.clipboardData || (window as any).clipboardData).getData('text');
-    
+
     // Verificar si el texto pegado contiene solo números
     if (paste && /^\d+$/.test(paste)) {
       const input = event.target as HTMLInputElement;
@@ -240,27 +230,18 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
 
   // Método para limpiar la búsqueda
   clearSearch(): void {
-    // Verificar si hay órdenes en edición antes de permitir limpiar búsqueda
     if (this.hasOrdersInEditMode()) {
       this.utils.showAlert('warning', 'Orden en edición', 'No puedes limpiar la búsqueda mientras hay órdenes en modo edición. Guarda o cancela los cambios primero.');
       return;
     }
-    
+
     this.searchTerm = '';
-    const searchInput = (document.getElementById('order-search-input') as HTMLInputElement);
-    if (searchInput) {
-      searchInput.value = '';
-    }
     this.applyFilters();
   }
 
   // Método para verificar si hay filtros activos
   hasActiveFilters(): boolean {
-    return this.selectedStatus !== '' || 
-           this.selectedCity !== '' || 
-           this.startDate !== '' || 
-           this.endDate !== '' ||
-           this.searchTerm !== '';
+    return this.selectedStatus !== '' || this.selectedCity !== '' || this.startDate !== '' || this.endDate !== '' || this.searchTerm !== '';
   }
 
   // Método para limpiar todos los filtros
@@ -272,13 +253,13 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
     this.startDate = '';
     this.endDate = '';
     this.searchTerm = '';
-    
+
     // Limpiar también el input de búsqueda
-    const searchInput = (document.getElementById('order-search-input') as HTMLInputElement);
+    const searchInput = document.getElementById('order-search-input') as HTMLInputElement;
     if (searchInput) {
       searchInput.value = '';
     }
-    
+
     // Reaplicar filtros (mostrará todas las órdenes)
     this.applyFilters();
   }
@@ -290,7 +271,7 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
       },
       error: (error) => {
         console.error('Error al obtener ciudades', error);
-      }
+      },
     });
   }
 
@@ -321,17 +302,18 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
     }
 
     if (order.status !== order.editStatus) {
-      if (order.editStatus === 'rescheduled') { 
+      if (order.editStatus === 'rescheduled') {
         order.rescheduleQuantity = (order.rescheduleQuantity || 0) + 1;
         if (order.rescheduleQuantity > 2) {
           order.editStatus = 'cancelled';
-        }}
-        
+        }
+      }
+
       const updatedOrder = {
         ...order,
         status: order.editStatus,
         rescheduleQuantity: order.rescheduleQuantity || 0,
-        updatedDate: new Date()
+        updatedDate: new Date(),
       };
       console.log('Actualizando orden:', updatedOrder);
 
@@ -359,11 +341,11 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
 
   // Métodos auxiliares para el control de edición
   private hasOrdersInEditMode(): boolean {
-    return this.filteredOrders.some(order => order.editing === true);
+    return this.filteredOrders.some((order) => order.editing === true);
   }
 
   private cancelAllEdits(): void {
-    this.filteredOrders.forEach(order => {
+    this.filteredOrders.forEach((order) => {
       if (order.editing) {
         this.cancelEdit(order);
       }
@@ -376,10 +358,7 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   }
 
   async handleUnsavedChanges(): Promise<boolean> {
-    return this.utils.showConfirm(
-      'Orden en edición',
-      'Estás editando una orden. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
-    ).then((result) => {
+    return this.utils.showConfirm('Orden en edición', 'Estás editando una orden. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?').then((result) => {
       if (result.isConfirmed) {
         this.cancelAllEdits();
         return true;

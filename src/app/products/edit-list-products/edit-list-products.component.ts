@@ -5,7 +5,7 @@ import { SupplierService } from 'src/app/services/supplier.service';
 import { FilterProductsSupplierService } from 'src/app/services/filters/filter-products-supplier.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { FilterProductsCategoryService } from 'src/app/services/filters/filter-products-category.service';
-import { environment } from '../../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
 import { EditGuardService, EditingComponent } from 'src/app/services/edit-guard.service';
 import Swal from 'sweetalert2';
@@ -22,16 +22,16 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   suppliers: any[] = [];
   categories: any[] = [];
   apiUrl = environment.apiUrl;
-  
+
   // Variables para mantener el estado de los filtros
   selectedSupplierCuit: number | string = '';
   selectedCategoryName: string = '';
   selectedStatus: boolean | string = '';
-  
+
   // Variables para control de navegación
   private routerSubscription: Subscription = new Subscription();
   private allowNavigation = false;
-  
+
   // Propiedades de EditingComponent
   componentName = 'edit-list-products';
 
@@ -59,10 +59,10 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   ngOnInit() {
     this.getSuppliers();
     this.getCategories();
-    
+
     // Registrar este componente en el servicio de guardia
     this.editGuardService.registerComponent(this);
-    
+
     // Cargar todos los productos inicialmente
     this.productService.products$.subscribe((data: any) => {
       this.allProducts = data;
@@ -83,7 +83,7 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
 
     // Listener para advertir al usuario antes de cerrar/recargar la página si hay ediciones pendientes
     window.addEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
-    
+
     // Interceptar navegación dentro de la SPA
     this.setupNavigationGuard();
   }
@@ -91,7 +91,7 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   ngOnDestroy() {
     // Desregistrar este componente del servicio de guardia
     this.editGuardService.unregisterComponent(this.componentName);
-    
+
     // Limpiar el listener cuando el componente se destruya
     window.removeEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
     // Limpiar suscripción del router
@@ -113,7 +113,7 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
         if (this.hasProductsInEditMode()) {
           // Prevenir la navegación
           this.router.navigateByUrl(this.router.url);
-          
+
           // Mostrar alerta de confirmación
           this.utils.showConfirm(
             'Producto en edición',
@@ -220,7 +220,7 @@ save(product: any): void {
     next: (existingProduct: any) => {
       const nameChanged = product.name !== product.editName;
       if (existingProduct === null || !nameChanged) {
-        
+
         // Crear el objeto con los datos actualizados
         const updatedProduct = {
           id: product.id,
@@ -320,7 +320,7 @@ save(product: any): void {
     if (this.selectedSupplierCuit !== '' && this.selectedSupplierCuit !== null) {
       const selectedSupplier = this.suppliers.find(supplier => supplier.cuit === this.selectedSupplierCuit);
       if (selectedSupplier) {
-        filteredProducts = filteredProducts.filter(product => 
+        filteredProducts = filteredProducts.filter(product =>
           product.supplier === selectedSupplier.id
         );
       }
@@ -330,7 +330,7 @@ save(product: any): void {
     if (this.selectedCategoryName !== '' && this.selectedCategoryName !== null) {
       const selectedCategory = this.categories.find(category => category.name === this.selectedCategoryName);
       if (selectedCategory) {
-        filteredProducts = filteredProducts.filter(product => 
+        filteredProducts = filteredProducts.filter(product =>
           product.category === selectedCategory.id
         );
       }
@@ -338,7 +338,7 @@ save(product: any): void {
 
     // Aplicar filtro de estado si está seleccionado
     if (this.selectedStatus !== '' && this.selectedStatus !== null) {
-      filteredProducts = filteredProducts.filter(product => 
+      filteredProducts = filteredProducts.filter(product =>
         product.isActive === this.selectedStatus
       );
     }
@@ -348,8 +348,8 @@ save(product: any): void {
 
   // Método para verificar si hay filtros activos
   hasActiveFilters(): boolean {
-    return this.selectedSupplierCuit !== '' && this.selectedSupplierCuit !== null || 
-           (this.selectedCategoryName !== '' && this.selectedCategoryName !== null) || 
+    return this.selectedSupplierCuit !== '' && this.selectedSupplierCuit !== null ||
+           (this.selectedCategoryName !== '' && this.selectedCategoryName !== null) ||
            this.selectedStatus !== '' && this.selectedStatus !== null;
   }
 
@@ -360,7 +360,7 @@ save(product: any): void {
     this.selectedSupplierCuit = '';
     this.selectedCategoryName = '';
     this.selectedStatus = '';
-    
+
     // Reaplicar filtros (mostrará todos los productos)
     this.applyFilters();
   }

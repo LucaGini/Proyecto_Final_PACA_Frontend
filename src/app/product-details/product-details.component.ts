@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { CartService } from '../services/cart.service';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 

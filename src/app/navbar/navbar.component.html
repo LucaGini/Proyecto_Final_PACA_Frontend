@@ -4,7 +4,7 @@
     <a class="navbar-brand" routerLink="/about-us">P.A.CA.</a>
 
     <nav class="navbar navbar-expand-lg">
-      <div class="container-fluid">
+      <div>
         <button
           class="navbar-toggler"
           type="button"
@@ -44,7 +44,7 @@
       </div>
     </nav>
 
-    <button *ngIf="!isLoggedIn" (click)="UserRegistration()" mat-button id="login">Iniciar Sesion</button>
+    <button *ngIf="!isLoggedIn" class="link" (click)="UserRegistration()" mat-button id="login">Iniciar Sesion</button>
 
     <button *ngIf="isLoggedIn" class="link" (click)="logout()" mat-button id="logout">Cerrar Sesion</button>
 
@@ -63,7 +63,7 @@
       color="accent"
       aria-label="Carrito"
       type="button"
-      class="search-button"
+      class="icon"
       data-bs-toggle="modal"
       data-bs-target="#cartModal"
       id="shopping_cart"
@@ -73,7 +73,7 @@
       matBadgePosition="above after"
       (click)="openCart()"
     >
-      <mat-icon class="icon">shopping_cart</mat-icon>
+      <mat-icon>shopping_cart</mat-icon>
     </button>
 
     <div>

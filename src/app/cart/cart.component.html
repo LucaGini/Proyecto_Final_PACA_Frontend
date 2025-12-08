@@ -26,6 +26,35 @@
     </div>
   </div>
 
+  <!-- Dropdowns para usuario no logueado -->
+  <div *ngIf="!userData && provinces.length > 0" class="guest-location">
+    <span>Seleccione su ubicación para calcular el recargo por domicilio</span>
+    <div class="input-container">
+      <div class="col-md-6 d-flex flex-column align-items-center">
+        <div class="form-group">
+          <label for="province">Provincia</label>
+          <select id="province" class="form-control" [(ngModel)]="selectedProvince" (change)="onProvinceChange()">
+            <option value="" disabled selected>Seleccione una provincia</option>
+            <option *ngFor="let province of provinces" [value]="province.id">
+              {{ province.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-md-6 d-flex flex-column align-items-center">
+        <div class="form-group">
+          <label for="city">Ciudad</label>
+          <select id="city" class="form-control" [(ngModel)]="selectedCity" (change)="onCityChange()" [disabled]="!cities.length">
+            <option value="" disabled selected>Seleccione una ciudad</option>
+            <option *ngFor="let city of cities" [value]="city.id">
+              {{ city.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="city-charge" *ngIf="cityCharge > 0">
     <h2>
       Recargo por domicilio seleccionado: <span>{{ cityCharge }}%</span>

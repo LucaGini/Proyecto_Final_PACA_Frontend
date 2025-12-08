@@ -23,15 +23,21 @@
         <a [routerLink]="['/product', product.id]" class="btn info">
           Ver producto
         </a>
+
+        <!-- Añadir -->
+        <button *ngIf="!isInCart(product.id) && showAddButton()" class="btn add" (click)="addToCart(product)" [disabled]="product.stock === 0">Añadir al carrito</button>
+
+        <!-- Quitar -->
+        <button *ngIf="isInCart(product.id) && showAddButton()" class="btn remove" (click)="removeFromCart(product)">Quitar del carrito</button>
       </div>
     </div>
 
   </div>
 </div>
 
-  <!-- Mensaje sin productos -->
-  <div *ngIf="products.length === 0" class="no-items-message">
-    <mat-icon>inventory_2_off</mat-icon>
-    <h3>No hay productos en esta categoría</h3>
-    <p>La categoría "{{categoryName}}" no tiene productos disponibles en este momento.</p>
-  </div>
+<!-- Mensaje sin productos -->
+<div *ngIf="products.length === 0" class="no-items-message">
+  <mat-icon>inventory_2_off</mat-icon>
+  <h3>No hay productos en esta categoría</h3>
+  <p>La categoría "{{categoryName}}" no tiene productos disponibles en este momento.</p>
+</div>
