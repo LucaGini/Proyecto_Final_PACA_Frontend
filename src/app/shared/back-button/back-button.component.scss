@@ -1,0 +1,25 @@
+.back-btn {
+  position: absolute;
+  top: 7rem;
+  left: 4rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+
+  z-index: 1000;
+
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: .4rem .9rem;
+  border-radius: 999px;
+
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+
+.back-btn:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transform: translateX(-2px);
+}

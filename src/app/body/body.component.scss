@@ -24,6 +24,7 @@
   max-width: 1200px;
   margin: 0 auto;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  place-items: center;
 }
 
 @media (max-width: 992px) {
@@ -42,6 +43,8 @@
 
 /* Tarjeta de producto */
 .product-card {
+  width: 100%;
+  max-width: 340px;
   background: #fff;
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -61,7 +64,8 @@
 .image-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1; /* cuadrada */
+  height: 300px;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
 }
 .image-wrapper img {
@@ -84,6 +88,7 @@
 
 /* Cuerpo tarjeta */
 .card-body {
+  background-color: #fffefd;
   padding: 1rem;
   flex: 1;
   display: flex;
@@ -126,4 +131,30 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.back-btn {
+  position: absolute;
+  top: 7rem;
+  left: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  z-index: 1000;
+
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transform: translateX(-2px);
 }

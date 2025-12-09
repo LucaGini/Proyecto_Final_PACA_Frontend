@@ -37,7 +37,7 @@ interface Order {
 @Component({
   selector: 'app-orders-history',
   templateUrl: './orders-history.component.html',
-  styleUrls: ['./orders-history.component.scss']
+  styleUrls: ['./orders-history.component.scss'],
 })
 export class OrdersHistoryComponent implements OnInit {
   orders: Order[] = [];
@@ -74,10 +74,10 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
   this.orderService.getOrdersPaginated(page, limit).subscribe({
     next: (response) => {
       // Filter orders for the current user
-      const userOrders = response.data.filter(order => 
+      const userOrders = response.data.filter(order =>
         order.user?.email === user.email
       );
-      
+
       // Update pagination metadata to reflect filtered results
       this.pagination = {
         ...response.pagination,
@@ -150,8 +150,10 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
         }
       });
     }
-  });
+  }); 
 }
+
+
 
   onStatusChange(event: any) {
     this.selectedStatus = event.target.value;
@@ -166,7 +168,7 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
     let filtered = [...this.orders];
 
     if (this.selectedStatus) {
-      filtered = filtered.filter(order => order.status === this.selectedStatus);
+      filtered = filtered.filter((order) => order.status === this.selectedStatus);
     }
 
     if (this.startDate && this.endDate) {
@@ -176,7 +178,7 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
       start.setTime(start.getTime() + start.getTimezoneOffset() * 60 * 1000);
       end.setTime(end.getTime() + end.getTimezoneOffset() * 60 * 1000);
 
-      filtered = filtered.filter(order => {
+      filtered = filtered.filter((order) => {
         const orderDate = new Date(order.orderDate);
         return orderDate >= start && orderDate <= end;
       });
@@ -184,10 +186,7 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
 
     // Filtro de búsqueda por número de orden
     if (this.searchTerm) {
-      filtered = filtered.filter(order => 
-        order.orderNumber && 
-        order.orderNumber.toString().toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter((order) => order.orderNumber && order.orderNumber.toString().toLowerCase().includes(this.searchTerm.toLowerCase()));
     }
 
     this.filteredOrders = filtered;
@@ -196,15 +195,14 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
   // Método para búsqueda de órdenes por número
   onOrderSearch(event: Event): void {
     event.preventDefault();
-    
-    const searchInput = (document.getElementById('order-search-input-history') as HTMLInputElement);
-    const query = searchInput.value.trim();
-    
+
+    const query = this.searchTerm.trim();
+
     if (!query) {
       this.utils.showAlert('warning', 'Búsqueda', 'Ingrese un número de orden para buscar');
       return;
     }
-    
+
     this.searchTerm = query;
     this.applyFilters();
   }
@@ -228,7 +226,7 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
   onPaste(event: ClipboardEvent): void {
     event.preventDefault();
     const paste = (event.clipboardData || (window as any).clipboardData).getData('text');
-    
+
     // Verificar si el texto pegado contiene solo números
     if (paste && /^\d+$/.test(paste)) {
       const input = event.target as HTMLInputElement;
@@ -241,19 +239,12 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
   // Método para limpiar la búsqueda
   clearSearch(): void {
     this.searchTerm = '';
-    const searchInput = (document.getElementById('order-search-input-history') as HTMLInputElement);
-    if (searchInput) {
-      searchInput.value = '';
-    }
     this.applyFilters();
   }
 
   // Método para verificar si hay filtros activos
   hasActiveFilters(): boolean {
-    return this.selectedStatus !== '' || 
-           this.startDate !== '' || 
-           this.endDate !== '' ||
-           this.searchTerm !== '';
+    return this.selectedStatus !== '' || this.startDate !== '' || this.endDate !== '' || this.searchTerm !== '';
   }
 
   // Método para limpiar todos los filtros
@@ -264,43 +255,42 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
     this.startDate = '';
     this.endDate = '';
     this.searchTerm = '';
-    
+
     // Limpiar también el input de búsqueda
-    const searchInput = (document.getElementById('order-search-input-history') as HTMLInputElement);
+    const searchInput = document.getElementById('order-search-input-history') as HTMLInputElement;
     if (searchInput) {
       searchInput.value = '';
     }
-    
+
     // Reaplicar filtros (mostrará todas las órdenes)
     this.applyFilters();
   }
 
   cancelOrder(order: Order) {
-    this.utils.showConfirm('¿Estás seguro?', 'Esta acción cancelará la orden y no se podrá revertir.')
-    .then((result) => {
+    this.utils.showConfirm('¿Estás seguro?', 'Esta acción cancelará la orden y no se podrá revertir.').then((result) => {
       if (result.isConfirmed) {
         const updatedOrder = {
           ...order,
           status: 'cancelled',
           updatedDate: new Date(),
-          orderItems: order.orderItems 
+          orderItems: order.orderItems,
         };
-  
+
         this.orderService.update(updatedOrder).subscribe({
           next: () => {
             this.utils.showAlert('success', 'Cancelado', 'La orden ha sido cancelada con éxito');
             order.status = 'cancelled';
             order.updatedDate = new Date();
-            this.productService.loadProducts();  
+            this.productService.loadProducts();
           },
-          
+
           error: (error) => {
             let errorMessage = 'No se pudo cancelar la orden.';
             if (error.status === 400 && error.error?.message) {
               errorMessage = error.error.message; // esto es lo que dice el back
-         }
-         this.utils.showAlert('error', 'Error', errorMessage);
-          }
+            }
+            this.utils.showAlert('error', 'Error', errorMessage);
+          },
         });
       }
     });

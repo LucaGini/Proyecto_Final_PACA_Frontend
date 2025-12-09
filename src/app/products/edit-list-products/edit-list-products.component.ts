@@ -5,7 +5,7 @@ import { SupplierService } from 'src/app/services/supplier.service';
 import { FilterProductsSupplierService } from 'src/app/services/filters/filter-products-supplier.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { FilterProductsCategoryService } from 'src/app/services/filters/filter-products-category.service';
-import { environment } from '../../../environments/environment';
+import { environment } from 'src/environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
 import { EditGuardService, EditingComponent } from 'src/app/services/edit-guard.service';
 import Swal from 'sweetalert2';
@@ -15,7 +15,7 @@ import { PaginationMetadata, ProductFilters } from '../../models/pagination.inte
 @Component({
   selector: 'app-edit-list-products',
   templateUrl: './edit-list-products.component.html',
-  styleUrls: ['./edit-list-products.component.scss']
+  styleUrls: ['./edit-list-products.component.scss'],
 })
 export class EditListProductsComponent implements OnDestroy, EditingComponent {
   products: any[] = [];
@@ -23,22 +23,22 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   suppliers: any[] = [];
   categories: any[] = [];
   apiUrl = environment.apiUrl;
-  
+
   // Variables para mantener el estado de los filtros
   selectedSupplierCuit: number | string = '';
   selectedCategoryName: string = '';
   selectedStatus: boolean | string = '';
-  
+
   // Pagination properties
   pagination: PaginationMetadata | null = null;
   currentPage = 1;
   pageSize = 20;
-  
+
   // Variables para control de navegación
   private routerSubscription: Subscription = new Subscription();
   private paginationRefreshSubscription: Subscription = new Subscription();
   private allowNavigation = false;
-  
+
   // Propiedades de EditingComponent
   componentName = 'edit-list-products';
 
@@ -66,9 +66,15 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   ngOnInit() {
     this.getSuppliers();
     this.getCategories();
-    
+
     // Registrar este componente en el servicio de guardia
     this.editGuardService.registerComponent(this);
+
+    // Cargar todos los productos inicialmente
+    this.productService.products$.subscribe((data: any) => {
+      this.allProducts = data;
+      this.applyFilters(); // Aplicar filtros cada vez que se actualicen los productos
+    });
     
     // Load products with pagination
     this.loadProducts();
@@ -94,7 +100,7 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
 
     // Listener para advertir al usuario antes de cerrar/recargar la página si hay ediciones pendientes
     window.addEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
-    
+
     // Interceptar navegación dentro de la SPA
     this.setupNavigationGuard();
   }
@@ -102,7 +108,7 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   ngOnDestroy() {
     // Desregistrar este componente del servicio de guardia
     this.editGuardService.unregisterComponent(this.componentName);
-    
+
     // Limpiar el listener cuando el componente se destruya
     window.removeEventListener('beforeunload', this.beforeUnloadHandler.bind(this));
     // Limpiar suscripciones
@@ -122,17 +128,14 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   }
 
   private setupNavigationGuard(): void {
-    this.routerSubscription = this.router.events.subscribe(event => {
+    this.routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart && !this.allowNavigation) {
         if (this.hasProductsInEditMode()) {
           // Prevenir la navegación
           this.router.navigateByUrl(this.router.url);
-          
+
           // Mostrar alerta de confirmación
-          this.utils.showConfirm(
-            'Producto en edición',
-            'Estás editando un producto. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
-          ).then((result) => {
+          this.utils.showConfirm('Producto en edición', 'Estás editando un producto. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?').then((result) => {
             if (result.isConfirmed) {
               // Cancelar todas las ediciones
               this.cancelAllEdits();
@@ -151,20 +154,19 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   }
 
   delete(id: string) {
-    this.utils.showConfirm('Desea eliminar el producto', 'Esta acción no se puede deshacer')
-      .then((result) => {
-        if (result.isConfirmed) {
-          this.productService.delete(id).subscribe({
-            next: () => {
-              this.utils.showAlert('success', 'La acción ha sido confirmada');
-            },
-            error: err => {
-              console.error(err);
-              this.utils.showAlert('error', 'Error al eliminar el producto', err.message);
-            }
-          });
-        }
-      });
+    this.utils.showConfirm('Desea eliminar el producto', 'Esta acción no se puede deshacer').then((result) => {
+      if (result.isConfirmed) {
+        this.productService.delete(id).subscribe({
+          next: () => {
+            this.utils.showAlert('success', 'La acción ha sido confirmada');
+          },
+          error: (err) => {
+            console.error(err);
+            this.utils.showAlert('error', 'Error al eliminar el producto', err.message);
+          },
+        });
+      }
+    });
   }
 
   edit(product: any): void {
@@ -208,99 +210,97 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
     product.hasNewImage = false;
   }
 
-save(product: any): void {
-  const { editName, editPrice, editStock, editMinimumStock, editDescription } = product;
+  save(product: any): void {
+    const { editName, editPrice, editStock, editMinimumStock, editDescription } = product;
 
-  if (!this.utils.areValidFields([editName, editPrice, editStock, editMinimumStock, editDescription])) {
-    this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
-    return;
-  }
-
-  const hasChanged = this.utils.hasObjectChanged(
-    { name: product.name, price: product.price, stock: product.stock, minimumStock: product.minimumStock, description: product.description },
-    { name: editName, price: editPrice, stock: editStock, minimumStock: editMinimumStock, description: editDescription }
-  );
-
-  // Verificar si hay cambios o si hay una nueva imagen
-  if (!hasChanged && !product.hasNewImage) {
-    this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en el producto.');
-    product.editing = false;
-    return;
-  }
-
-  product.editName = this.utils.capitalize(editName);
-
-  this.productService.findProductByName(product.editName).subscribe({
-    next: (existingProduct: any) => {
-      const nameChanged = product.name !== product.editName;
-      if (existingProduct === null || !nameChanged) {
-        
-        // Crear el objeto con los datos actualizados
-        const updatedProduct = {
-          id: product.id,
-          name: product.editName,
-          price: parseFloat(editPrice),
-          stock: parseInt(editStock),
-          minimumStock: parseInt(editMinimumStock),
-          description: editDescription,
-          isActive: product.isActive,
-          category: product.category,
-          supplier: product.supplier
-        };
-
-        // Si hay nueva imagen, usar el método updateWithImage, sino usar update normal
-        if (product.hasNewImage && product.selectedImage) {
-          this.productService.updateWithImage(updatedProduct, product.selectedImage).subscribe({
-            next: (res: any) => {
-              if (res.data) {
-                const index = this.products.findIndex(p => p.id === res.data.id);
-                if (index !== -1) {
-                  this.products[index] = res.data;
-                  this.products = [...this.products]; // Forzar renderizado
-                }
-              }
-              this.utils.showAlert('success', 'Producto actualizado con éxito');
-              product.editing = false;
-              // Limpiar propiedades de imagen
-              product.selectedImage = null;
-              product.imagePreviewUrl = null;
-              product.hasNewImage = false;
-            },
-            error: (err: any) => {
-              console.error(err);
-              this.utils.showAlert('error', 'Registro fallido', err.message);
-            }
-          });
-        } else {
-          this.productService.update(updatedProduct).subscribe({
-            next: (res: any) => {
-              if (res.data) {
-                const index = this.products.findIndex(p => p.id === res.data.id);
-                if (index !== -1) {
-                  this.products[index] = res.data;
-                  this.products = [...this.products]; // Forzar renderizado
-                }
-              }
-              this.utils.showAlert('success', 'Producto actualizado con éxito');
-              product.editing = false;
-            },
-            error: (err: any) => {
-              console.error(err);
-              this.utils.showAlert('error', 'Registro fallido', err.message);
-            }
-          });
-        }
-      } else {
-        this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
-      }
-    },
-    error: (err: any) => {
-      console.error(err);
-      this.utils.showAlert('error', 'Error', 'Error en la verificación del nombre.');
+    if (!this.utils.areValidFields([editName, editPrice, editStock, editMinimumStock, editDescription])) {
+      this.utils.showAlert('error', 'Error en el registro', 'Debe completar todos los campos.');
+      return;
     }
-  });
-}
 
+    const hasChanged = this.utils.hasObjectChanged(
+      { name: product.name, price: product.price, stock: product.stock, minimumStock: product.minimumStock, description: product.description },
+      { name: editName, price: editPrice, stock: editStock, minimumStock: editMinimumStock, description: editDescription }
+    );
+
+    // Verificar si hay cambios o si hay una nueva imagen
+    if (!hasChanged && !product.hasNewImage) {
+      this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en el producto.');
+      product.editing = false;
+      return;
+    }
+
+    product.editName = this.utils.capitalize(editName);
+
+    this.productService.findProductByName(product.editName).subscribe({
+      next: (existingProduct: any) => {
+        const nameChanged = product.name !== product.editName;
+        if (existingProduct === null || !nameChanged) {
+          // Crear el objeto con los datos actualizados
+          const updatedProduct = {
+            id: product.id,
+            name: product.editName,
+            price: parseFloat(editPrice),
+            stock: parseInt(editStock),
+            minimumStock: parseInt(editMinimumStock),
+            description: editDescription,
+            isActive: product.isActive,
+            category: product.category,
+            supplier: product.supplier,
+          };
+
+          // Si hay nueva imagen, usar el método updateWithImage, sino usar update normal
+          if (product.hasNewImage && product.selectedImage) {
+            this.productService.updateWithImage(updatedProduct, product.selectedImage).subscribe({
+              next: (res: any) => {
+                if (res.data) {
+                  const index = this.products.findIndex((p) => p.id === res.data.id);
+                  if (index !== -1) {
+                    this.products[index] = res.data;
+                    this.products = [...this.products]; // Forzar renderizado
+                  }
+                }
+                this.utils.showAlert('success', 'Producto actualizado con éxito');
+                product.editing = false;
+                // Limpiar propiedades de imagen
+                product.selectedImage = null;
+                product.imagePreviewUrl = null;
+                product.hasNewImage = false;
+              },
+              error: (err: any) => {
+                console.error(err);
+                this.utils.showAlert('error', 'Registro fallido', err.message);
+              },
+            });
+          } else {
+            this.productService.update(updatedProduct).subscribe({
+              next: (res: any) => {
+                if (res.data) {
+                  const index = this.products.findIndex((p) => p.id === res.data.id);
+                  if (index !== -1) {
+                    this.products[index] = res.data;
+                    this.products = [...this.products]; // Forzar renderizado
+                  }
+                }
+                this.utils.showAlert('success', 'Producto actualizado con éxito');
+                product.editing = false;
+              },
+              error: (err: any) => {
+                console.error(err);
+                this.utils.showAlert('error', 'Registro fallido', err.message);
+              },
+            });
+          }
+        } else {
+          this.utils.showAlert('error', 'Error', 'El nombre ya está registrado');
+        }
+      },
+      error: (err: any) => {
+        console.error(err);
+        this.utils.showAlert('error', 'Error', 'Error en la verificación del nombre.');
+      },
+    });
+  }
 
   getSuppliers() {
     this.supplierService.findAll().subscribe({
@@ -310,7 +310,7 @@ save(product: any): void {
       error: (error) => {
         console.error('Error al obtener proveedores', error);
         this.utils.showAlert('error', 'Error', 'No se pudieron cargar los proveedores.');
-      }
+      },
     });
   }
 
@@ -322,7 +322,7 @@ save(product: any): void {
       error: (error) => {
         console.error('Error al obtener categorías', error);
         this.utils.showAlert('error', 'Error', 'No se pudieron cargar las categorías.');
-      }
+      },
     });
   }
 
@@ -334,14 +334,14 @@ save(product: any): void {
         this.allProducts = response.data; // Keep for local filtering
         this.pagination = response.pagination;
         this.currentPage = page;
-        
+
         // Apply client-side filters
         this.applyFilters();
       },
       error: (error) => {
         console.error('Error loading products:', error);
         this.utils.showAlert('error', 'Error', 'No se pudieron cargar los productos.');
-      }
+      },
     });
   }
 
@@ -351,37 +351,33 @@ save(product: any): void {
 
     // Aplicar filtro de proveedor si está seleccionado
     if (this.selectedSupplierCuit !== '' && this.selectedSupplierCuit !== null) {
-      const selectedSupplier = this.suppliers.find(supplier => supplier.cuit === this.selectedSupplierCuit);
+      const selectedSupplier = this.suppliers.find((supplier) => supplier.cuit === this.selectedSupplierCuit);
       if (selectedSupplier) {
-        filteredProducts = filteredProducts.filter(product =>
-          product.supplier === selectedSupplier.id
-        );
+        filteredProducts = filteredProducts.filter((product) => product.supplier === selectedSupplier.id);
       }
     }
 
     // Aplicar filtro de categoría si está seleccionado
     if (this.selectedCategoryName !== '' && this.selectedCategoryName !== null) {
-      const selectedCategory = this.categories.find(category => category.name === this.selectedCategoryName);
+      const selectedCategory = this.categories.find((category) => category.name === this.selectedCategoryName);
       if (selectedCategory) {
-        filteredProducts = filteredProducts.filter(product =>
-          product.category === selectedCategory.id
-        );
+        filteredProducts = filteredProducts.filter((product) => product.category === selectedCategory.id);
       }
     }
 
     // Aplicar filtro de estado si está seleccionado
     if (this.selectedStatus !== '' && this.selectedStatus !== null) {
-      filteredProducts = filteredProducts.filter(product => 
-        product.isActive === this.selectedStatus
-      );
+      filteredProducts = filteredProducts.filter((product) => product.isActive === this.selectedStatus);
     }
 
     this.products = filteredProducts;
-  }  // Método para verificar si hay filtros activos
+  } // Método para verificar si hay filtros activos
   hasActiveFilters(): boolean {
-    return this.selectedSupplierCuit !== '' && this.selectedSupplierCuit !== null || 
-           (this.selectedCategoryName !== '' && this.selectedCategoryName !== null) || 
-           this.selectedStatus !== '' && this.selectedStatus !== null;
+    return (
+      (this.selectedSupplierCuit !== '' && this.selectedSupplierCuit !== null) ||
+      (this.selectedCategoryName !== '' && this.selectedCategoryName !== null) ||
+      (this.selectedStatus !== '' && this.selectedStatus !== null)
+    );
   }
 
   // Método para limpiar todos los filtros
@@ -391,7 +387,7 @@ save(product: any): void {
     this.selectedSupplierCuit = '';
     this.selectedCategoryName = '';
     this.selectedStatus = '';
-    
+
     // Reaplicar filtros (mostrará todos los productos)
     this.applyFilters();
   }
@@ -406,7 +402,7 @@ save(product: any): void {
 
   onSupplierChange(event: any) {
     const selectedCuit = event.target.value;
-    if (selectedCuit === "") {
+    if (selectedCuit === '') {
       this.selectedSupplierCuit = '';
     } else {
       this.selectedSupplierCuit = parseInt(selectedCuit);
@@ -416,7 +412,7 @@ save(product: any): void {
 
   onCategoryChange(event: any) {
     const selectedCategory = event.target.value;
-    if (selectedCategory === "") {
+    if (selectedCategory === '') {
       this.selectedCategoryName = '';
     } else {
       this.selectedCategoryName = selectedCategory;
@@ -426,108 +422,106 @@ save(product: any): void {
 
   onStatusChange(event: any) {
     const selectedStatus = event.target.value;
-    if (selectedStatus === "") {
+    if (selectedStatus === '') {
       this.selectedStatus = '';
     } else {
-      this.selectedStatus = selectedStatus === "true";
+      this.selectedStatus = selectedStatus === 'true';
     }
     this.applyFilters();
   }
 
   showLowStockAlert(product: any): void {
-  this.supplierService.findOne(product.supplier).subscribe({
-    next: (data: any) => {
-      if (!data || !data.data) {
-        this.utils.showAlert('error', 'Error', 'No se encontró el proveedor.');
-        return;
-      }
+    this.supplierService.findOne(product.supplier).subscribe({
+      next: (data: any) => {
+        if (!data || !data.data) {
+          this.utils.showAlert('error', 'Error', 'No se encontró el proveedor.');
+          return;
+        }
 
-      const supplier = data.data;
+        const supplier = data.data;
 
-      this.utils.showConfirm(
-        `Tienes poco stock del producto "${product.name}".`,
-        `¿Quieres enviar un mail a tu proveedor ${supplier.businessName} a ${supplier.email} solicitando nuevo stock?`
-      ).then((result) => {
-        if (result.isConfirmed) {
-          this.supplierService.requestRestockEmail(product.id, supplier.id).subscribe({
-            next: (res: any) => {
-              if (res.data) {
-                // Reemplazar en la lista el producto que cambió
-                const index = this.products.findIndex(p => p.id === res.data.id);
-                if (index !== -1) {
-                  this.products[index] = res.data;
-                  this.products = [...this.products]; // forzar renderizado
-                }
-              }
-              this.utils.showAlert('success', 'Éxito', 'Correo enviado al proveedor correctamente');
-            },
-            error: () => {
-              this.utils.showAlert('error', 'Error', 'No se pudo enviar el correo');
+        this.utils
+          .showConfirm(
+            `Tienes poco stock del producto "${product.name}".`,
+            `¿Quieres enviar un mail a tu proveedor ${supplier.businessName} a ${supplier.email} solicitando nuevo stock?`
+          )
+          .then((result) => {
+            if (result.isConfirmed) {
+              this.supplierService.requestRestockEmail(product.id, supplier.id).subscribe({
+                next: (res: any) => {
+                  if (res.data) {
+                    // Reemplazar en la lista el producto que cambió
+                    const index = this.products.findIndex((p) => p.id === res.data.id);
+                    if (index !== -1) {
+                      this.products[index] = res.data;
+                      this.products = [...this.products]; // forzar renderizado
+                    }
+                  }
+                  this.utils.showAlert('success', 'Éxito', 'Correo enviado al proveedor correctamente');
+                },
+                error: () => {
+                  this.utils.showAlert('error', 'Error', 'No se pudo enviar el correo');
+                },
+              });
             }
           });
-        }
-      });
-    },
-    error: () => {
-      this.utils.showAlert('error', 'Error', 'No se pudo obtener el proveedor');
-    }
-  });
-}
+      },
+      error: () => {
+        this.utils.showAlert('error', 'Error', 'No se pudo obtener el proveedor');
+      },
+    });
+  }
 
-reactivate(product: any) {
-  console.log('Reactivating product:', product.id);
-  this.productService.reactivateProduct(product.id).subscribe({
-    next: () => {
-      this.utils.showAlert('success', 'Producto reactivado', `El producto ${product.name} ha sido reactivado.`);
-      product.isActive = true;  // Actualiza el estado en UI
-    },
-    error: (err) => {
-      this.utils.showAlert('error', 'Error', 'No se pudo reactivar el producto.');
-      console.error(err);
-    }
-  });
-}
+  reactivate(product: any) {
+    console.log('Reactivating product:', product.id);
+    this.productService.reactivateProduct(product.id).subscribe({
+      next: () => {
+        this.utils.showAlert('success', 'Producto reactivado', `El producto ${product.name} ha sido reactivado.`);
+        product.isActive = true; // Actualiza el estado en UI
+      },
+      error: (err) => {
+        this.utils.showAlert('error', 'Error', 'No se pudo reactivar el producto.');
+        console.error(err);
+      },
+    });
+  }
 
-// Métodos auxiliares para el control de edición
-private hasProductsInEditMode(): boolean {
-  return this.products.some(product => product.editing === true);
-}
+  // Métodos auxiliares para el control de edición
+  private hasProductsInEditMode(): boolean {
+    return this.products.some((product) => product.editing === true);
+  }
 
-private cancelAllEdits(): void {
-  this.products.forEach(product => {
-    if (product.editing) {
-      this.cancelEdit(product);
-    }
-  });
-}
+  private cancelAllEdits(): void {
+    this.products.forEach((product) => {
+      if (product.editing) {
+        this.cancelEdit(product);
+      }
+    });
+  }
 
-// Implementación de EditingComponent
-hasUnsavedChanges(): boolean {
-  return this.hasProductsInEditMode();
-}
+  // Implementación de EditingComponent
+  hasUnsavedChanges(): boolean {
+    return this.hasProductsInEditMode();
+  }
 
-async handleUnsavedChanges(): Promise<boolean> {
-  return this.utils.showConfirm(
-    'Producto en edición',
-    'Estás editando un producto. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
-  ).then((result) => {
-    if (result.isConfirmed) {
-      this.cancelAllEdits();
-      return true;
-    }
-    return false;
-  });
-}
+  async handleUnsavedChanges(): Promise<boolean> {
+    return this.utils.showConfirm('Producto en edición', 'Estás editando un producto. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?').then((result) => {
+      if (result.isConfirmed) {
+        this.cancelAllEdits();
+        return true;
+      }
+      return false;
+    });
+  }
 
-// Pagination handlers
-onPageChange(page: number): void {
-  this.loadProducts(page, this.pageSize);
-}
+  // Pagination handlers
+  onPageChange(page: number): void {
+    this.loadProducts(page, this.pageSize);
+  }
 
-onPageSizeChange(newSize: number): void {
-  this.pageSize = newSize;
-  this.currentPage = 1; // Reset to first page when changing page size
-  this.loadProducts(1, newSize);
-}
-
+  onPageSizeChange(newSize: number): void {
+    this.pageSize = newSize;
+    this.currentPage = 1; // Reset to first page when changing page size
+    this.loadProducts(1, newSize);
+  }
 }

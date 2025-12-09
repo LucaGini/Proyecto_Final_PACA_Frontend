@@ -1,24 +1,24 @@
-<div class="suppliers-container">
+<div *ngIf="suppliers.length > 0" class="suppliers-container">
   <div class="supplier-card" *ngFor="let supplier of suppliers">
     <div class="card">
       <!-- Acciones -->
       <div class="card-actions">
-        <button mat-icon-button *ngIf="!supplier.editing" class="yellow-btn" (click)="edit(supplier)">
+        <button mat-icon-button *ngIf="!supplier.editing" class="icon-btn edit" (click)="edit(supplier)">
           <mat-icon>create</mat-icon>
         </button>
-        <button mat-icon-button *ngIf="!supplier.editing" color="warn" (click)="delete(supplier)">
+        <button mat-icon-button *ngIf="!supplier.editing" class="icon-btn delete" (click)="delete(supplier)">
           <mat-icon>delete</mat-icon>
         </button>
         <button
           mat-icon-button
           *ngIf="supplier.editing"
-          color="primary"
+          class="icon-btn save"
           (click)="save(supplier)"
           [disabled]="!supplier.editCuit || !supplier.editBusinessName || !supplier.editEmail || !supplier.editPhone"
         >
           <mat-icon>save_alt</mat-icon>
         </button>
-        <button mat-icon-button *ngIf="supplier.editing" color="warn" (click)="cancelEdit(supplier)">
+        <button mat-icon-button *ngIf="supplier.editing" class="icon-btn cancel" (click)="cancelEdit(supplier)">
           <mat-icon>cancel</mat-icon>
         </button>
       </div>
@@ -103,4 +103,11 @@
       </div>
     </div>
   </div>
+</div>
+
+
+<div *ngIf="suppliers.length === 0" class="no-items-message">
+  <mat-icon>business</mat-icon>
+  <h3>No hay proveedores disponibles</h3>
+  <p>No hay proveedores cargados en el sistema en este momento.</p>
 </div>

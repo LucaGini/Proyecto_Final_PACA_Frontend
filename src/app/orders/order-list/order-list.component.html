@@ -1,17 +1,20 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light order-filters-navbar">
   <div class="container-fluid">
     <div class="collapse navbar-collapse">
-      <ul class="navbar-nav align-items-center">
+      <ul class="navbar-nav align-items-end">
+        <!-- Filtros + Estado -->
         <li class="nav-item me-4">
           <div class="form-group">
-            <div class="filter-header d-flex align-items-center justify-content-between">
+            <div class="filter-header">
               <h2>Filtros</h2>
+
               <button *ngIf="hasActiveFilters()" class="clear-filters-btn" (click)="clearAllFilters()" matTooltip="Limpiar todos los filtros">
                 <mat-icon>filter_list_off</mat-icon>
               </button>
             </div>
-            <label for="status">Estado de la orden:</label>
-            <select class="form-control" id="status" (change)="onStatusChange($event)" [(ngModel)]="selectedStatus" name="status">
+
+            <label>Estado de la orden</label>
+            <select class="form-control" [(ngModel)]="selectedStatus" (change)="onStatusChange($event)">
               <option value="">Todos</option>
               <option value="pending">Pendiente</option>
               <option value="completed">Completado</option>
@@ -22,62 +25,65 @@
           </div>
         </li>
 
+        <!-- Ciudad -->
         <li class="nav-item me-4">
           <div class="form-group">
-            <label for="city">Ciudad:</label>
-            <select class="form-control" id="city" (change)="onCityChange($event)" [(ngModel)]="selectedCity" name="city">
+            <label>Ciudad</label>
+            <select class="form-control" [(ngModel)]="selectedCity" (change)="onCityChange($event)">
               <option value="">Todas</option>
               <option *ngFor="let city of cities" [value]="city.name">{{ city.name }}</option>
             </select>
           </div>
         </li>
 
-        <li class="nav-item">
-          <div class="form-group">
-            <label for="dateRange">Rango de fechas:</label>
-            <div class="input-group">
-              <input type="date" class="form-control" id="startDate" (change)="onDateChange()" [(ngModel)]="startDate" />
-              <span class="input-group-text">hasta</span>
-              <input type="date" class="form-control" id="endDate" (change)="onDateChange()" [(ngModel)]="endDate" />
+        <!-- Rango fechas -->
+        <li class="nav-item me-4">
+          <div>
+            <label class="mb-1">Rango de fechas</label>
+
+            <div class="d-flex gap-3">
+              <!-- Desde -->
+              <div class="form-group d-flex align-items-center gap-2">
+                <span class="d-inline-block w-25 small">desde</span>
+                <input type="date" class="form-control" [(ngModel)]="startDate" (change)="onDateChange()" />
+              </div>
+
+              <!-- Hasta -->
+              <div class="form-group d-flex align-items-center gap-2">
+                <span class="d-inline-block w-25 small">hasta</span>
+                <input type="date" class="form-control" [(ngModel)]="endDate" (change)="onDateChange()" />
+              </div>
             </div>
           </div>
         </li>
 
-        <li class="nav-item">
+        <!-- Buscar Nº orden -->
+        <li class="nav-item me-4">
           <div class="form-group">
-            <label for="orderSearch">Buscar por número de orden:</label>
-            <form
-              id="order-search-form"
-              class="search-form-container"
-              (submit)="onOrderSearch($event)"
-            >
+            <label>Buscar por número de orden</label>
+
+            <form (submit)="onOrderSearch($event)">
               <div class="search-input-container">
                 <input
-                  type="text"
                   id="order-search-input"
-                  class="form-control search-input"
+                  type="text"
+                  style="all: unset; display: inline-block"
                   placeholder="Ej: 202509000063"
                   aria-label="Buscar orden"
                   pattern="[0-9]*"
                   inputmode="numeric"
                   (keypress)="onlyNumbers($event)"
                   (paste)="onPaste($event)"
+                  [(ngModel)]="searchTerm"
+                  name="searchTerm"
+                  (ngModelChange)="applyFilters()"
                 />
-                <button
-                  type="submit"
-                  class="search-button"
-                  aria-label="Buscar orden"
-                  matTooltip="Buscar orden por número"
-                >
+
+                <button type="submit" class="search-button" matTooltip="Buscar orden">
                   <mat-icon>search</mat-icon>
                 </button>
-                <button
-                  type="button"
-                  class="clear-search-button"
-                  (click)="clearSearch()"
-                  aria-label="Limpiar búsqueda"
-                  matTooltip="Limpiar búsqueda"
-                >
+
+                <button type="button" class="clear-search-button" (click)="clearSearch()" matTooltip="Limpiar búsqueda">
                   <mat-icon>clear</mat-icon>
                 </button>
               </div>
@@ -101,17 +107,21 @@
 <div *ngIf="filteredOrders.length > 0" class="orders-container">
   <div class="card mb-3" *ngFor="let order of filteredOrders; let i = index">
     <div class="card-header">
-      <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex justify-content-between align-items-center gap-3">
         <h3>Orden #{{ order.orderNumber }}</h3>
         <div class="d-flex align-items-center">
           <div *ngIf="!order.editing" class="me-3">
-            <span class="badge" [ngClass]="{
-              'bg-warning': order.status === 'pending',
-              'bg-success': order.status === 'completed',
-              'bg-danger': order.status === 'cancelled',
-              'bg-primary': order.status === 'in distribution',
-              'bg-orange': order.status === 'rescheduled'
-            }">{{order.status}}</span>
+            <span
+              class="badge badge-lg"
+              [ngClass]="{
+                'bg-warning': order.status === 'pending',
+                'bg-success': order.status === 'completed',
+                'bg-danger': order.status === 'cancelled',
+                'bg-primary': order.status === 'in distribution',
+                'bg-orange': order.status === 'rescheduled'
+              }"
+              >{{ order.status }}</span
+            >
           </div>
           <div *ngIf="order.editing" class="me-3">
             <select class="form-control" [(ngModel)]="order.editStatus">
@@ -123,10 +133,15 @@
             </select>
           </div>
           <div class="example-button-container">
-            <button mat-icon-button class="btn"  *ngIf="!order.editing && order.status !== 'cancelled' && order.status !== 'completed'" (click)="edit(order)" style="color: #e7c633;">
-              <mat-icon>create</mat-icon></button>
-            <button mat-icon-button class="btn" *ngIf="order.editing" (click)="save(order)"
-              style="color: #e7c633;"><mat-icon>save_alt</mat-icon></button>
+            <!-- Botón Edit -->
+            <button mat-icon-button *ngIf="!order.editing && order.status !== 'cancelled' && order.status !== 'completed'" (click)="edit(order)" class="icon-btn edit">
+              <mat-icon>create</mat-icon>
+            </button>
+
+            <!-- Botón Save -->
+            <button mat-icon-button *ngIf="order.editing" (click)="save(order)" class="icon-btn save">
+              <mat-icon>save_alt</mat-icon>
+            </button>
           </div>
         </div>
       </div>
@@ -140,12 +155,13 @@
           <p><strong>Email:</strong> {{ order.user?.email }}</p>
           <p><strong>Dirección:</strong> {{ order.user?.street }} {{ order.user?.streetNumber }}, {{ order.user?.cityName }}</p>
         </div>
+        
         <div class="col-md-6">
           <h4>Información del Pedido</h4>
-          <p><strong>Fecha de Orden:</strong> {{order.orderDate | date:'dd/MM/yyyy HH:mm'}}</p>
-          <p><strong>Última Actualización:</strong> {{order.updatedDate | date:'dd/MM/yyyy HH:mm'}}</p>
-          <p><strong>Total:</strong> ${{order.total}}</p>
-          <p><strong>Cantidad de reenviados:</strong> {{order.rescheduleQuantity}}</p>
+          <p><strong>Fecha de Orden:</strong> {{ order.orderDate | date : 'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Última Actualización:</strong> {{ order.updatedDate | date : 'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Total:</strong> ${{ order.total }}</p>
+          <p><strong>Cantidad de reenviados:</strong> {{ order.rescheduleQuantity }}</p>
         </div>
       </div>
 

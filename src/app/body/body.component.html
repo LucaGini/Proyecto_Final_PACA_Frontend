@@ -1,10 +1,8 @@
 <!-- Contenedor de productos -->
 <div *ngIf="products.length > 0" class="products-container">
-  <div
-    class="product-card"
-    *ngFor="let product of products"
-    [ngClass]="{ 'out-of-stock': product.stock === 0 }"
-  >
+  <button *ngIf="isSearching" class="back-btn" (click)="clearSearch()">← Ver todos</button>
+
+  <div class="product-card" *ngFor="let product of products" [ngClass]="{ 'out-of-stock': product.stock === 0 }">
     <!-- Imagen -->
     <div class="image-wrapper">
       <img [src]="getImageUrl(product.image)" [alt]="product.name" />
@@ -22,31 +20,30 @@
         <a [routerLink]="['/product', product.id]" class="btn info">Ver producto</a>
 
         <!-- Añadir -->
-        <button
-          *ngIf="!isInCart(product.id) && showAddButton()"
-          class="btn add"
-          (click)="addToCart(product)"
-          [disabled]="product.stock === 0">
-          Añadir al carrito
-        </button>
+        <button *ngIf="!isInCart(product.id) && showAddButton()" class="btn add" (click)="addToCart(product)" [disabled]="product.stock === 0">Añadir al carrito</button>
 
         <!-- Quitar -->
-        <button
-          *ngIf="isInCart(product.id) && showAddButton()"
-          class="btn remove"
-          (click)="removeFromCart(product)">
-          Quitar del carrito
-        </button>
+        <button *ngIf="isInCart(product.id) && showAddButton()" class="btn remove" (click)="removeFromCart(product)">Quitar del carrito</button>
       </div>
     </div>
   </div>
 </div>
 
+<div *ngIf="products.length === 0" class="no-items-message">
+  <button *ngIf="isSearching" class="back-btn" (click)="clearSearch()">← Ver todos</button>
+
+  <mat-icon>production_quantity_limits</mat-icon>
+  <h3>No hay productos disponibles</h3>
+  <p>
+    {{ isSearching ? 'No hay productos que coincidan con el término ingresado.' : 'No hay productos registrados en el sistema en este momento.' }}
+  </p>
+</div>
+
 <!-- Pagination Component (only for regular product browsing, not search) -->
-<app-pagination 
+<app-pagination
   *ngIf="pagination && !isSearching"
-  [pagination]="pagination" 
-  [currentPage]="currentPage" 
-  (pageChange)="onPageChange($event)" 
+  [pagination]="pagination"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
   (pageSizeChange)="onPageSizeChange($event)">
 </app-pagination>

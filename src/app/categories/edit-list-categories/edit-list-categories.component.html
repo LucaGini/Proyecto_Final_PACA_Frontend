@@ -1,18 +1,18 @@
-<div class="categories-container">
+<div *ngIf="categories.length > 0" class="categories-container">
   <div class="category-card" *ngFor="let category of categories">
     <div class="card">
       <!-- Contenido editable -->
       <div class="card-actions">
-        <button mat-icon-button *ngIf="!category.editing" class="yellow-btn" (click)="edit(category)">
+        <button mat-icon-button *ngIf="!category.editing" class="icon-btn edit" (click)="edit(category)">
           <mat-icon>create</mat-icon>
         </button>
-        <button mat-icon-button *ngIf="!category.editing" color="warn" (click)="delete(category)">
+        <button mat-icon-button *ngIf="!category.editing" class="icon-btn delete" (click)="delete(category)">
           <mat-icon>delete</mat-icon>
         </button>
-        <button mat-icon-button *ngIf="category.editing" color="primary" (click)="save(category)" [disabled]="!category.editName || !category.editDescription">
+        <button mat-icon-button *ngIf="category.editing" class="icon-btn save" (click)="save(category)" [disabled]="!category.editName || !category.editDescription">
           <mat-icon>save_alt</mat-icon>
         </button>
-        <button mat-icon-button *ngIf="category.editing" color="warn" (click)="cancelEdit(category)">
+        <button mat-icon-button *ngIf="category.editing" class="icon-btn cancel" (click)="cancelEdit(category)">
           <mat-icon>cancel</mat-icon>
         </button>
       </div>
@@ -57,4 +57,10 @@
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="categories.length === 0" class="no-items-message">
+  <mat-icon>category</mat-icon>
+  <h3>No hay categorias disponibles</h3>
+  <p>No hay categorias cargadas en el sistema en este momento.</p>
 </div>

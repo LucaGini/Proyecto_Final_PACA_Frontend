@@ -12,7 +12,10 @@
   .image-col,
   .info-col {
     flex: 1 1 50%;
-    min-width: 300px; // asegura que no se achiquen demasiado
+    min-width: 300px;
+    justify-content: flex-end;
+    display: flex;
+    align-items: center;
   }
 
   .card {
@@ -22,6 +25,7 @@
     padding: 2rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 35vw;
 
     &:hover {
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -67,9 +71,8 @@
       transition: all 0.5s ease;
 
       &:hover {
-        transform: scale(1.05);
-        filter: brightness(1.05);
-        box-shadow: 0 12px 30px rgba(231, 198, 51, 0.2);
+        transform: scale(1.03);
+        filter: brightness(1.01);
       }
     }
 
@@ -94,7 +97,6 @@
 
     .card-title {
       font-size: 2rem;
-      font-family: 'Quicksand', sans-serif;
       position: relative;
 
       &::after {
@@ -102,7 +104,7 @@
         display: block;
         width: 50px;
         height: 2px;
-        background: linear-gradient(45deg, #e7c633, #ffd700);
+        background: linear-gradient(90deg, #498620, #016405);
         margin: 0.5rem 0;
         border-radius: 2px;
         transition: width 0.3s ease;

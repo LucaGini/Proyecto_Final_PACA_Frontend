@@ -1,5 +1,8 @@
 <div class="page-wrapper">
   <app-navbar *ngIf="showHeaderFooter"></app-navbar>
+
+  <app-back-button *ngIf="showBackButton"></app-back-button>
+
   <app-loading-spinner></app-loading-spinner>
 
   <main class="content">

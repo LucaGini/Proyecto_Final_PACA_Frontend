@@ -33,7 +33,7 @@
     }
 
     .card-body {
-      background: white;
+      background-color: #fffefd;
 
       .table-orders {
         width: 100%;
@@ -93,6 +93,8 @@
   .no-orders-message {
     text-align: center;
     margin-top: 2rem;
+    background-color: #fffefd;
+
     color: var(--text-color);
 
     h3 {
@@ -113,6 +115,28 @@
   }
 }
 
+.fancy-title {
+  position: relative;
+  display: inline-block; /* para que el fondo abrace el texto */
+  padding: 6px 12px; /* espacio interno */
+  z-index: 1;
+  font-size: 1.6rem;
+
+  /* Texto */
+  color: #fffefd;
+  font-weight: 600;
+
+  /* Fondo con before */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.95;
+    background: #c8894b; /* color trigo suave */
+    border-radius: 8px;
+  }
+}
 /* ------------------ MODAL CONFIGURACIÓN CRON ------------------ */
 .modal-backdrop {
   position: fixed;
@@ -177,23 +201,6 @@
           flex-direction: column;
         }
       }
-
-      button {
-        margin-top: 1rem;
-        background: linear-gradient(45deg, #ca8a4a, #b38558);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.7rem 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.25s ease;
-
-        &:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 3px 10px rgba(202, 138, 74, 0.3);
-        }
-      }
     }
   }
 }
@@ -219,38 +226,6 @@
   }
 }
 
-
-.btn-cron {
-  background-color: #ca8a4a; /* Combina con el header */
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: background-color 0.2s, transform 0.2s;
-  font-size: 0.95rem;
-
-  mat-icon {
-    font-size: 20px;
-  }
-
-  &:hover {
-    background-color: #b38558;
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-
-  &:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    transform: none;
-  }
+.cron {
+  min-width: auto;
 }

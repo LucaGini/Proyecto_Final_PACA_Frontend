@@ -23,7 +23,7 @@
   display: flex;
   justify-content: center;
   margin-top: 1rem;
-  
+
   // Personalizar el botón de Google
   div[role="button"] {
     border-radius: 8px !important;
@@ -33,19 +33,19 @@
     width: 100% !important;
     max-width: 300px !important;
     height: 48px !important;
-    
+
     &:hover {
       border-color: #567518 !important;
       box-shadow: 0 4px 12px rgba(86, 117, 24, 0.15) !important;
       transform: translateY(-1px) !important;
     }
-    
+
     &:active {
       transform: translateY(0) !important;
       box-shadow: 0 2px 6px rgba(86, 117, 24, 0.2) !important;
     }
   }
-  
+
   // Mejorar el texto del botón
   span {
     font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
@@ -60,7 +60,7 @@
   position: relative;
   text-align: center;
   margin: 1.5rem 0;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -71,15 +71,16 @@
     background: linear-gradient(to right, transparent, #e5e5e5, transparent);
     z-index: 1;
   }
-  
+
   .separator-text {
-    background: white;
+    background: #e4dacf;
     padding: 0 1rem;
-    color: #6c757d;
+    color: #595e62;
     font-size: 0.9rem;
     position: relative;
     z-index: 2;
     display: inline-block;
+    border-radius: 10px;
   }
 }
 
@@ -87,7 +88,7 @@
 .google-signin-section {
   margin-top: 1rem;
   padding: 0 1rem;
-  
+
   .google-signin-text {
     font-size: 0.9rem;
     color: #6c757d;

@@ -1,10 +1,14 @@
 .form-group {
   margin-bottom: 0.5rem;
 }
-
+.badge-lg {
+  font-size: 1rem; // texto más grande
+  padding: 6px 12px; // más espacio interno
+  border-radius: 0.5rem; // opcional, más redondeado
+}
 .navbar {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px);
+  background: #ffffff87 !important;
+  backdrop-filter: blur(2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   .navbar-nav {
     display: flex;
@@ -18,17 +22,15 @@
 
     h2 {
       color: #333;
-      margin-bottom: 0.5rem;
       position: relative;
-      font-family: 'Quicksand', sans-serif;
+      margin-bottom: 0.5rem;
 
       &::after {
         content: '';
         display: block;
         width: 50px;
         height: 2px;
-        background: linear-gradient(45deg, #e7c633, #ffd700);
-        margin: 0.5rem 0;
+        background: linear-gradient(90deg, #498620, #016405);
         transition: width 0.3s ease;
       }
 
@@ -49,7 +51,7 @@
 .no-orders-message {
   text-align: center;
   padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
+  background-color: #fffefd;
   border-radius: 15px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin: 2rem;
@@ -71,8 +73,12 @@
   padding: 2rem;
 }
 
+.card-header{
+  background-color: #E9E0D7;
+}
+
 .orders-container .card {
-  background: rgba(255, 255, 255, 0.95);
+  background: #fff;
   backdrop-filter: blur(10px);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -83,10 +89,10 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
 
-  p {
-    color: #666;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
+p {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
 }
 
 .bg-orange {
@@ -102,16 +108,10 @@
   display: flex;
   align-items: center;
   background: rgba(255, 255, 255, 0.9);
-  border-radius: 25px;
-  padding: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 4px 8px 4px 8px;
   transition: all 0.3s ease;
-  border: 2px solid transparent;
-}
-
-.search-input-container:focus-within {
-  box-shadow: 0 4px 12px rgba(231, 198, 51, 0.3);
-  border-color: #e7c633;
+  border: 2px solid #eee;
+  border-radius: 8px;
 }
 
 .search-input {
@@ -133,8 +133,9 @@
   font-style: italic;
 }
 
-.search-button, .clear-search-button {
-  background: linear-gradient(45deg, #e7c633, #ffd700);
+.search-button,
+.clear-search-button {
+  background: linear-gradient(45deg, #6b8e23, #7fa935);
   color: white;
   border: none;
   border-radius: 50%;
@@ -148,13 +149,15 @@
   cursor: pointer;
 }
 
-.search-button:hover, .clear-search-button:hover {
-  background: linear-gradient(45deg, #d4b12d, #e6c200);
+.search-button:hover,
+.clear-search-button:hover {
+  background: linear-gradient(45deg, #5a7a1f, #709b2f);
   transform: scale(1.05);
-  box-shadow: 0 2px 8px rgba(231, 198, 51, 0.4);
+  box-shadow: 0 2px 8px rgba(107, 142, 35, 0.4);
 }
 
-.search-button mat-icon, .clear-search-button mat-icon {
+.search-button mat-icon,
+.clear-search-button mat-icon {
   font-size: 18px;
   width: 18px;
   height: 18px;
@@ -174,8 +177,70 @@
     width: 100%;
     margin-top: 1rem;
   }
-  
+
   .search-input-container {
     width: 100%;
   }
+}
+
+.date-range-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Label más visible */
+.date-range-label {
+  font-weight: 600;
+  color: #444;
+}
+
+/* Input-group más limpio */
+.date-range {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6px;
+  border-radius: 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+/* Textos “desde / hasta” más claros */
+.input-group-text {
+  background: #f3f3f3;
+  border: none !important;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  color: #555;
+  border-radius: 8px;
+}
+
+/* Inputs limpios */
+.date-range input.form-control {
+  border: none !important;
+  box-shadow: none !important;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+}
+
+.date-range input.form-control:focus {
+  outline: none;
+}
+
+.search-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-right: 2rem;
+}
+
+.push-down {
+  margin-top: auto;
+}
+
+form {
+  all: unset;
 }

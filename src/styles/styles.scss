@@ -9,7 +9,7 @@
 // Global variables
 :root {
   --text-color: #3e3e3e;
-  --background-color: #f9f9f9;
+  --background-color: #e0e5df;
   --border-color: #6b8e23;
 
   --error-color: #c94c4c;
@@ -23,26 +23,53 @@
 html,
 body {
   height: 100%;
+  min-height: 100%;
   margin: 0;
-  display: flex;
-  flex-direction: column;
+  padding: 0;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  color: var(--text-color);
+  font-family: 'Poppins', sans-serif;
+  overflow-y: scroll;
+}
+
+/* Fondo con pattern */
+body::before {
+  content: '';
+  position: fixed; /* se queda fijo mientras scrolleás */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  background-image: url('/assets/pattern.jpg');
+  background-repeat: repeat;
+  background-size: 450px; /* ajustá según tu patrón */
+
+  opacity: 0.3; /* hace que sea sutil */
+
+  z-index: -1; /* detrás de todo */
+  pointer-events: none; /* no molesta al interactuar */
 }
 
 app-root {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-  padding-top: 65px;
+  // min-height: 100%;
 }
 
 .page-wrapper {
-  min-height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 100vh; /* <- importante */
 }
 
 .content {
-  flex: 1; // ocupa todo el espacio disponible
+  flex: 1; /* ocupa todo el espacio restante */
 }
 
 * {
@@ -51,19 +78,12 @@ app-root {
   box-sizing: border-box;
 }
 
-body {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  font-family: 'Poppins', sans-serif;
-  overflow-y: scroll;
-}
-
 form,
 .form-container {
   max-width: 800px;
   margin: 2rem auto;
   padding: 2.5rem;
-  background: white;
+  background: #fffefd;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
@@ -113,10 +133,12 @@ a {
 }
 
 .modal-content {
+  background-color: #fffefd;
   margin-top: 4rem;
 }
 
 .modal-header {
+  background-color: #e9e0d7;
   padding: 12px;
 }
 
@@ -139,9 +161,9 @@ a {
 /* Global Filter Styles */
 .filter-header {
   display: flex;
-  align-items: center;
+  align-items: center; // centra todo verticalmente
+  justify-content: space-between; // mantiene h2 y botón en extremos
   gap: 1rem;
-  margin-bottom: 0.5rem;
 
   h2 {
     margin-bottom: 0;
@@ -150,20 +172,19 @@ a {
 }
 
 .clear-filters-btn {
-  background: transparent;
+  background: #b38558;
   border: none;
-  padding: 0.2rem;
   border-radius: 50%;
-  transition: all 0.3s ease;
-  cursor: pointer;
+  padding: 0; // eliminamos padding extra
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.7;
-  background-color: #b38558;
-  height: 2rem;
-  width: 2rem;
-  transform: translateY(-16px);
+  cursor: pointer;
+  opacity: 0.85;
+  transition: all 0.3s ease;
+  transform: none; // eliminamos el translateY que movía el botón
 
   &:hover {
     background: rgba(166, 124, 82, 0.1);
@@ -171,12 +192,15 @@ a {
   }
 
   mat-icon {
-    color: white;
-    font-size: 1.2rem;
+    display: block; // evita que se desplace por inline
+    line-height: 1;
     width: 1.2rem;
     height: 1.2rem;
+    font-size: 1.2rem;
+    color: white;
   }
 }
+
 
 .error-msg {
   position: absolute;
@@ -266,7 +290,6 @@ a {
   box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.1);
 }
 
-
 .btn {
   background-color: #a67c52 !important;
   display: block;
@@ -347,17 +370,31 @@ a {
   }
 }
 
+// Edit list de admin
+.card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  background-color: #e9e0d7;
+  padding: 0.2rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  mat-icon {
+    font-size: 20px;
+  }
+}
+
 // Estilos globales para botón de Google Sign-In
 .google-signin-button-global {
   // Asegurar que los estilos se apliquen globalmente
-  div[role="button"] {
+  div[role='button'] {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    
+
     &:hover {
       transform: translateY(-2px) !important;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
     }
-    
+
     &:focus {
       outline: 2px solid #567518 !important;
       outline-offset: 2px !important;
@@ -365,8 +402,58 @@ a {
   }
 }
 
+.icon-btn {
+  &.save {
+    color: #6b8e23;
+
+    &:hover {
+      background-color: rgba(107, 142, 35, 0.15);
+    }
+  }
+
+  &.edit {
+    color: #a67c52;
+
+    &:hover {
+      background-color: rgba(166, 124, 82, 0.15);
+    }
+  }
+
+  &.delete {
+    color: #dc3545;
+
+    &:hover {
+      background-color: rgba(220, 53, 69, 0.15);
+    }
+  }
+
+  &.cancel {
+    color: #888;
+
+    &:hover {
+      background-color: rgba(136, 136, 136, 0.15);
+    }
+  }
+
+  &.restore {
+    color: #1e90ff;
+
+    &:hover {
+      background-color: rgba(30, 144, 255, 0.15);
+    }
+  }
+
+  &.warning {
+    color: #ec8f24;
+
+    &:hover {
+      background-color: rgba(232, 152, 61, 0.15);
+    }
+  }
+}
+
 // Mejorar los estilos del iframe de Google
-iframe[src*="accounts.google.com"] {
+iframe[src*='accounts.google.com'] {
   border-radius: 8px !important;
 }
 
@@ -431,3 +518,133 @@ iframe[src*="accounts.google.com"] {
   }
 }
 
+.no-items-message {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: #fffefd;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin: 2rem;
+  backdrop-filter: blur(10px);
+
+  mat-icon {
+    font-size: 4rem;
+    width: 4rem;
+    height: 4rem;
+    color: #a67c52;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    color: #333;
+  }
+
+  p {
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* Fondo general del header */
+.mat-mdc-tab-group .mat-mdc-tab-header {
+  background-color: #e4dacf !important;
+}
+
+/* --------------------------------------------- */
+/*     ESTILO DEL TAB ACTIVO (seleccionado)      */
+/* --------------------------------------------- */
+
+/* Color del texto del tab activo */
+.mat-mdc-tab-group .mat-mdc-tab.mdc-tab--active .mdc-tab__text-label {
+  color: #7a5c2e !important;
+  font-weight: 600 !important; /* más negrita */
+  font-size: 1.1rem !important; /* un poco más grande */
+}
+
+/* Subrayado personalizado del activo */
+.mat-mdc-tab-group .mat-mdc-tab.mdc-tab--active .mdc-tab-indicator {
+  display: flex !important;
+}
+
+/* Texto de los tabs inactivos */
+.mat-mdc-tab-group .mat-mdc-tab:not(.mdc-tab--active) .mdc-tab__text-label {
+  color: #7a5c2e !important; /* el color que quieras para los inactivos */
+  font-weight: 400 !important; /* peso normal */
+  font-size: 1.05rem !important; /* un poco más grande */
+}
+
+.mat-mdc-tab-group .mat-mdc-tab.mdc-tab--active .mdc-tab-indicator .mdc-tab-indicator__content {
+  border-color: #7a5c2e !important;
+  border-width: 3px !important;
+  border-style: solid !important;
+}
+
+/* --------------------------------------------- */
+/*            REMOVER AZULES / RIPPLES            */
+/* --------------------------------------------- */
+
+/* Hover: sacar azul y aplicar tu color */
+.mat-mdc-tab-group .mat-mdc-tab:hover {
+  background-color: rgba(122, 92, 46, 0.12) !important; /* marrón clarito */
+  box-shadow: none !important;
+}
+
+/* Texto en hover */
+.mat-mdc-tab-group .mat-mdc-tab:hover .mdc-tab__text-label {
+  color: #7a5c2e !important;
+}
+
+/* Focus/click: remover outline azul */
+.mat-mdc-tab-group .mat-mdc-tab:focus,
+.mat-mdc-tab-group .mat-mdc-tab:focus-visible,
+.mat-mdc-tab-group .mat-mdc-tab:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Ripple (la onda azul) → recolorarlo a tu esquema */
+.mat-mdc-tab-group .mat-mdc-tab .mat-ripple-element {
+  background-color: rgba(122, 92, 46, 0.35) !important; /* marrón trigo */
+}
+
+/* ------------------------------- */
+.mat-mdc-menu-panel {
+  background-color: #f2e8db !important; /* beige clarito */
+  border: 1px solid #c9b8a6 !important; /* borde suave */
+  border-radius: 20px !important; /* esquinas redondeadas */
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.12) !important;
+  /* separacion interna */
+}
+/* Contenedor del menú */
+.mat-mdc-menu-content {
+  background-color: #f3e9dd !important; /* beige claro suppliers-container*/
+  border: 1px solid #c7b8a6 !important;
+}
+
+/* Cada opción del menú */
+.mat-mdc-menu-item {
+  background: transparent !important;
+  color: #5a4633 !important; /* marrón suave */
+  font-weight: 500 !important;
+  border-radius: 0 !important;
+
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Hover */
+.mat-mdc-menu-item:hover {
+  background-color: #e0d3c4 !important; /* beige más oscuro */
+  color: #7a5c2e !important;
+}
+
+/* Línea separadora entre items */
+.mat-mdc-menu-item:not(:last-child) {
+  border-bottom: 1px solid #d8cabb !important;
+}
+
+/* Ripple recoloreado */
+.mat-mdc-menu-item .mat-ripple-element {
+  background-color: rgba(122, 92, 46, 0.25) !important; /* marrón trigo */
+}

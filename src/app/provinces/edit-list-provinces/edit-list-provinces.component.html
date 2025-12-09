@@ -1,18 +1,24 @@
-<div class="provinces-container">
+<div *ngIf="provinces.length > 0" class="provinces-container">
   <div class="province-card" *ngFor="let province of provinces">
     <div class="card">
       <!-- Acciones -->
       <div class="card-actions">
-        <button mat-icon-button color="warn" (click)="delete(province.id)">
+        <button mat-icon-button class="icon-btn delete" (click)="delete(province.id)">
           <mat-icon>delete</mat-icon>
         </button>
       </div>
 
       <!-- Contenido -->
       <div class="card-body">
-          <h3 class="card-text">Nombre</h3>
-          <p>{{ province.name }}</p>
-        </div>
+        <h3 class="card-text">Nombre</h3>
+        <p>{{ province.name }}</p>
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="provinces.length === 0" class="no-items-message">
+  <mat-icon>public</mat-icon>
+  <h3>No hay provincias disponibles</h3>
+  <p>No hay provincias cargadas en el sistema en este momento.</p>
+</div>

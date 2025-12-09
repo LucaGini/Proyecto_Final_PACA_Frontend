@@ -3,8 +3,8 @@
 }
 
 .navbar {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px);
+  background: #ffffff87 !important;
+  backdrop-filter: blur(2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   .navbar-nav {
     display: flex;
@@ -18,16 +18,15 @@
 
     h2 {
       color: #333;
-      margin-bottom: 0.5rem;
       position: relative;
+      margin-bottom: 0.5rem;
 
       &::after {
         content: '';
         display: block;
         width: 50px;
         height: 2px;
-        background: linear-gradient(45deg, #e7c633, #ffd700);
-        margin: 0.5rem 0;
+        background: linear-gradient(90deg, #498620, #016405);
         transition: width 0.3s ease;
       }
 
@@ -37,7 +36,6 @@
     }
   }
 }
-
 
 .cities-container {
   display: grid;
@@ -53,21 +51,24 @@
 }
 
 .card {
-  background: #fff;
+  background: #fffefd;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   position: relative;
   transition: all 0.3s ease;
   height: 100%; /* fuerza altura uniforme */
+  overflow: hidden; // <-- hace que se note el borde redondo
 }
 
 .card:hover {
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .card-body {
+  background-color: #fffefd;
+
   padding: 1rem;
   width: 100%;
 }
@@ -80,28 +81,15 @@
 }
 
 .truncate {
-  white-space: normal;   /* permite saltos de línea */
+  white-space: normal; /* permite saltos de línea */
   word-wrap: break-word; /* divide palabras largas */
   overflow-wrap: break-word;
-}
-
-.card-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-  background-color: rgba(232, 232, 232, 0.5);
-  padding: 0.5rem;
-}
-
-.yellow-btn {
-  color: #ffc107;
 }
 
 button[disabled] {
   opacity: 0.6;
   pointer-events: none;
 }
-
 
 .no-products-message {
   text-align: center;
@@ -118,12 +106,6 @@ button[disabled] {
     height: 4rem;
     color: #a67c52;
     margin-bottom: 1rem;
-  }
-
-  h3 {
-    color: #333;
-    margin-bottom: 0.5rem;
-    font-family: 'Quicksand', sans-serif;
   }
 
   p {

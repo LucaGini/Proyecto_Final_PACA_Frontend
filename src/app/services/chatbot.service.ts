@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, timeout } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
+import { environment } from 'src/environments/environment';
 
 export interface ChatMessage {
   text: string;
@@ -30,7 +30,7 @@ export interface ChatbotStatus {
 export class ChatbotService {
   private readonly apiUrl = `${environment.apiUrl}api/chatbot`;
   private readonly REQUEST_TIMEOUT = 15000; // 15 segundos para consultas de stock
-  
+
   // Subject para manejar el estado del chat
   private isLoadingSubject = new BehaviorSubject<boolean>(false);
   public isLoading$ = this.isLoadingSubject.asObservable();
@@ -42,7 +42,7 @@ export class ChatbotService {
    */
   sendMessage(message: string, conversationHistory?: string[]): Observable<ChatbotResponse> {
     this.isLoadingSubject.next(true);
-    
+
     const payload = {
       message: message.trim(),
       conversationHistory: conversationHistory || []
@@ -111,7 +111,7 @@ export class ChatbotService {
    */
   private handleError = (error: HttpErrorResponse) => {
     let errorMessage = 'Lo siento, estoy teniendo problemas técnicos. Por favor, intenta nuevamente.';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Error del lado del cliente
       console.error('Client error:', error.error.message);
@@ -119,7 +119,7 @@ export class ChatbotService {
     } else {
       // Error del lado del servidor
       console.error(`Server error: ${error.status}, body:`, error.error);
-      
+
       switch (error.status) {
         case 0:
           errorMessage = 'No se pudo conectar con el servidor. Por favor, intenta más tarde.';

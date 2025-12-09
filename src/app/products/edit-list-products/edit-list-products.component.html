@@ -54,7 +54,7 @@
 </nav>
 
 <!-- Mensaje cuando no hay productos -->
-<div *ngIf="products.length === 0" class="no-products-message">
+<div *ngIf="products.length === 0" class="no-items-message">
   <mat-icon>inventory_2</mat-icon>
   <h3>No hay productos disponibles</h3>
   <p *ngIf="hasActiveFilters()">No se encontraron productos con los filtros aplicados. Intenta ajustar los criterios de búsqueda.</p>
@@ -68,8 +68,8 @@
       <!-- Botones de acción -->
       <div class="card-actions">
         <ng-container *ngIf="product.stock < product.minimumStock && product.isActive">
-          <button mat-icon-button (click)="showLowStockAlert(product)" *ngIf="!product.mailSent">
-            <mat-icon class="warning">warning</mat-icon>
+          <button mat-icon-button (click)="showLowStockAlert(product)" class="icon-btn warning" *ngIf="!product.mailSent">
+            <mat-icon>warning</mat-icon>
           </button>
           <div *ngIf="product.mailSent" class="sent">
             <mat-icon>check_circle</mat-icon>
@@ -78,23 +78,23 @@
         </ng-container>
 
         <!-- Botones -->
-        <button mat-icon-button *ngIf="!product.editing && product.isActive" class="yellow-btn" (click)="edit(product)">
+        <button mat-icon-button *ngIf="!product.editing && product.isActive" class="icon-btn edit" (click)="edit(product)">
           <mat-icon>create</mat-icon>
         </button>
 
-        <button mat-icon-button *ngIf="!product.editing && product.isActive" color="warn" (click)="delete(product.id)">
+        <button mat-icon-button *ngIf="!product.editing && product.isActive" class="icon-btn delete" (click)="delete(product.id)">
           <mat-icon>delete</mat-icon>
         </button>
 
-        <button mat-icon-button *ngIf="!product.editing && !product.isActive" color="primary" (click)="reactivate(product)">
+        <button mat-icon-button *ngIf="!product.editing && !product.isActive" class="icon-btn restore" (click)="reactivate(product)">
           <mat-icon>restore</mat-icon>
         </button>
 
-        <button mat-icon-button *ngIf="product.editing" color="primary" (click)="save(product)">
+        <button mat-icon-button *ngIf="product.editing" class="icon-btn save" (click)="save(product)">
           <mat-icon>save_alt</mat-icon>
         </button>
 
-        <button mat-icon-button *ngIf="product.editing" color="warn" (click)="cancelEdit(product)">
+        <button mat-icon-button *ngIf="product.editing" class="icon-btn cancel" (click)="cancelEdit(product)">
           <mat-icon>cancel</mat-icon>
         </button>
       </div>

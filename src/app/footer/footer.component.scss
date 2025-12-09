@@ -1,23 +1,35 @@
 .site-footer {
   width: 100%;
-  background: var(--secondary-bg);
   text-align: center;
-  border-top: 1px solid #ccc;
-  padding: 1rem 0;
-  box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+  padding: 0.5rem 0;
+  box-shadow: 0 -8px 16px rgba(0, 0, 0, 0.15);
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
+  max-height: 250px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
 
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: #e4dacf;
+    opacity: 0.8;
+    filter: blur(2px);
+    pointer-events: none;
+  }
 
   .footer-section {
+    flex: 1; // todas las secciones ocupan el mismo ancho
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    width: 240px;
+    justify-content: center;
   }
 
   .logo-section img {
@@ -31,16 +43,21 @@
   }
 
   .footer-contact {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-
     h2 {
       font-size: 1.4rem;
       font-weight: 600;
-      margin: 0;
+      margin-bottom: 1rem;
       color: #333;
+
+      &::after {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 3px;
+        margin: 0.2rem auto 0 auto;
+        background: linear-gradient(90deg, #498620, #016405);
+        border-radius: 2px;
+      }
     }
 
     .socialNetwork {
@@ -59,44 +76,31 @@
     }
   }
 
-  .map-section {
-    iframe {
-      width: 240px;
-      height: 120px;
-      border: none;
-      border-radius: 4px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
+  .map-section iframe {
+    width: 240px;
+    height: 120px;
+    border: none;
+    border-radius: 20px;
+    opacity: 0.8;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   }
-}
 
-.site-footer .footer-contact h2::after {
-  content: '';
-  display: block;
-  width: 40px;
-  height: 3px;
-  margin: 0 auto;
-  background: linear-gradient(90deg, #498620, #016405);
-  border-radius: 2px;
-}
-
-@media (max-width: 768px) {
-  .site-footer {
+  @media (max-width: 768px) {
     flex-direction: column;
     gap: 1rem;
-  }
 
-  .map-section iframe {
-    width: 140px;
-    height: 100px;
-  }
+    .map-section iframe {
+      width: 140px;
+      height: 100px;
+    }
 
-  .footer-contact .socialNetwork a img {
-    width: 24px;
-    height: 24px;
-  }
+    .footer-contact .socialNetwork a img {
+      width: 24px;
+      height: 24px;
+    }
 
-  .logo-section img {
-    width: 70px;
+    .logo-section img {
+      width: 70px;
+    }
   }
 }

@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { NgChartsModule } from 'ng2-charts';
 // Angular Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -80,7 +79,6 @@ import { SharedModule } from './shared/shared.module';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    CarouselModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
