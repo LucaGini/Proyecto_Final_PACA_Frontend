@@ -105,7 +105,7 @@ export class AddProductComponent implements OnInit {
 
     this.productService.add(formData).subscribe({
       next: () => {
-        this.utils.showAlert('success', 'Éxito', 'Producto registrado con éxito');
+        this.utils.showAlert('success', 'Éxito', 'Producto registrado con éxito!!');
         addForm.resetForm();
 
         this.selectedImage = null;
