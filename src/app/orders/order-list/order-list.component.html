@@ -155,7 +155,7 @@
           <p><strong>Email:</strong> {{ order.user?.email }}</p>
           <p><strong>Dirección:</strong> {{ order.user?.street }} {{ order.user?.streetNumber }}, {{ order.user?.cityName }}</p>
         </div>
-        
+
         <div class="col-md-6">
           <h4>Información del Pedido</h4>
           <p><strong>Fecha de Orden:</strong> {{ order.orderDate | date : 'dd/MM/yyyy HH:mm' }}</p>
@@ -187,10 +187,10 @@
 </div>
 
 <!-- Pagination Component -->
-<app-pagination 
+<app-pagination
   *ngIf="pagination"
-  [pagination]="pagination" 
-  [currentPage]="currentPage" 
-  (pageChange)="onPageChange($event)" 
+  [pagination]="pagination"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
   (pageSizeChange)="onPageSizeChange($event)">
 </app-pagination>

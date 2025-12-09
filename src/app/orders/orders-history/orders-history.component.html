@@ -100,7 +100,7 @@
         <h3>Orden #{{ order.orderNumber }}</h3>
         <div class="d-flex align-items-center">
           <span
-            class="badge badge-lg"
+            class="me-3 badge badge-lg"
             [ngClass]="{
               'bg-warning': order.status === 'pending',
               'bg-success': order.status === 'completed',
@@ -110,8 +110,9 @@
             }"
             >{{ order.status }}</span
           >
-          <button mat-icon-button class="btn" *ngIf="order.status === 'pending'" style="color: #f76666" (click)="cancelOrder(order)">
-            <span class="material-symbols-outlined">cancel</span>
+
+          <button mat-icon-button class="icon-btn delete" *ngIf="order.status === 'pending'" (click)="cancelOrder(order)">
+            <mat-icon>delete</mat-icon>
           </button>
         </div>
       </div>
@@ -149,10 +150,5 @@
 </div>
 
 <!-- Pagination Component -->
-<app-pagination
-  *ngIf="pagination"
-  [pagination]="pagination"
-  [currentPage]="currentPage"
-  (pageChange)="onPageChange($event)"
-  (pageSizeChange)="onPageSizeChange($event)">
+<app-pagination *ngIf="pagination" [pagination]="pagination" [currentPage]="currentPage" (pageChange)="onPageChange($event)" (pageSizeChange)="onPageSizeChange($event)">
 </app-pagination>

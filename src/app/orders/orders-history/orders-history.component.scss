@@ -1,11 +1,17 @@
 .form-group {
   margin-bottom: 0.5rem;
 }
+
+.card-header{
+  background-color: #E9E0D7;
+}
+
 .badge-lg {
   font-size: 1rem; // texto más grande
   padding: 6px 12px; // más espacio interno
   border-radius: 0.5rem; // opcional, más redondeado
 }
+
 .navbar {
   background: #ffffff87 !important;
   backdrop-filter: blur(2px);
