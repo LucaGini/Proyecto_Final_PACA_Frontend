@@ -143,5 +143,26 @@ delete(orderId: string): Observable<any> {
     return this.http.get(url, { headers: this.getAuthHeaders() });
   }
 
+  getOrdersByEmailPaginated(email: string, page: number = 1, limit: number = 20): Observable<PaginatedResponse<any>> {
+    const url = `${this.URL}/orders/user/${email}/paginated?page=${page}&limit=${limit}`;
+    return this.http.get<PaginatedResponse<any>>(url, { headers: this.getAuthHeaders() }).pipe(
+      map(response => ({
+        ...response,
+        data: response.data.map((order: any) => ({
+          ...order,
+          orderItems: order.orderItems.map((item: any) => ({
+            ...item,
+            product: item.productId || item.product,
+            subtotal: item.quantity * item.unitPrice
+          }))
+        }))
+      })),
+      catchError(error => {
+        console.error('Error in getOrdersByEmailPaginated:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
 }
 

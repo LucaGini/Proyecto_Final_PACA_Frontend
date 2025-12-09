@@ -71,7 +71,7 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
   }
 
   // Try to use paginated orders first, fallback to email-specific if needed
-  this.orderService.getOrdersPaginated(page, limit).subscribe({
+  this.orderService.getOrdersByEmailPaginated(user.email, page, limit).subscribe({
     next: (response) => {
       // Filter orders for the current user
       const userOrders = response.data.filter(order =>
