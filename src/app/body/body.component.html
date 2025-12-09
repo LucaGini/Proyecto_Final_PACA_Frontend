@@ -38,3 +38,12 @@
     {{ isSearching ? 'No hay productos que coincidan con el término ingresado.' : 'No hay productos registrados en el sistema en este momento.' }}
   </p>
 </div>
+
+<!-- Pagination Component (only for regular product browsing, not search) -->
+<app-pagination
+  *ngIf="pagination && !isSearching"
+  [pagination]="pagination"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)">
+</app-pagination>

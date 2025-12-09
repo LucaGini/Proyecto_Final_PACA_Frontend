@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs'; 
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { PaginatedResponse } from '../models/pagination.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -50,6 +51,27 @@ findAll(): Observable<any> {
     }),
     catchError((error: any) => {
       console.error('Error in findAll:', error);
+      return throwError(error);
+    })
+  );
+}
+
+getOrdersPaginated(page: number = 1, limit: number = 20): Observable<PaginatedResponse<any>> {
+  const url = `${this.URL}/orders/paginated?page=${page}&limit=${limit}`;
+  return this.http.get<PaginatedResponse<any>>(url).pipe(
+    map((response: PaginatedResponse<any>) => ({
+      ...response,
+      data: response.data.map((order: any) => ({
+        ...order,
+        orderItems: order.orderItems.map((item: any) => ({
+          ...item,
+          product: item.productId || item.product,
+          subtotal: item.quantity * item.unitPrice
+        }))
+      }))
+    })),
+    catchError((error: any) => {
+      console.error('Error in getOrdersPaginated:', error);
       return throwError(error);
     })
   );
@@ -108,9 +130,6 @@ delete(orderId: string): Observable<any> {
 
     bulkUpdateStatus(orderIds: string[], status: string): Observable<any> {
     const url = `${this.URL}/orders/bulk-status`;
-    console.log("ESTOY EN EL SERVICIO")
-    console.log('Updating orders:', orderIds, 'to status:', status);
-    console.log('PUT URL:', url);
     return this.http.put(url, { orderIds, status }).pipe(
       catchError((error: any) => {
         console.error('Error in bulkUpdateStatus:', error);
@@ -119,9 +138,10 @@ delete(orderId: string): Observable<any> {
     );
   }
 
-findInDistribution(provinceId: string) {
-  return this.http.get(`${this.URL}/orders/in-distribution/${provinceId}`);
-}
+  getOrdersForDriver() {
+    const url = `${this.URL}/orders/driver/orders`;
+    return this.http.get(url, { headers: this.getAuthHeaders() });
+  }
 
 }
 

@@ -38,9 +38,18 @@ export class ProvinceService {
     });
   }
 
-  add(provinceData: any): Observable<any> { 
-    return this.http.post<any>(this.URL + '/provinces', provinceData, { headers: this.getAuthHeaders() })
-    .pipe(tap(() => this.loadProvinces()));
+  add(provinceData: any): Observable<any> {
+    return this.http.post<any>(`${this.URL}/provinces`, provinceData, { headers: this.getAuthHeaders() })
+      .pipe(
+        tap(() => this.loadProvinces()) // 👈 actualiza observable
+      );
+  }
+
+  delete(id: string): Observable<any> {
+    return this.http.delete<any>(`${this.URL}/provinces/${id}`, { headers: this.getAuthHeaders() })
+      .pipe(
+        tap(() => this.loadProvinces()) // 👈 actualiza observable
+      );
   }
 
   findAll(): Observable<any[]> {
@@ -49,18 +58,14 @@ export class ProvinceService {
     );
   }
 
-  delete(provinceId: any): Observable<any> {
-    return this.http.delete(`${this.URL}/provinces/${provinceId}`, { headers: this.getAuthHeaders() })
-      .pipe(
-        tap(() => {
-          this.loadProvinces(); // Reload provinces after deleting
-        })
-      );
-  }
   update(province: any): Observable<any> {
-    const updateUrl = `${this.URL}/provinces/${province.id}`;
-    return this.http.patch<any>(updateUrl, province, { headers: this.getAuthHeaders() }); 
-  }
+  const updateUrl = `${this.URL}/provinces/${province.id}`;
+  return this.http.patch<any>(updateUrl, province, { headers: this.getAuthHeaders() })
+    .pipe(
+      tap(() => this.loadProvinces())
+    );
+}
+
   
 findProvinceByName(name: string): Observable<any> {
   const url =`${this.URL}/provinces/${name}`;

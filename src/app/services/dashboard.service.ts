@@ -127,4 +127,12 @@ export class DashboardService {
       params: this.buildParams(startDate, endDate)
     });
   }
+
+  getRevenue(start: string, end: string) {
+  return this.http.get<{ data: number }>(
+    `${this.apiUrl}/total-revenue`,
+    { params: { startDate: start, endDate: end } }
+  );
+}
+
 }

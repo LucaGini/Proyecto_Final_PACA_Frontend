@@ -3,10 +3,11 @@ import { CategoryService } from '../services/category.service';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { CartService } from '../services/cart.service'; // NUEVO
-import { AuthService } from '../services/auth.service'; // NUEVO
-import { ProductService } from '../services/product.service'; // NUEVO
-import Swal from 'sweetalert2'; // NUEVO
+import { CartService } from '../services/cart.service';
+import { AuthService } from '../services/auth.service';
+import { ProductService } from '../services/product.service';
+import { PaginationMetadata } from '../models/pagination.interface';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-collection',
@@ -19,6 +20,11 @@ export class CollectionComponent implements OnInit {
     categoryName: string = '';
     apiUrl = environment.apiUrl;
     cartItems: any[] = []; // NUEVO
+
+    // Pagination properties
+    pagination: PaginationMetadata | null = null;
+    currentPage = 1;
+    pageSize = 12; // Good size for product display
 
     constructor(
         private categoryService: CategoryService,
@@ -57,13 +63,24 @@ export class CollectionComponent implements OnInit {
         return this.urlPath
     }
 
-    getProductsByCategory (name: string) {
-        this.categoryName = name;
-        this.categoryService.findActiveProductsByCategory(name).subscribe((data:any) => {
-            if (data && data.data && data.data.length > 0) {
-                this.products = data.data;
-            } else {
-                this.products = [];
+    getProductsByCategory (name: string, page: number = 1, limit: number = this.pageSize) {
+        this.categoryName = name; // Guardar el nombre de la categoría
+        this.categoryService.findActiveProductsByCategoryPaginated(name, page, limit).subscribe({
+            next: (response) => {
+                this.products = response.data;
+                this.pagination = response.pagination;
+                this.currentPage = page;
+            },
+            error: (error) => {
+                console.error('Error loading products by category:', error);
+                // Fallback to original method
+                this.categoryService.findActiveProductsByCategory(name).subscribe((data:any) => {
+                    if (data && data.data && data.data.length > 0) {
+                        this.products = data.data;
+                    } else {
+                        this.products = [];
+                    }
+                });
             }
         });
     }
@@ -100,5 +117,16 @@ export class CollectionComponent implements OnInit {
 
     showAddButton(): boolean {
         return !this.authService.isAdmin() && !this.authService.isDriver();
+    }
+
+    // Pagination handlers
+    onPageChange(page: number): void {
+        this.getProductsByCategory(this.categoryName, page, this.pageSize);
+    }
+
+    onPageSizeChange(newSize: number): void {
+        this.pageSize = newSize;
+        this.currentPage = 1;
+        this.getProductsByCategory(this.categoryName, 1, newSize);
     }
 }

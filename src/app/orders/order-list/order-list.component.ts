@@ -6,6 +6,7 @@ import { CityService } from '../../services/city.service';
 import { UtilsService } from '../../services/utils.service';
 import { EditGuardService, EditingComponent } from '../../services/edit-guard.service';
 import { forkJoin, Subscription } from 'rxjs';
+import { PaginationMetadata } from '../../models/pagination.interface';
 
 @Component({
   selector: 'app-order-list',
@@ -21,6 +22,11 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   selectedStatus: string = '';
   selectedCity: string = '';
   searchTerm: string = '';
+
+  // Pagination properties
+  pagination: PaginationMetadata | null = null;
+  currentPage = 1;
+  pageSize = 20;
 
   // Variables para control de navegación
   private routerSubscription: Subscription = new Subscription();
@@ -97,9 +103,12 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
     });
   }
 
-  loadOrders() {
-    this.orderService.findAll().subscribe({
-      next: (response: any) => {
+  loadOrders(page: number = 1, limit: number = this.pageSize) {
+    this.orderService.getOrdersPaginated(page, limit).subscribe({
+      next: (response) => {
+        this.pagination = response.pagination;
+        this.currentPage = page;
+
         const orderPromises = response.data.map((order: any) => {
           const productPromises = order.orderItems.map((item: any) => {
             return this.productService.findOne(item.productId).toPromise();
@@ -365,5 +374,16 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
       }
       return false;
     });
+  }
+
+  // Pagination handlers
+  onPageChange(page: number): void {
+    this.loadOrders(page, this.pageSize);
+  }
+
+  onPageSizeChange(newSize: number): void {
+    this.pageSize = newSize;
+    this.currentPage = 1; // Reset to first page when changing page size
+    this.loadOrders(1, newSize);
   }
 }

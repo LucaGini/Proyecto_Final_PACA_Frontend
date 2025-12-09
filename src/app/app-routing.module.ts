@@ -24,12 +24,13 @@ import { EditListCitiesComponent } from './cities/edit-list-cities/edit-list-cit
 import { EditListSuppliersComponent } from './suppliers/edit-list-suppliers/edit-list-suppliers.component';
 import { OrdersHistoryComponent } from './orders/orders-history/orders-history.component';
 import { AuthGuard } from './guards/auth.guard';
-//import { ProfileCompleteGuard } from './guards/profile-complete.guard';
+import { ProfileCompleteGuard } from './guards/profile-complete.guard';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { VrpComponent } from './vrp/vrp.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { VrpListComponent } from './vrp-list/vrp-list.component';
+import { AdminDriverComponent } from './driver/admin-driver/admin-driver.component';
 
 const routes: Routes = [
   // === SOLO ADMINISTRADOR ===
@@ -40,6 +41,7 @@ const routes: Routes = [
   { path: 'UserList', component: UserListComponent, canActivate: [AuthGuard], data: { roles: ['administrador'], hideBackButton: true } },
   { path: 'AdminSuppliers', component: AdminSuppliersComponent, canActivate: [AuthGuard], data: { roles: ['administrador'], hideBackButton: true } },
   { path: 'EditListProducts', component: EditListProductsComponent, canActivate: [AuthGuard], data: { roles: ['administrador'], hideBackButton: true } },
+  { path: 'AdminDrivers', component: AdminDriverComponent, canActivate: [AuthGuard], data: { roles: ['administrador'], hideBackButton: true } },
   { path: 'EditListProvinces', component: EditListProvincesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'], hideBackButton: true } },
   { path: 'EditListCategories', component: EditListCategoriesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'], hideBackButton: true } },
   { path: 'EditListCities', component: EditListCitiesComponent, canActivate: [AuthGuard], data: { roles: ['administrador'], hideBackButton: true } },

@@ -156,3 +156,12 @@
     </div>
   </div>
 </div>
+
+<!-- Pagination Component -->
+<app-pagination 
+  *ngIf="pagination"
+  [pagination]="pagination" 
+  [currentPage]="currentPage" 
+  (pageChange)="onPageChange($event)" 
+  (pageSizeChange)="onPageSizeChange($event)">
+</app-pagination>

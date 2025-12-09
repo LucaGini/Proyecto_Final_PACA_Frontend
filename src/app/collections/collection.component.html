@@ -41,3 +41,12 @@
   <h3>No hay productos en esta categoría</h3>
   <p>La categoría "{{categoryName}}" no tiene productos disponibles en este momento.</p>
 </div>
+
+<!-- Pagination Component -->
+<app-pagination
+  *ngIf="pagination && products.length > 0"
+  [pagination]="pagination"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)">
+</app-pagination>

@@ -42,6 +42,12 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { VrpComponent } from './vrp/vrp.component';
 import { VrpListComponent } from './vrp-list/vrp-list.component';
+import { DriverComponent } from './driver/add-driver/add-driver.component';
+import { EditListDriverComponent } from './driver/edit-list-driver/edit-list-driver.component';
+import { AdminDriverComponent } from './driver/admin-driver/admin-driver.component';
+
+// Import SharedModule from the correct path
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -62,7 +68,10 @@ import { VrpListComponent } from './vrp-list/vrp-list.component';
     EditListSuppliersComponent,
     VrpComponent,
     DashboardComponent,
-    VrpListComponent
+    VrpListComponent,
+    DriverComponent,
+    EditListDriverComponent,
+    AdminDriverComponent
   ],
   imports: [
     //BrowserModule,
@@ -80,7 +89,8 @@ import { VrpListComponent } from './vrp-list/vrp-list.component';
     MatMenuModule,
     MatTabsModule,
     NgChartsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    SharedModule
   ],
 })
 export class AdminModule { }
