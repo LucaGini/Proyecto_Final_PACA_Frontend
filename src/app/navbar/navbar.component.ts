@@ -206,4 +206,18 @@ export class NavbarComponent implements OnInit {
       }
     );
   }
+  openManual(): void {
+  let pdfPath = '';
+
+  if (this.isAdmin) {
+    pdfPath = 'assets/manual_usuario/manual_administrador.pdf';
+  } else if (this.isDriver) {
+    pdfPath = 'assets/manual_usuario/manual_conductor.pdf';
+  } else {
+    pdfPath = 'assets/manual_usuario/manual_usuario.pdf';
+  }
+
+  window.open(pdfPath, '_blank');
+}
+
 }
