@@ -205,3 +205,60 @@
   top: -3px !important;
   right: -6px !important;
 }
+
+#shopping_cart:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+#shopping_cart .mat-ripple-element {
+  display: none !important;
+}
+
+
+/* ===========================
+   MANUAL DE USUARIO
+=========================== */
+.help-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 900;
+
+  width: 46px;
+  height: 46px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  border: 1px solid #c7b39e;
+
+  background: #d7cbbd;
+  color: #5a4633;
+
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.18);
+
+
+  transition: background-color 0.25s ease,
+              color 0.25s ease,
+              border-color 0.25s ease,
+              box-shadow 0.25s ease,
+              transform 0.2s ease;
+}
+
+.help-button:hover {
+  background: #a38364c2 !important;
+  color: #f6f3ee;
+  border-color: #8a6a4e;
+
+  box-shadow: 0 0 0 3px #b2b2b233,
+              0 8px 18px rgba(0,0,0,0.22);
+
+  transform: scale(1.05);
+}
+
+.help-button mat-icon {
+  font-size: 22px;
+}
