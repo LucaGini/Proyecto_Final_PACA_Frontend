@@ -306,4 +306,16 @@ loadOrders(page: number = 1, limit: number = this.pageSize) {
     this.currentPage = 1; // Reset to first page when changing page size
     this.loadOrders(1, newSize);
   }
+
+  // Status translation method
+  getStatusLabel(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'pending': 'Pendiente',
+      'completed': 'Completado',
+      'cancelled': 'Cancelado',
+      'in distribution': 'En distribución',
+      'rescheduled': 'Reprogramada'
+    };
+    return statusMap[status] || status;
+  }
 }

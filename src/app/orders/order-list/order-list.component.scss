@@ -99,6 +99,16 @@ p {
   background-color: orange !important;
 }
 
+// Right-align numeric columns in product table
+.table {
+  th:nth-child(2),
+  th:nth-child(3),
+  td:nth-child(2),
+  td:nth-child(3) {
+    text-align: right;
+  }
+}
+
 // Estilos para la barra de búsqueda de órdenes
 .search-form-container {
   margin-top: 0.5rem;
