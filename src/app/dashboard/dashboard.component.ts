@@ -321,11 +321,12 @@ export class DashboardComponent implements OnInit, AfterViewInit {
     const starless = this.startDate ? new Date(this.startDate) : null;
     const endless = this.endDate ? new Date(this.endDate) : null;
 
-    const startPlus1 = starless ? new Date(starless.getTime() + 24 * 60 * 60 * 1000) : null;
-    const endPlus1 = endless ? new Date(endless.getTime() + 24 * 60 * 60 * 1000) : null;
+    // const startPlus1 = starless ? new Date(starless.getTime() + 24 * 60 * 60 * 1000) : null;
+    // const endPlus1 = endless ? new Date(endless.getTime() + 24 * 60 * 60 * 1000) : null;
 
-    const start = startPlus1 ? startPlus1.toISOString().split('T')[0] : '';
-    const end = endPlus1 ? endPlus1.toISOString().split('T')[0] : '';
+    const start = this.startDate;
+    const end   = this.endDate;
+
 
     // Sales by province
     this.dashboardService.getSalesByProvince(start, end).subscribe((res) => {
