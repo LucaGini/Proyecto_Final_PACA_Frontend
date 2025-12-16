@@ -473,7 +473,6 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   }
 
   reactivate(product: any) {
-    console.log('Reactivating product:', product.id);
     this.productService.reactivateProduct(product.id).subscribe({
       next: () => {
         this.utils.showAlert('success', 'Producto reactivado', `El producto ${product.name} ha sido reactivado.`);

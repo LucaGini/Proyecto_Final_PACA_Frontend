@@ -45,11 +45,9 @@ export class UserService {
 
 findUserByEmail(email: string): Observable<any> {
   const url = `${this.URL}/users/by-email?email=${email}`; 
-  console.log('🌐 Haciendo petición a:', url);
   // El interceptor se encarga automáticamente de agregar los headers de autorización
   return this.http.get<any>(url).pipe(
     map(response => {
-      console.log('📦 Respuesta del backend:', response);
       // Devolver la respuesta completa para que el componente pueda acceder a response.data
       return response;
     }),

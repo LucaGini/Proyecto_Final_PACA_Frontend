@@ -187,12 +187,10 @@ export class VrpComponent implements OnInit, AfterViewInit {
       Swal.fire('Error', 'Debe ingresar una expresión válida', 'error');
       return;
     }
-    console.log('Actualizando cron a:', this.cronExpression);
 
     this.cronService.updateCron(this.cronExpression).subscribe({
       next: (data) => {
         this.latestCron = data;
-        console.log('Cron actualizado:', data);
         Swal.fire('¡Actualizado!', 'El cron se actualizó correctamente', 'success');
         this.showCronModal = false;
       },
