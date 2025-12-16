@@ -303,7 +303,6 @@ export class CartComponent implements OnInit {
                   if (cityResponse && cityResponse.data && cityResponse.data.surcharge !== undefined) {
                     this.cityCharge = cityResponse.data.surcharge;
                     this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
-                    console.log('💰 Surcharge aplicado:', this.cityCharge);
                   } else {
                     console.error('City no contiene un surcharge válido:', cityResponse);
                     this.cityCharge = 0; // Valor por defecto
