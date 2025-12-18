@@ -21,7 +21,7 @@ export class VrpComponent implements OnInit, AfterViewInit {
   latestCron: CronConfig | null = null;
   showCronModal = false;
 
-  // 🔹 Estado general
+  // Estado general
   isLoading = false;
   selectedDay: number = 1;
   selectedHour: number = 9;
@@ -123,17 +123,29 @@ export class VrpComponent implements OnInit, AfterViewInit {
         opacity: 0.8
       }).addTo(this.map);
 
-      route.forEach((r: Route) => {
+      route.forEach((r: Route, index: number) => {
+        const isFirst = index === 0;
+        const isLast = index === route.length - 1;
+        const isDepot = isFirst || isLast;
+
+        let title = 'Orden';
+        if (isFirst) title = 'Depósito / Punto de partida';
+        if (isLast) title = 'Punto de llegada';
+
         L.marker([r.lat!, r.lon!], { icon: customIcon })
           .addTo(this.map)
           .bindPopup(
-            `<b>Orden: ${r.orderNumber ?? 'Depósito'}</b><br>
-             Cliente: ${r.firstName ?? ''} ${r.lastName ?? ''}<br>
-             Total: $${r.total?.toLocaleString() ?? '0'}<br>
-             Dirección: ${r.address}<br>
-             <a href="${mapsLink}" target="_blank">Abrir en Google Maps</a>`
+            `
+            <b>${title}</b><br>
+            ${!isDepot ? `Orden: ${r.orderNumber}<br>` : ''}
+            ${!isDepot ? `Cliente: ${r.firstName ?? ''} ${r.lastName ?? ''}<br>` : ''}
+            ${!isDepot ? `Total: $${r.total?.toLocaleString() ?? '0'}<br>` : ''}
+            Dirección: ${r.address}<br>
+            <a href="${mapsLink}" target="_blank">Abrir en Google Maps</a>
+            `
           );
-      });
+        });
+
 
       this.map.fitBounds(polyline.getBounds());
       colorIndex++;
@@ -175,12 +187,10 @@ export class VrpComponent implements OnInit, AfterViewInit {
       Swal.fire('Error', 'Debe ingresar una expresión válida', 'error');
       return;
     }
-    console.log('Actualizando cron a:', this.cronExpression);
 
     this.cronService.updateCron(this.cronExpression).subscribe({
       next: (data) => {
         this.latestCron = data;
-        console.log('Cron actualizado:', data);
         Swal.fire('¡Actualizado!', 'El cron se actualizó correctamente', 'success');
         this.showCronModal = false;
       },
@@ -222,13 +232,37 @@ export class VrpComponent implements OnInit, AfterViewInit {
         doc.text(`Provincia: ${province}`, 14, y);
         y += 5;
 
-        const data = route.map((r: Route) => [
-          r.orderNumber ?? 'DEPÓSITO',
-          `${r.firstName ?? ''} ${r.lastName ?? ''}`,
-          `$${r.total?.toLocaleString() ?? '0'}`,
-          r.address,
-          `${r.lat}, ${r.lon}`
-        ]);
+        const data = route.map((r: Route, index: number): string[] => {
+          if (index === 0) {
+            return [
+              'DEPÓSITO (Inicio)',
+              '-',
+              '-',
+              r.address || 'UTN FRRo',
+              `${r.lat ?? ''}, ${r.lon ?? ''}`
+            ];
+          }
+
+          if (index === route.length - 1) {
+            return [
+              'DEPÓSITO (Fin)',
+              '-',
+              '-',
+              r.address || 'UTN FRRo',
+              `${r.lat ?? ''}, ${r.lon ?? ''}`
+            ];
+          }
+
+          return [
+            String(r.orderNumber ?? ''),
+            `${r.firstName ?? ''} ${r.lastName ?? ''}`.trim(),
+            `$${String(r.total ?? 0)}`,
+            r.address || '',
+            `${r.lat ?? ''}, ${r.lon ?? ''}`
+          ];
+        });
+
+
 
         autoTable(doc, {
           startY: y,

@@ -375,7 +375,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
       });
 
       const data = raw.map((x: any) => x.totalRevenue);
-
       this.revenueChartData = {
         labels,
         datasets: [

@@ -305,48 +305,45 @@ export class OrderListComponent implements OnInit, OnDestroy, EditingComponent {
   }
 
   save(order: any): void {
-    if (!this.utils.areValidFields([order.editStatus])) {
-      this.utils.showAlert('error', 'Error', 'Debe seleccionar un estado.');
-      return;
-    }
-
-    if (order.status !== order.editStatus) {
-      if (order.editStatus === 'rescheduled') {
-        order.rescheduleQuantity = (order.rescheduleQuantity || 0) + 1;
-        if (order.rescheduleQuantity > 2) {
-          order.editStatus = 'cancelled';
-        }
-      }
-
-      const updatedOrder = {
-        ...order,
-        status: order.editStatus,
-        rescheduleQuantity: order.rescheduleQuantity || 0,
-        updatedDate: new Date(),
-      };
-      console.log('Actualizando orden:', updatedOrder);
-
-      this.orderService.update(updatedOrder).subscribe(
-        () => {
-          this.utils.showAlert('success', 'Orden actualizada con éxito!');
-          this.productService.loadProducts();
-          order.status = order.editStatus;
-          order.updatedDate = new Date();
-          order.editing = false;
-        },
-        (err: any) => {
-          let errorMessage = 'No se pudo actualizar la orden.';
-          if (err.status === 400) {
-            errorMessage = err.error?.message || 'No se realizaron cambios en la orden.';
-          }
-          this.utils.showAlert('error', 'Error', errorMessage);
-        }
-      );
-    } else {
-      this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en la orden.');
-      order.editing = false;
-    }
+  if (!this.utils.areValidFields([order.editStatus])) {
+    this.utils.showAlert('error', 'Error', 'Debe seleccionar un estado.');
+    return;
   }
+
+  if (order.status === order.editStatus) {
+    this.utils.showAlert('info', 'Sin cambios', 'No se realizaron cambios en la orden.');
+    order.editing = false;
+    return;
+  }
+  const payload = {
+    id: order.id,
+    status: order.editStatus
+  };
+
+  this.orderService.update(payload).subscribe(
+    (response: any) => {
+      const updatedOrder = response.data;
+
+      //sincronizar con backend
+      order.status = updatedOrder.status;
+      order.rescheduleQuantity = updatedOrder.rescheduleQuantity;
+      order.updatedDate = updatedOrder.updatedDate;
+      order.editing = false;
+
+      // clave para que desaparezca si se cancela
+      this.applyFilters();
+
+      this.utils.showAlert('success', 'Orden actualizada con éxito!');
+    },
+    (err) => {
+      let errorMessage = 'No se pudo actualizar la orden.';
+      if (err.status === 400) {
+        errorMessage = err.error?.message || errorMessage;
+      }
+      this.utils.showAlert('error', 'Error', errorMessage);
+    }
+  );
+}
 
   // Métodos auxiliares para el control de edición
   private hasOrdersInEditMode(): boolean {

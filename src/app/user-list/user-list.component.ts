@@ -47,7 +47,6 @@ export class UserListComponent {
 
   loadUsers(searchTerm?: string, page: number = 1, limit: number = this.pageSize) {
     let isActive: boolean | null = null;
-    console.log('Selected User Status:', this.selectedUserStatus);
     if (this.selectedUserStatus === 'active') {
       isActive = true;
     } else if (this.selectedUserStatus === 'inactive') {

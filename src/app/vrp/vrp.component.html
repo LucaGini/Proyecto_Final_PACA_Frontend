@@ -89,12 +89,39 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let route of weeklyRoutes.routesByProvince[province].route">
-            <td class="order-number">#{{ route.orderNumber }}</td>
-            <td class="client">{{ route.firstName }} {{ route.lastName }}</td>
-            <td class="total">$ {{ route.total | number:'1.0-0' }}</td>
-            <td class="address">{{ route.address }}</td>
+          <tr *ngFor="let route of weeklyRoutes.routesByProvince[province].route; let i = index">
+            <td class="order-number">
+              <ng-container *ngIf="i === 0">
+                DEPÓSITO – Punto de partida
+              </ng-container>
+
+              <ng-container *ngIf="i === weeklyRoutes.routesByProvince[province].route.length - 1 && i !== 0">
+                DEPÓSITO – Punto de llegada
+              </ng-container>
+
+              <ng-container *ngIf="i !== 0 && i !== weeklyRoutes.routesByProvince[province].route.length - 1">
+                #{{ route.orderNumber }}
+              </ng-container>
+            </td>
+
+            <td class="client">
+              {{ route.firstName }} {{ route.lastName }}
+            </td>
+
+            <td class="total">
+              <ng-container *ngIf="i === 0 || i === weeklyRoutes.routesByProvince[province].route.length - 1 && i !== 0" >
+              </ng-container>
+
+              <ng-container *ngIf="i !== 0 && i !== weeklyRoutes.routesByProvince[province].route.length - 1">
+                $ {{ route.total | number:'1.0-0' }}
+              </ng-container>
+            </td>
+
+            <td class="address">
+              {{ route.address }}
+            </td>
           </tr>
+
         </tbody>
       </table>
     </div>
@@ -129,16 +156,18 @@
     </div>
   </div>
 
+  <!-- Mensaje cuando no hay rutas -->
+<ng-container *ngIf="!weeklyRoutes || (weeklyRoutes && getProvinces().length === 0)">
+  <div class="no-items-message">
+    <mat-icon>receipt_long_off</mat-icon>
+    <h3>No hay rutas disponibles</h3>
+    <p *ngIf="weeklyRoutes && getProvinces().length === 0">No se encontraron rutas para mostrar. Intenta generar rutas.</p>
+    <p *ngIf="!weeklyRoutes">Aún no se han cargado rutas. Por favor, genera rutas para poder verlas aquí.</p>
+  </div>
+</ng-container>
+
   <!-- Mapa de rutas -->
   <div id="map" class="map-container"></div>
 </div>
 
-<!-- Mensaje cuando no hay rutas -->
-<ng-container *ngIf="!weeklyRoutes || (weeklyRoutes && getProvinces().length === 0)">
-  <div class="no-orders-message">
-    <mat-icon>receipt_long_off</mat-icon>
-    <h3>No hay rutas disponibles</h3>
-    <p *ngIf="weeklyRoutes && getProvinces().length === 0">No se encontraron rutas para mostrar. Intenta generar rutas o revisar los filtros/criterios.</p>
-    <p *ngIf="!weeklyRoutes">Aún no se han cargado rutas. Por favor, genera rutas para poder verlas aquí.</p>
-  </div>
-</ng-container>
+

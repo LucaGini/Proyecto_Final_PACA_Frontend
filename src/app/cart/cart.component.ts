@@ -294,18 +294,15 @@ export class CartComponent implements OnInit {
         next: (response) => {
           if (response && response.data) {
             this.userData = response.data;
-            console.log('🛒 Datos de usuario en cart:', this.userData);
-
+          
             // userData.city contiene el ID de la ciudad, no el nombre
             if (this.userData.city) {
-              console.log('🏙️ Buscando ciudad con ID:', this.userData.city);
+      
               this.cityService.findCityById(this.userData.city).subscribe({
                 next: (cityResponse) => {
-                  console.log('🏙️ Respuesta de ciudad en cart:', cityResponse);
                   if (cityResponse && cityResponse.data && cityResponse.data.surcharge !== undefined) {
                     this.cityCharge = cityResponse.data.surcharge;
                     this.totalAmount = this.cartService.calculateTotal(this.cityCharge);
-                    console.log('💰 Surcharge aplicado:', this.cityCharge);
                   } else {
                     console.error('City no contiene un surcharge válido:', cityResponse);
                     this.cityCharge = 0; // Valor por defecto

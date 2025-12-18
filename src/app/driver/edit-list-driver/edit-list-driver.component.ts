@@ -62,7 +62,6 @@ export class EditListDriverComponent {
 
   loadUsers(searchTerm?: string) {
     let isActive: boolean | null = null;
-    console.log('Selected User Status:', this.selectedUserStatus);
     if (this.selectedUserStatus === 'active') {
       isActive = true;
     } else if (this.selectedUserStatus === 'inactive') {
@@ -70,7 +69,6 @@ export class EditListDriverComponent {
     }
     this.userService.getUsers('transportista', isActive, searchTerm).subscribe((data: any) => {
       this.users = data.data || data;
-      console.log('Loaded Users:', this.users);
     });
   }
 
