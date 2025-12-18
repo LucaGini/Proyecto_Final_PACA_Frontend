@@ -82,8 +82,8 @@
           <mat-icon>create</mat-icon>
         </button>
 
-        <button mat-icon-button *ngIf="!product.editing && product.isActive" class="icon-btn delete" (click)="delete(product.id)">
-          <mat-icon>delete</mat-icon>
+        <button mat-icon-button *ngIf="!product.editing && product.isActive" class="icon-btn delete" (click)="delete(product.id)" matTooltip="Desactivar producto">
+          <mat-icon>block</mat-icon>
         </button>
 
         <button mat-icon-button *ngIf="!product.editing && !product.isActive" class="icon-btn restore" (click)="reactivate(product)">
@@ -106,7 +106,7 @@
       <div class="card-body" *ngIf="!product.editing">
         <h3>{{ product.name }}</h3>
         <p class="desc">{{ product.description }}</p>
-        <p><strong>Precio:</strong> {{ product.price }}</p>
+        <p><strong>Precio:</strong> ${{ product.price }}</p>
         <p><strong>Stock:</strong> {{ product.stock }} / {{ product.minimumStock }}</p>
       </div>
 
@@ -137,7 +137,7 @@
 
         <!-- Precio -->
         <div class="form-group">
-          <label>Precio</label>
+          <label>Precio ($)</label>
           <input type="text" class="form-control" [(ngModel)]="product.editPrice" />
         </div>
 

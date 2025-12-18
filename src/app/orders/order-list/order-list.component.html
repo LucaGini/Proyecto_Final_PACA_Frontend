@@ -120,7 +120,7 @@
                 'bg-primary': order.status === 'in distribution',
                 'bg-orange': order.status === 'rescheduled'
               }"
-              >{{ order.status }}</span
+              >{{ getStatusLabel(order.status) }}</span
             >
           </div>
           <div *ngIf="order.editing" class="me-3">
@@ -129,7 +129,7 @@
               <option value="completed">Completado</option>
               <option value="cancelled">Cancelado</option>
               <option value="in distribution">En distribucion</option>
-              <option value="rescheduled">Reenviado</option>
+              <option value="rescheduled">Reprogramada</option>
             </select>
           </div>
           <div class="example-button-container">
@@ -161,7 +161,7 @@
           <p><strong>Fecha de Orden:</strong> {{ order.orderDate | date : 'dd/MM/yyyy HH:mm' }}</p>
           <p><strong>Última Actualización:</strong> {{ order.updatedDate | date : 'dd/MM/yyyy HH:mm' }}</p>
           <p><strong>Total:</strong> ${{ order.total }}</p>
-          <p><strong>Cantidad de reenviados:</strong> {{ order.rescheduleQuantity }}</p>
+          <p><strong>Cantidad de reprogramaciones:</strong> {{ order.rescheduleQuantity }}</p>
         </div>
       </div>
 
