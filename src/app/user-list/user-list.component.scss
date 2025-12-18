@@ -87,23 +87,23 @@
   overflow-wrap: break-word;
 }
 
-.delete-button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  color: #f76666;
-  z-index: 10;
-  background: transparent;
-  border: none;
-  transition: all 0.3s ease;
-}
+// .delete-button {
+//   position: absolute;
+//   top: 0.5rem;
+//   right: 0.5rem;
+//   color: #f76666;
+//   z-index: 10;
+//   background: transparent;
+//   border: none;
+//   transition: all 0.3s ease;
+// }
 
-.delete-button:hover {
-  transform: translateY(-2px);
-}
-.delete-button:active {
-  transform: translateY(1px);
-}
+// .delete-button:hover {
+//   transform: translateY(-2px);
+// }
+// .delete-button:active {
+//   transform: translateY(1px);
+// }
 
 
 

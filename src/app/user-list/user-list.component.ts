@@ -55,7 +55,13 @@ export class UserListComponent {
 
     this.userService.getUsersPaginated(page, limit).subscribe({
       next: (response) => {
-        this.users = response.data;
+        // Apply client-side filtering based on isActive status
+        let filteredUsers = response.data;
+        if (isActive !== null) {
+          filteredUsers = response.data.filter((user: any) => user.isActive === isActive);
+        }
+        
+        this.users = filteredUsers;
         this.pagination = response.pagination;
         this.currentPage = page;
       },
@@ -89,14 +95,14 @@ export class UserListComponent {
     this.utils.showAlert('error', 'Error', 'Error al deshabilitar la cuenta');
   }
   deleteUser(user: any): void {
-    this.utils.showConfirm('¿Estás seguro?', 'Esta acción es permanente').then((result) => {
+    this.utils.showConfirm('¿Desea dar de baja el usuario?', 'Esta acción es permanente').then((result) => {
       if (result.isConfirmed) {
         this.userService.delete(user.id).subscribe({
           next: () => {
-            this.utils.showAlert('success', 'Usuario eliminado correctamente');
+            this.utils.showAlert('success', 'Usuario dado de baja correctamente');
             this.loadUsers(undefined, this.currentPage); // Stay on current page
           },
-          error: () => this.handleError('Error eliminando la cuenta'),
+          error: () => this.handleError('Error dando de baja la cuenta'),
         });
       }
     });

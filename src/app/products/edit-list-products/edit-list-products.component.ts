@@ -154,7 +154,7 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
   }
 
   delete(id: string) {
-    this.utils.showConfirm('Desea eliminar el producto', 'Esta acción no se puede deshacer').then((result) => {
+    this.utils.showConfirm('¿Desea dar de baja el producto?', 'Esta acción puede deshacerse').then((result) => {
       if (result.isConfirmed) {
         this.productService.delete(id).subscribe({
           next: () => {
@@ -162,7 +162,7 @@ export class EditListProductsComponent implements OnDestroy, EditingComponent {
           },
           error: (err) => {
             console.error(err);
-            this.utils.showAlert('error', 'Error al eliminar el producto', err.message);
+            this.utils.showAlert('error', 'Error al dar de baja el producto', err.message);
           },
         });
       }

@@ -42,19 +42,19 @@
 
       <!-- BOTONES -->
       <div class="card-actions">
-        <button mat-icon-button *ngIf="!driver.editing && driver.isActive" class="yellow-btn" (click)="edit(driver)">
+        <button mat-icon-button *ngIf="!driver.editing && driver.isActive" class="icon-btn edit" (click)="edit(driver)">
           <mat-icon>create</mat-icon>
         </button>
 
-        <button mat-icon-button *ngIf="!driver.editing && driver.isActive" color="warn" (click)="deleteUser(driver)">
-          <mat-icon>delete</mat-icon>
+        <button mat-icon-button *ngIf="!driver.editing && driver.isActive" class="icon-btn delete"  (click)="deleteUser(driver)">
+          <mat-icon>block</mat-icon>
         </button>
 
-        <button mat-icon-button *ngIf="driver.editing && driver.isActive"  color="primary" (click)="save(driver)">
+        <button mat-icon-button *ngIf="driver.editing && driver.isActive" class="icon-btn save" (click)="save(driver)">
           <mat-icon>save_alt</mat-icon>
         </button>
 
-        <button mat-icon-button *ngIf="driver.editing && driver.isActive"  color="warn" (click)="cancelEdit(driver)">
+        <button mat-icon-button *ngIf="driver.editing && driver.isActive" class="icon-btn cancel"  (click)="cancelEdit(driver)">
           <mat-icon>cancel</mat-icon>
         </button>
       </div>

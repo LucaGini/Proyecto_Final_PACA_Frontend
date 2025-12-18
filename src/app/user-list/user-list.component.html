@@ -54,9 +54,9 @@
           [disabled]="!user.isActive || user.privilege !== 'cliente'"
           [ngStyle]="{ color: !user.isActive || user.privilege !== 'cliente' ? '#bbb' : '' }"
           (click)="deleteUser(user)"
-          matTooltip="Eliminar usuario"
+          matTooltip="Desactivar usuario"
         >
-          <mat-icon>delete</mat-icon>
+          <mat-icon>block</mat-icon>
         </button>
       </div>
 
