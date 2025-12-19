@@ -86,4 +86,16 @@ export class VrpListComponent implements OnInit {
   trackByOrderId(index: number, order: any): string {
     return order.id ? order.id.toString() : index.toString();
   }
+
+  // Status translation method
+  getStatusLabel(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      'pending': 'Pendiente',
+      'completed': 'Completado',
+      'cancelled': 'Cancelado',
+      'in distribution': 'En distribución',
+      'rescheduled': 'Reprogramada'
+    };
+    return statusMap[status] || status;
+  }
 }

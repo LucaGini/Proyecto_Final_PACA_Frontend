@@ -54,7 +54,7 @@
                   'bg-warning text-dark': order?.status === 'rescheduled',
                   'bg-secondary': order?.status !== 'in distribution' && order?.status !== 'completed' && order?.status !== 'rescheduled'
                 }">
-                {{ order?.status }}
+                {{ getStatusLabel(order?.status) }}
               </span>
             </td>
           </tr>
