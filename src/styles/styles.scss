@@ -162,7 +162,7 @@ a {
 .filter-header {
   display: flex;
   align-items: center; // centra todo verticalmente
-  justify-content: space-between; // mantiene h2 y botón en extremos
+justify-content: flex-start; /* todos juntos a la izquierda */
   gap: 1rem;
 
   h2 {
@@ -200,7 +200,6 @@ a {
     color: white;
   }
 }
-
 
 .error-msg {
   position: absolute;
@@ -348,21 +347,14 @@ a {
   }
 
   &.edit {
-    background: linear-gradient(45deg, #e7c633, #ffd700) !important;
-    border: none;
+    background-color: #2f80ed !important;
 
-    &:hover {
-      box-shadow: 0 5px 15px rgba(231, 198, 51) !important;
-    }
   }
 
   &.danger {
     background: #dc3545 !important;
     border: none;
 
-    &:hover {
-      box-shadow: 0 5px 15px rgba(220, 53, 69) !important;
-    }
   }
 
   i {
@@ -649,20 +641,19 @@ iframe[src*='accounts.google.com'] {
   background-color: rgba(122, 92, 46, 0.25) !important; /* marrón trigo */
 }
 
-
 .swal2-confirm.swal2-styled,
 .swal2-cancel.swal2-styled,
 .swal2-deny.swal2-styled {
-  background-color: #a67c52 !important;   /* tu color base */
+  background-color: #a67c52 !important; /* tu color base */
   color: white !important;
   border: none !important;
   border-radius: 8px !important;
   font-weight: 550 !important;
   letter-spacing: 0.5px;
-  padding: 0.5rem 1rem !important;        /* más chico */
-  min-width: 120px !important;            /* más angosto */
-  font-size: 0.9rem !important;           /* más compacto */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
+  padding: 0.5rem 1rem !important; /* más chico */
+  min-width: 120px !important; /* más angosto */
+  font-size: 0.9rem !important; /* más compacto */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
   transition: all 0.25s ease;
 }
 
@@ -670,17 +661,17 @@ iframe[src*='accounts.google.com'] {
 .swal2-cancel.swal2-styled:hover,
 .swal2-deny.swal2-styled:hover {
   transform: scale(1.03);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
 }
 
 /* Cancel específico */
 .swal2-cancel.swal2-styled {
-  background-color: #c94c4c !important;   /* tu remove */
+  background-color: #c94c4c !important; /* tu remove */
 }
 
 /* Deny (si lo usás) */
 .swal2-deny.swal2-styled {
-  background-color: #6b8e23 !important;   /* tu color "back" o secundario */
+  background-color: #6b8e23 !important; /* tu color "back" o secundario */
 }
 
 /* Quitamos el glow violeta por defecto */

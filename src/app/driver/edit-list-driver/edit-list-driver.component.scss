@@ -2,9 +2,10 @@
   margin-bottom: 0.5rem;
 }
 
+
 .navbar {
-  background: rgba(255, 255, 255, 0.95) !important;
-  backdrop-filter: blur(10px);
+  background: #ffffff87 !important;
+  backdrop-filter: blur(2px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   .navbar-nav {
     display: flex;
@@ -18,16 +19,15 @@
 
     h2 {
       color: #333;
-      margin-bottom: 0.5rem;
       position: relative;
+      margin-bottom: 0.5rem;
 
       &::after {
         content: '';
         display: block;
         width: 50px;
         height: 2px;
-        background: linear-gradient(45deg, #e7c633, #ffd700);
-        margin: 0.5rem 0;
+        background: linear-gradient(90deg, #498620, #016405);
         transition: width 0.3s ease;
       }
 
@@ -36,13 +36,6 @@
       }
     }
   }
-}
-
-.btn {
-  background: transparent;
-  color: white;
-  border: none;
-  transition: all 0.3s ease;
 }
 
 /* Contenedor de usuarios con grid responsive */
@@ -87,24 +80,6 @@
   overflow-wrap: break-word;
 }
 
-.delete-button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  color: #f76666;
-  z-index: 10;
-  background: transparent;
-  border: none;
-  transition: all 0.3s ease;
-}
-
-.delete-button:hover {
-  transform: translateY(-2px);
-}
-.delete-button:active {
-  transform: translateY(1px);
-}
-
 .no-users-message {
   text-align: center;
   padding: 4rem 2rem;
@@ -132,18 +107,3 @@
   margin-bottom: 0.5rem;
 }
 
-.card-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-  background-color: rgba(232, 232, 232, 0.5);
-  padding: 0.5rem;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-}
-
-.card-actions button {
-  background: transparent;
-  border: none;
-}

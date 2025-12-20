@@ -1,6 +1,4 @@
 <div class="container mt-4">
-  <hr />
-
   <form #signUpForm="ngForm" (ngSubmit)="signUp(signUpForm)">
     <div class="row">
       <!-- Nombre -->
@@ -13,11 +11,9 @@
           ngModel
           required
           #firstNameInput="ngModel"
-          [ngClass]="{'is-invalid': firstNameInput.invalid && firstNameInput.touched}"
+          [ngClass]="{ 'is-invalid': firstNameInput.invalid && firstNameInput.touched }"
         />
-        <small *ngIf="firstNameInput.invalid && firstNameInput.touched" class="text-danger">
-          El nombre es requerido.
-        </small>
+        <small *ngIf="firstNameInput.invalid && firstNameInput.touched" class="text-danger"> El nombre es requerido. </small>
       </div>
 
       <!-- Apellido -->
@@ -30,11 +26,9 @@
           ngModel
           required
           #lastNameInput="ngModel"
-          [ngClass]="{'is-invalid': lastNameInput.invalid && lastNameInput.touched}"
+          [ngClass]="{ 'is-invalid': lastNameInput.invalid && lastNameInput.touched }"
         />
-        <small *ngIf="lastNameInput.invalid && lastNameInput.touched" class="text-danger">
-          El apellido es requerido.
-        </small>
+        <small *ngIf="lastNameInput.invalid && lastNameInput.touched" class="text-danger"> El apellido es requerido. </small>
       </div>
     </div>
 
@@ -42,36 +36,15 @@
       <!-- Teléfono -->
       <div class="col-md-6 mb-3">
         <label>Teléfono</label>
-        <input
-          type="number"
-          class="form-control"
-          name="phone"
-          ngModel
-          required
-          #phoneInput="ngModel"
-          [ngClass]="{'is-invalid': phoneInput.invalid && phoneInput.touched}"
-        />
-        <small *ngIf="phoneInput.invalid && phoneInput.touched" class="text-danger">
-          El teléfono es requerido.
-        </small>
+        <input type="number" class="form-control" name="phone" ngModel required #phoneInput="ngModel" [ngClass]="{ 'is-invalid': phoneInput.invalid && phoneInput.touched }" />
+        <small *ngIf="phoneInput.invalid && phoneInput.touched" class="text-danger"> El teléfono es requerido. </small>
       </div>
 
       <!-- Email -->
       <div class="col-md-6 mb-3">
         <label>Email</label>
-        <input
-          type="email"
-          class="form-control"
-          name="email"
-          ngModel
-          required
-          email
-          #emailInput="ngModel"
-          [ngClass]="{'is-invalid': emailInput.invalid && emailInput.touched}"
-        />
-        <small *ngIf="emailInput.invalid && emailInput.touched" class="text-danger">
-          Ingrese un email válido.
-        </small>
+        <input type="email" class="form-control" name="email" ngModel required email #emailInput="ngModel" [ngClass]="{ 'is-invalid': emailInput.invalid && emailInput.touched }" />
+        <small *ngIf="emailInput.invalid && emailInput.touched" class="text-danger"> Ingrese un email válido. </small>
       </div>
     </div>
 
@@ -87,15 +60,13 @@
           required
           pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*._-])[A-Za-z\d!@#$%^&*._-]{8,}$"
           #passwordInput="ngModel"
-          [ngClass]="{'is-invalid': passwordInput.invalid && passwordInput.touched}"
+          [ngClass]="{ 'is-invalid': passwordInput.invalid && passwordInput.touched }"
         />
-        <span class="input-group-text" (click)="togglePasswordVisibility()" style="cursor:pointer">
+        <span class="input-group-text" (click)="togglePasswordVisibility()" style="cursor: pointer">
           <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
         </span>
       </div>
-      <small *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger">
-        La contraseña debe tener 8 caracteres, una mayúscula, un número y un símbolo.
-      </small>
+      <small *ngIf="passwordInput.invalid && passwordInput.touched" class="text-danger"> La contraseña debe tener 8 caracteres, una mayúscula, un número y un símbolo. </small>
     </div>
 
     <!-- Confirmar Password -->
@@ -109,34 +80,27 @@
           ngModel
           required
           #password2Input="ngModel"
-          [ngClass]="{'is-invalid': password2Input.invalid && password2Input.touched}"
+          [ngClass]="{ 'is-invalid': password2Input.invalid && password2Input.touched }"
         />
-        <span class="input-group-text" (click)="toggleConfirmPasswordVisibility()" style="cursor:pointer">
+        <span class="input-group-text" (click)="toggleConfirmPasswordVisibility()" style="cursor: pointer">
           <i [class]="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
         </span>
       </div>
-      <small *ngIf="password2Input.invalid && password2Input.touched" class="text-danger">
-        Debe verificar la contraseña.
-      </small>
+      <small *ngIf="password2Input.invalid && password2Input.touched" class="text-danger"> Debe verificar la contraseña. </small>
     </div>
 
     <!-- Provincia -->
     <div class="mb-3">
       <label>Provincia</label>
-      <select
-        class="form-control"
-        name="province"
-        [(ngModel)]="selectedProvince"
-        required
-      >
+      <select class="form-control" name="province" [(ngModel)]="selectedProvince" required>
         <option value="">Seleccione una provincia</option>
         <option *ngFor="let province of provinces" [value]="province.id">{{ province.name }}</option>
       </select>
     </div>
 
     <!-- Botón -->
-    <button type="submit" class="btn btn-success w-100" [disabled]="signUpForm.invalid">
-      Crear Transportista
-    </button>
+    <div class="d-flex justify-content-center">
+      <button type="submit" class="btn btn-success" [disabled]="signUpForm.invalid">Crear Transportista</button>
+    </div>
   </form>
 </div>

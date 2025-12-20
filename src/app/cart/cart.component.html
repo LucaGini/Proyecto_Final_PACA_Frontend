@@ -73,7 +73,7 @@
   </div>
 
   <div class="btn-container">
-    <button *ngIf="!isModal && showConfirmButton" class="btn back" (click)="navigateToProducts()">Seguir comprando</button>
-    <button type="button" class="btn confirm" [disabled]="isCartEmpty" *ngIf="!isModal && showConfirmButton" (click)="confirmPurchase()">Confirmar compra</button>
+    <button *ngIf="!isModal && showConfirmButton" class="btn confirm" (click)="navigateToProducts()">Seguir comprando</button>
+    <button type="button" class="btn add" [disabled]="isCartEmpty" *ngIf="!isModal && showConfirmButton" (click)="confirmPurchase()">Confirmar compra</button>
   </div>
 </div>
