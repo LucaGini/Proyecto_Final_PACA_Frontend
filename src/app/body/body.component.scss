@@ -1,29 +1,11 @@
-/* Mensaje sin productos */
-.no-products-message {
-  text-align: center;
-  margin: 3rem auto;
-  color: #666;
-}
-.no-products-message mat-icon {
-  font-size: 4rem;
-  height: 4rem;
-  width: 4rem;
-  color: #bbb;
-  margin-bottom: 1rem;
-}
-.no-products-message h3 {
-  font-size: 1.5rem;
-  margin: 0.5rem 0;
-}
-
 /* Contenedor responsivo */
 .products-container {
   display: grid;
   gap: 1.5rem;
   padding: 2rem 1rem;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   place-items: center;
 }
 
@@ -44,7 +26,7 @@
 /* Tarjeta de producto */
 .product-card {
   width: 100%;
-  max-width: 340px;
+  max-width: 380px;
   background: #fff;
   border-radius: 1rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -72,7 +54,14 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 15px;
+  transform: scale(0.95); /* reduce un poco la escala inicial */
+  transition: all 0.5s ease;
 }
+.image-wrapper img:hover {
+  transform: scale(0.98); /* zoom al pasar el mouse */
+}
+
 .overlay-text {
   position: absolute;
   bottom: 10px;
@@ -126,12 +115,7 @@
   }
 }
 
-/* Truncar textos */
-.truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+
 
 .back-btn {
   position: absolute;

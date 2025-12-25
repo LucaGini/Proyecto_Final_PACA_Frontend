@@ -90,27 +90,3 @@ button[disabled] {
   opacity: 0.6;
   pointer-events: none;
 }
-
-.no-products-message {
-  text-align: center;
-  padding: 4rem 2rem;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin: 2rem;
-  backdrop-filter: blur(10px);
-
-  mat-icon {
-    font-size: 4rem;
-    width: 4rem;
-    height: 4rem;
-    color: #a67c52;
-    margin-bottom: 1rem;
-  }
-
-  p {
-    color: #666;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-  }
-}

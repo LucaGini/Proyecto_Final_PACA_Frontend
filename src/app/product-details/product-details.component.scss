@@ -19,13 +19,13 @@
   }
 
   .card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(1px);
+    background: transparent; /* elimina cualquier fondo */
+    /* o si solo querés quitar color de fondo específico */
+    background-color: transparent;
     border-radius: 15px;
-    padding: 2rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    width: 35vw;
 
     &:hover {
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -59,20 +59,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5rem 0;
+    padding: 2rem 5rem;
 
     .card-img-top {
-      width: 260px;
-      height: 260px;
+      width: 320px;
+      height: 320px;
       border-radius: 12px;
       object-fit: cover;
       filter: brightness(0.95);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.313);
       transition: all 0.5s ease;
 
       &:hover {
         transform: scale(1.03);
-        filter: brightness(1.01);
+        filter: brightness(1.005);
       }
     }
 
@@ -111,22 +111,19 @@
       }
 
       &:hover::after {
-        width: 100px;
+        width: 300px;
       }
     }
 
     .card-description {
-      color: #666;
+      color: #565656;
       font-size: 1rem;
       line-height: 1.4rem;
 
-      display: -webkit-box;
-      -webkit-line-clamp: 3; // máximo 3 líneas
-      line-clamp: 3; // standard property
-      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
       margin: 0;
+
+      max-width: 450px;
     }
 
     .price {

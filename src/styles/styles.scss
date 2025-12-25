@@ -158,6 +158,23 @@ a {
   margin-right: 10px;
 }
 
+/* Truncar textos */
+.truncate {
+  &.title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &.description {
+    display: -webkit-box;          /* necesario para line-clamp */
+    -webkit-line-clamp: 3;         /* máximo 3 líneas */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
 /* Global Filter Styles */
 .filter-header {
   display: flex;

@@ -9,14 +9,16 @@
 
     <!-- Imagen -->
     <div class="image-wrapper">
-      <img [src]="getImageUrl(product.image)" alt="{{ product.name }}">
-      <span *ngIf="product.stock === 0" class="overlay-text">AGOTADO</span>
+      <a [routerLink]="['/product', product.id]">
+        <img [src]="getImageUrl(product.image)" [alt]="product.name" />
+        <span *ngIf="product.stock === 0" class="overlay-text">AGOTADO</span>
+      </a>
     </div>
 
     <!-- Contenido -->
     <div class="card-body">
-      <h2 class="card-title truncate">{{ product.name }}</h2>
-      <p class="card-text truncate">{{ product.description }}</p>
+      <h2 class="card-title truncate title">{{ product.name }}</h2>
+      <p class="card-text truncate description">{{ product.description }}</p>
       <p class="price">Precio: ${{ product.price }}</p>
 
       <div class="button-container">
