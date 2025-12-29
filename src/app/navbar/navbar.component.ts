@@ -67,8 +67,11 @@ export class NavbarComponent implements OnInit {
     setTimeout(() => (this.showCart = true), 0); // Vuelve a crear
   }
 
-  navigateToProducts() {
-    this.router.navigate(['/products']);
+  async navigateToProducts() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['/products']);
+    }
   }
 
   async logout(): Promise<void> {
@@ -102,75 +105,131 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  Home() {
-    this.router.navigate(['about-us']);
+  async Home() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['about-us']);
+    }
   }
 
-  UserRegistration() {
-    this.router.navigate(['UserRegistration']);
+  async UserRegistration() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['UserRegistration']);
+    }
   }
 
-  AdminProducts() {
-    this.router.navigate(['AdminProducts']);
+  async AdminProducts() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['AdminProducts']);
+    }
   }
 
-  AdminProvinces() {
-    this.router.navigate(['AdminProvinces']);
+  async AdminProvinces() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['AdminProvinces']);
+    }
   }
 
-  AdminCategories() {
-    this.router.navigate(['AdminCategories']);
+  async AdminCategories() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['AdminCategories']);
+    }
   }
 
-  AdminCities() {
-    this.router.navigate(['AdminCities']);
+  async AdminCities() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['AdminCities']);
+    }
   }
 
-  AdminSuppliers() {
-    this.router.navigate(['AdminSuppliers']);
+  async AdminSuppliers() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['AdminSuppliers']);
+    }
   }
 
-  UserList() {
-    this.router.navigate(['UserList']);
+  async UserList() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['UserList']);
+    }
   }
 
-  OrderList() {
-    this.router.navigate(['OrderList']);
+  async OrderList() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['OrderList']);
+    }
   }
 
-  UserInformation() {
-    this.router.navigate(['UserInformation']);
+  async UserInformation() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['UserInformation']);
+    }
   }
 
-  OrdersHistory() {
-    this.router.navigate(['OrdersHistory']);
+  async OrdersHistory() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['OrdersHistory']);
+    }
   }
 
-  Route() {
-    this.router.navigate(['vrp']);
+  async Route() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['vrp']);
+    }
   }
 
-  Dashboard() {
-    this.router.navigate(['Dashboard']);
+  async Dashboard() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['Dashboard']);
+    }
   }
 
-  DeliveryReport() {
-    this.router.navigate(['vrp-list']);
+  async DeliveryReport() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['vrp-list']);
+    }
   }
 
-  AdminDrivers() {
-    this.router.navigate(['AdminDrivers']);
+  async AdminDrivers() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.router.navigate(['AdminDrivers']);
+    }
   }
 
-  onCategoryButtonClick(name: string) {
-    this.navbarEventService.emitCategoryButtonClick(name);
-    this.router.navigate([`collection/${name}`]);
+  async onCategoryButtonClick(name: string) {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.navbarEventService.emitCategoryButtonClick(name);
+      this.router.navigate([`collection/${name}`]);
+    }
   }
   finishOrder() {
     this.cartService.setOrderFinished(true);
   }
 
-  onSearch(event: Event) {
+  async finishOrderAndNavigate() {
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (canContinue) {
+      this.finishOrder();
+      this.router.navigate(['/cart']);
+    }
+  }
+
+  async onSearch(event: Event) {
     event.preventDefault();
     const searchInput = document.getElementById('search-input') as HTMLInputElement;
     const query = searchInput.value.trim();
@@ -178,6 +237,12 @@ export class NavbarComponent implements OnInit {
     if (!query) {
       Swal.fire('Ingrese un término para buscar', '', 'warning');
       return;
+    }
+
+    // Verificar si hay cambios sin guardar antes de buscar
+    const canContinue = await this.editGuardService.handleUnsavedChanges();
+    if (!canContinue) {
+      return; // No continuar con la búsqueda si el usuario cancela
     }
 
     this.productService.searchProducts(query).subscribe(

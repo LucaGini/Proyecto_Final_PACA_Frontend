@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { UserService } from '../services/user.service';
@@ -6,13 +6,14 @@ import { ProvinceService } from '../services/province.service';
 import { CityService } from '../services/city.service';
 import { User } from '../services/userInterface';
 import { UtilsService } from '../services/utils.service';
+import { EditGuardService, EditingComponent } from '../services/edit-guard.service';
 
 @Component({
   selector: 'app-user-information',
   templateUrl: './user-information.component.html',
   styleUrls: ['./user-information.component.scss'],
 })
-export class UserInformationComponent implements OnInit {
+export class UserInformationComponent implements OnInit, OnDestroy, EditingComponent {
   userData: User | any = null;
   isEditMode = false;
   selectedProvince: string = '';
@@ -31,9 +32,15 @@ export class UserInformationComponent implements OnInit {
   isProfileComplete: boolean = true;
   missingFields: string[] = [];
 
-  constructor(private authService: AuthService, private userService: UserService, private provinceService: ProvinceService, private cityService: CityService, private router: Router, private utils: UtilsService) {}
+  // Propiedades de EditingComponent
+  componentName = 'user-information';
+
+  constructor(private authService: AuthService, private userService: UserService, private provinceService: ProvinceService, private cityService: CityService, private router: Router, private utils: UtilsService, private editGuardService: EditGuardService) {}
 
   ngOnInit(): void {
+    // Registrar este componente en el servicio de guardia
+    this.editGuardService.registerComponent(this);
+    
     this.loadUserData();
     this.loadProvinces();
   }
@@ -267,5 +274,25 @@ export class UserInformationComponent implements OnInit {
       this.isProfileComplete = this.userService.isProfileComplete(this.userData);
       this.missingFields = this.userService.getMissingProfileFields(this.userData);
     }
+  }
+
+  // Implementación de EditingComponent
+  hasUnsavedChanges(): boolean {
+    return this.isEditMode;
+  }
+
+  async handleUnsavedChanges(): Promise<boolean> {
+    return this.utils.showConfirm('Perfil en edición', 'Estás editando tu información de usuario. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?').then((result) => {
+      if (result.isConfirmed) {
+        this.cancelEdit();
+        return true;
+      }
+      return false;
+    });
+  }
+
+  ngOnDestroy(): void {
+    // Desregistrar el componente al destruirlo
+    this.editGuardService.unregisterComponent(this.componentName);
   }
 }

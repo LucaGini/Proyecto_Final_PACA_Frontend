@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProvinceService } from 'src/app/services/province.service';
 import { UserService } from 'src/app/services/user.service';
@@ -6,13 +6,14 @@ import { environment} from 'src/environments/environment';
 import { UtilsService } from 'src/app/services/utils.service';
 import { AuthService } from  'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import { EditGuardService, EditingComponent } from 'src/app/services/edit-guard.service';
 
 @Component({
   selector: 'app-edit-list-driver',
   templateUrl: './edit-list-driver.component.html',
   styleUrls: ['./edit-list-driver.component.scss']
 })
-export class EditListDriverComponent {
+export class EditListDriverComponent implements OnDestroy, EditingComponent {
   users: any[] = [];
   selectedUserStatus: string = '';
   apiUrl = environment.apiUrl;
@@ -21,7 +22,8 @@ export class EditListDriverComponent {
   selectedProvince: string = '';
   provinces: any[] = [];
 
-
+  // Propiedades de EditingComponent
+  componentName = 'edit-list-driver';
 
   constructor(
     private userService: UserService,
@@ -29,10 +31,14 @@ export class EditListDriverComponent {
     private utils: UtilsService,
     private authService: AuthService,
     private router: Router,
-    private provinceService: ProvinceService
+    private provinceService: ProvinceService,
+    private editGuardService: EditGuardService
   ) {}
 
   ngOnInit() {
+    // Registrar este componente en el servicio de guardia
+    this.editGuardService.registerComponent(this);
+
     this.route.queryParams.subscribe((queryParams) => {
       const searchTerm = queryParams['q'];
       this.loadUsers(searchTerm);
@@ -119,6 +125,12 @@ deleteUser(user: any): void {
 }
 
 edit(driver: any) {
+  // Verificar si ya hay algún conductor en edición
+  if (this.hasDriversInEditMode()) {
+    this.utils.showAlert('warning', 'Conductor en edición', 'Ya tienes un conductor en modo edición. Debes guardar o cancelar los cambios antes de editar otro conductor.');
+    return;
+  }
+
   driver.editing = true;
   driver.editProvince = driver.province?.name || '';
 }
@@ -145,6 +157,39 @@ save(driver: any) {
       this.utils.showAlert('error', 'Error', err.message);
     }
   });
+}
+
+// Métodos auxiliares para el control de edición
+private hasDriversInEditMode(): boolean {
+  return this.users.some((driver) => driver.editing === true);
+}
+
+private cancelAllEdits(): void {
+  this.users.forEach((driver) => {
+    if (driver.editing) {
+      this.cancelEdit(driver);
+    }
+  });
+}
+
+// Implementación de EditingComponent
+hasUnsavedChanges(): boolean {
+  return this.hasDriversInEditMode();
+}
+
+async handleUnsavedChanges(): Promise<boolean> {
+  return this.utils.showConfirm('Conductor en edición', 'Estás editando un conductor. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?').then((result) => {
+    if (result.isConfirmed) {
+      this.cancelAllEdits();
+      return true;
+    }
+    return false;
+  });
+}
+
+ngOnDestroy(): void {
+  // Desregistrar el componente al destruirlo
+  this.editGuardService.unregisterComponent(this.componentName);
 }
 
 }
