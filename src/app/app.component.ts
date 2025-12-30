@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, NavigationEnd, ActivatedRoute, Data } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,8 +11,13 @@ import { filter, map, mergeMap } from 'rxjs/operators';
 export class AppComponent {
   showHeaderFooter = true;
   showBackButton = true;
+  showChatbot = true; // Por defecto visible
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(
+    private router: Router, 
+    private activatedRoute: ActivatedRoute,
+    private authService: AuthService
+  ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd),
       map(() => this.activatedRoute),
@@ -25,6 +31,11 @@ export class AppComponent {
     ).subscribe((data: Data) => {
       this.showHeaderFooter = !data['hideHeaderFooter'];
       this.showBackButton = !data['hideBackButton'];
+    });
+
+    // Suscribirse al estado de isDriver para ocultar el chatbot para transportistas
+    this.authService.isDriver$().subscribe((isDriver) => {
+      this.showChatbot = !isDriver; // Ocultar chatbot si es transportista
     });
   }
 }
