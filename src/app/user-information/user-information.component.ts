@@ -14,7 +14,9 @@ import { EditGuardService, EditingComponent } from '../services/edit-guard.servi
   styleUrls: ['./user-information.component.scss'],
 })
 export class UserInformationComponent implements OnInit, OnDestroy, EditingComponent {
+
   userData: User | any = null;
+  originalEmail: string | null = null; // ✅ NUEVO
   isEditMode = false;
   selectedProvince: string = '';
 
@@ -23,24 +25,27 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
   showPassword: boolean = false;
 
   password: string = '';
-  
-  // Guardar información completa de provincia y ciudad para mostrar en modo lectura
+
   currentProvinceInfo: any = null;
   currentCityInfo: any = null;
 
-  // Propiedades para el estado del perfil
   isProfileComplete: boolean = true;
   missingFields: string[] = [];
 
-  // Propiedades de EditingComponent
   componentName = 'user-information';
 
-  constructor(private authService: AuthService, private userService: UserService, private provinceService: ProvinceService, private cityService: CityService, private router: Router, private utils: UtilsService, private editGuardService: EditGuardService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private provinceService: ProvinceService,
+    private cityService: CityService,
+    private router: Router,
+    private utils: UtilsService,
+    private editGuardService: EditGuardService
+  ) {}
 
   ngOnInit(): void {
-    // Registrar este componente en el servicio de guardia
     this.editGuardService.registerComponent(this);
-    
     this.loadUserData();
     this.loadProvinces();
   }
@@ -50,7 +55,6 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
   }
 
   loadUserData(): void {
-
     const user = this.authService.getLoggedUser();
     const updatedEmail = localStorage.getItem('currentUserEmail');
     const emailToUse = updatedEmail ? updatedEmail : user?.email;
@@ -60,14 +64,14 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
         next: (response) => {
           if (response && response.data) {
             this.userData = response.data;
+            this.originalEmail = response.data.email; // ✅ NUEVO
+
             if (updatedEmail) {
               localStorage.removeItem('currentUserEmail');
             }
-            
-            // Verificar estado del perfil
+
             this.checkProfileCompletion();
-            
-            // Cargar información completa de ciudad y provincia
+
             if (this.userData?.city) {
               this.loadCityDetails(this.userData.city);
             }
@@ -110,32 +114,14 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
     }
   }
 
-  loadCityById(cityId: string): void {
-    this.cityService.findCityById(cityId).subscribe({
-      next: (response) => {
-        if (response.data && response.data.name) {
-          this.userData.city = response.data.name;
-        }
-      },
-      error: () => {
-        this.userData.city = 'Error al cargar ciudad';
-      },
-    });
-  }
-
   loadCityDetails(cityId: string): void {
     this.cityService.findCityById(cityId).subscribe({
       next: (response) => {
         if (response.data) {
           this.currentCityInfo = response.data;
-          // Cargar información de la provincia si existe
           if (response.data.province) {
-            this.currentProvinceInfo = { id: response.data.province };
-            // Buscar el nombre de la provincia en la lista cargada
             const province = this.provinces.find(p => p.id === response.data.province);
-            if (province) {
-              this.currentProvinceInfo = province;
-            }
+            this.currentProvinceInfo = province || { id: response.data.province };
           }
         }
       },
@@ -148,17 +134,12 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
   edit(): void {
     this.isEditMode = true;
     this.password = '';
-    
-    // Configurar los valores para los dropdowns cuando se entra en modo edición
+
     if (this.currentCityInfo && this.currentProvinceInfo) {
-      // Establecer la provincia seleccionada
       this.userData.province = this.currentProvinceInfo.id;
-      
-      // Cargar las ciudades de esa provincia
       this.provinceService.findCitiesByProvince(this.currentProvinceInfo.id).subscribe({
         next: (response) => {
           this.cities = Array.isArray(response) ? response : [];
-          // Establecer la ciudad seleccionada
           this.userData.city = this.currentCityInfo.id;
         },
         error: () => {
@@ -171,7 +152,7 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
   cancelEdit(): void {
     this.isEditMode = false;
     this.password = '';
-    this.cities = []; // Limpiar las ciudades cargadas
+    this.cities = [];
     this.loadUserData();
   }
 
@@ -181,8 +162,6 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
       return;
     }
 
-    if (!this.userData) return;
-
     const updatedUser: any = {
       id: this.userData.id || this.userData._id,
       email: this.userData.email.toLowerCase(),
@@ -191,7 +170,7 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
       phone: this.userData.phone,
       street: this.userData.street,
       streetNumber: String(this.userData.streetNumber),
-      city: this.userData.city, // Este ahora es el ID de la ciudad
+      city: this.userData.city,
       ...(this.password ? { password: this.password } : {}),
     };
 
@@ -206,11 +185,15 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
     }
 
     if (this.password && !this.utils.validatePassword(this.password)) {
-      this.utils.showAlert('error', 'Contraseña inválida', 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, un número y un caracter especial');
+      this.utils.showAlert(
+        'error',
+        'Contraseña inválida',
+        'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, un número y un caracter especial'
+      );
       return;
     }
 
-    if (updatedUser.email !== this.userData.email) {
+    if (updatedUser.email !== this.originalEmail) { // ✅ CAMBIO CLAVE
       this.userService.findUserByEmail(updatedUser.email).subscribe({
         next: (existingUser) => {
           if (existingUser) {
@@ -229,17 +212,16 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
   private update(updatedUser: any): void {
     this.userService.update(updatedUser).subscribe({
       next: () => {
-        if (updatedUser.email !== this.userData?.email) {
-          this.authService.updateUserEmail(updatedUser.email);
-          this.utils.showAlert('success', 'Éxito', 'Información actualizada').then(() => {
+        if (updatedUser.email !== this.originalEmail) { // ✅ CAMBIO CLAVE
+          this.utils.showAlert('success', 'Éxito', 'Email actualizado. Debe iniciar sesión nuevamente').then(() => {
             this.authService.logout();
             this.router.navigate(['/UserRegistration']);
           });
         } else {
           this.utils.showAlert('success', 'Éxito', 'Información actualizada').then(() => {
             this.isEditMode = false;
-            this.cities = []; // Limpiar las ciudades cargadas
-            this.loadUserData(); // Esto también verificará el perfil actualizado
+            this.cities = [];
+            this.loadUserData();
           });
         }
       },
@@ -266,9 +248,6 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
     });
   }
 
-  /**
-   * Verifica si el perfil del usuario está completo y actualiza las propiedades correspondientes
-   */
   private checkProfileCompletion(): void {
     if (this.userData) {
       this.isProfileComplete = this.userService.isProfileComplete(this.userData);
@@ -276,13 +255,15 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
     }
   }
 
-  // Implementación de EditingComponent
   hasUnsavedChanges(): boolean {
     return this.isEditMode;
   }
 
   async handleUnsavedChanges(): Promise<boolean> {
-    return this.utils.showConfirm('Perfil en edición', 'Estás editando tu información de usuario. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?').then((result) => {
+    return this.utils.showConfirm(
+      'Perfil en edición',
+      'Estás editando tu información de usuario. Si continúas, se perderán los cambios no guardados. ¿Deseas continuar?'
+    ).then((result) => {
       if (result.isConfirmed) {
         this.cancelEdit();
         return true;
@@ -292,7 +273,6 @@ export class UserInformationComponent implements OnInit, OnDestroy, EditingCompo
   }
 
   ngOnDestroy(): void {
-    // Desregistrar el componente al destruirlo
     this.editGuardService.unregisterComponent(this.componentName);
   }
 }

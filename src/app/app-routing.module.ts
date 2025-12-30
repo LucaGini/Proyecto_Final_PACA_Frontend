@@ -51,11 +51,11 @@ const routes: Routes = [
   { path: 'Dashboard', component: DashboardComponent, canActivate: [AuthGuard], data: { roles: ['administrador'], hideBackButton: true } },
 
   // === SOLO CLIENTES Y NO LOGUEADOS ===
-  { path: 'cart', component: CartComponent, canActivate: [AuthGuard], data: { excludeRoles: ['administrador', 'transportista'], hideBackButton: true } },
+  { path: 'cart', component: CartComponent, canActivate: [AuthGuard, ProfileCompleteGuard], data: { excludeRoles: ['administrador', 'transportista'], hideBackButton: true } },
 
   // === SOLO cliente ===
   { path: 'UserInformation', component: UserInformationComponent, canActivate: [AuthGuard], data: { roles: ['cliente'], hideBackButton: false } },
-  { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate: [AuthGuard], data: { roles: ['cliente'], hideBackButton: true } },
+  { path: 'OrdersHistory', component: OrdersHistoryComponent, canActivate: [AuthGuard, ProfileCompleteGuard], data: { roles: ['cliente'], hideBackButton: true } },
 
   // === SOLO TRANSPORTISTAS ===
   { path: 'vrp-list', component: VrpListComponent, canActivate: [AuthGuard], data: { roles: ['transportista'], hideBackButton: true } },
@@ -68,7 +68,7 @@ const routes: Routes = [
 
   // === TODOS ===
   { path: '', redirectTo: 'about-us', pathMatch: 'full' },
-  { path: 'about-us', component: AboutUsComponent, data: { hideBackButton: true } },
+  { path: 'about-us', component: AboutUsComponent, canActivate: [AuthGuard], data: { hideBackButton: true } },
   { path: 'products', component: BodyComponent, data: { hideBackButton: true } },
   { path: 'product/:productId', component: ProductDetailsComponent },
   { path: 'collection/:collection', component: CollectionComponent },
