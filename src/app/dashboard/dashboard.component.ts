@@ -365,16 +365,20 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
     // Revenue over time
     this.dashboardService.getRevenueOverTime(start, end).subscribe((res) => {
-      const raw = res.data || [];
+      const raw = (res.data || [])
+        .sort((a: any, b: any) =>
+          new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
+
       const labels = raw.map((x: any) => {
         const d = new Date(x.date + 'T00:00:00');
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${day}/${month}/${year}`;
+        return `${String(d.getDate()).padStart(2, '0')}/${
+          String(d.getMonth() + 1).padStart(2, '0')
+        }/${d.getFullYear()}`;
       });
 
       const data = raw.map((x: any) => x.totalRevenue);
+
       this.revenueChartData = {
         labels,
         datasets: [
@@ -386,6 +390,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
           },
         ],
       };
+
       this.cdr.markForCheck();
     });
 

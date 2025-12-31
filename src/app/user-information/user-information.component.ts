@@ -16,7 +16,7 @@ import { EditGuardService, EditingComponent } from '../services/edit-guard.servi
 export class UserInformationComponent implements OnInit, OnDestroy, EditingComponent {
 
   userData: User | any = null;
-  originalEmail: string | null = null; // ✅ NUEVO
+  originalEmail: string | null = null; 
   isEditMode = false;
   selectedProvince: string = '';
 
