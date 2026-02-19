@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 // Interfaces
 export interface ProvinceSales {
@@ -33,9 +34,9 @@ export interface WorstCustomer {
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'http://localhost:3000/api/dashboard';
+  private apiUrl = `${environment.apiUrl}api/dashboard`;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // 🔧 Helpers
   private buildParams(startDate?: string, endDate?: string): HttpParams {
@@ -129,10 +130,10 @@ export class DashboardService {
   }
 
   getRevenue(start: string, end: string) {
-  return this.http.get<{ data: number }>(
-    `${this.apiUrl}/total-revenue`,
-    { params: { startDate: start, endDate: end } }
-  );
-}
+    return this.http.get<{ data: number }>(
+      `${this.apiUrl}/total-revenue`,
+      { params: { startDate: start, endDate: end } }
+    );
+  }
 
 }

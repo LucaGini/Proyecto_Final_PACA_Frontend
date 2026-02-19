@@ -48,6 +48,6 @@ package-lock.json
 .pnpm-debug.log
 shrinkwrap.yaml
 
-# environment files
-src/environments/
+# environment files — DO NOT ignore; needed by Vercel at build time
+# src/environments/   ← intentionally unignored
 .env
