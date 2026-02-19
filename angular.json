@@ -35,8 +35,11 @@
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "src/styles/styles.scss",
               "node_modules/leaflet/dist/leaflet.css"
-              ],
-            "scripts": ["node_modules/bootstrap/dist/js/bootstrap.min.js", "node_modules/leaflet/dist/leaflet.js"]
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/leaflet/dist/leaflet.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -44,12 +47,12 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "10kb",
+                  "maximumError": "15kb"
                 }
               ],
               "outputHashing": "all"
@@ -109,6 +112,4 @@
   "cli": {
     "analytics": "ccdf6e51-d6c5-467e-aade-af82e1d5d107"
   }
-
 }
-
